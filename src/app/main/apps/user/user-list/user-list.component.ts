@@ -8,6 +8,8 @@ import { CoreConfigService } from "@core/services/config.service";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 
 import { UserListService } from "app/main/apps/user/user-list/user-list.service";
+import { Toast, ToastrService } from "ngx-toastr";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-user-list",
@@ -25,6 +27,8 @@ export class UserListComponent implements OnInit {
   public previousRoleFilter = "";
   public previousPlanFilter = "";
   public previousStatusFilter = "";
+  public customerDataForDelete: { id: number; name: string };
+  public deleteLoader: boolean = false;
 
   public selectRole: any = [
     { name: "All", value: "" },
@@ -72,7 +76,9 @@ export class UserListComponent implements OnInit {
   constructor(
     private _userListService: UserListService,
     private _coreSidebarService: CoreSidebarService,
-    private _coreConfigService: CoreConfigService
+    private _coreConfigService: CoreConfigService,
+    private toastr: ToastrService,
+    private modalService: NgbModal
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -160,6 +166,30 @@ export class UserListComponent implements OnInit {
     );
     this.rows = this.temp;
   }
+  public modalOpenWarning(modalWarning, id: number, name: string) {
+    this.customerDataForDelete = { id: id, name: name };
+    this.modalService.open(modalWarning, {
+      centered: true,
+      windowClass: "modal modal-warning",
+    });
+  }
+
+  ///////////////////// Delete Selected
+  public onDelete(): void {
+    this.deleteLoader = true;
+    this._userListService
+      .deleteCustomer(this.customerDataForDelete.id)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((response) => {
+        this.modalService.dismissAll();
+        this.deleteLoader = false;
+        this.customerDataForDelete = { id: 0, name: "" };
+        this.getCustomersList({
+          isAfterDelete: true,
+          name: this.customerDataForDelete.name,
+        });
+      });
+  }
 
   /**
    * Filter Rows
@@ -187,6 +217,37 @@ export class UserListComponent implements OnInit {
     });
   }
 
+  getCustomersList(
+    isFromDelete?: {
+      isAfterDelete: boolean;
+      name: string;
+    },
+    searchData?: {
+      page: number;
+      limit: number;
+      search: string | number;
+    }
+  ): void {
+    this._userListService
+      .getDataTableRows(searchData)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        if (isFromDelete?.isAfterDelete) {
+          this.toastr.success(
+            `The customer ${isFromDelete.name} has been deleted`,
+            "Success!",
+            {
+              toastClass: "toast ngx-toastr",
+              closeButton: true,
+            }
+          );
+        }
+        console.log(res);
+        this.rows = res.data.data;
+        this.tempData = this.rows;
+      });
+  }
+
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
   /**
@@ -201,21 +262,10 @@ export class UserListComponent implements OnInit {
         if (config.layout.animation === "zoomIn") {
           setTimeout(() => {
             console.log(this.rows, `before`);
-            this._userListService.onUserListChanged
-              .pipe(takeUntil(this._unsubscribeAll))
-              .subscribe((response) => {
-                this.rows = response.data;
-                console.log(this.rows);
-                this.tempData = this.rows;
-              });
-          }, 450);
+            this.getCustomersList();
+          }, 1);
         } else {
-          this._userListService.onUserListChanged
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response) => {
-              this.rows = response;
-              this.tempData = this.rows;
-            });
+          this.getCustomersList();
         }
       });
   }

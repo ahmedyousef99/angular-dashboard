@@ -7,14 +7,20 @@
           <ul ngbNav #nav="ngbNav" class="nav nav-pills">
             <li ngbNavItem>
               <a ngbNavLink class="d-flex align-items-center"
-                ><i data-feather="user" class="mr-sm-50"></i><span class="d-none d-sm-block">Account</span></a
+                ><i data-feather="user" class="mr-sm-50"></i
+                ><span class="d-none d-sm-block">Account</span></a
               >
               <ng-template ngbNavContent>
                 <!-- Account Tab starts -->
-                <div class="tab-pane active" id="account" aria-labelledby="account-tab" role="tabpanel">
+                <div
+                  class="tab-pane active"
+                  id="account"
+                  aria-labelledby="account-tab"
+                  role="tabpanel"
+                >
                   <!-- users edit media object start -->
                   <div class="media mb-2">
-                    <div *ngIf="currentRow.avatar.length > 0; else customAvatar">
+                    <div *ngIf="true; else customAvatar">
                       <img
                         class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer"
                         [src]="avatarImage"
@@ -28,17 +34,21 @@
                         class="mr-1 ml-0"
                         [ngClass]="{
                           'bg-light-success': currentRow.status == 'active',
-                          'bg-light-secondary': currentRow.status == 'inactive',
-                          'bg-light-warning': currentRow.status == 'pending'
+                          'bg-light-secondary': currentRow.status == 'inactive'
                         }"
                       >
-                        <div class="rounded p-3">{{ currentRow.fullName | initials }}</div>
+                        <div class="rounded p-3">
+                          {{ currentRow.fullName | initials }}
+                        </div>
                       </div>
                     </ng-template>
                     <div class="media-body mt-50">
                       <h4>{{ currentRow.fullName }}</h4>
                       <div class="col-12 d-flex mt-1 px-0">
-                        <label class="btn btn-primary mr-75 mb-0" for="change-picture">
+                        <label
+                          class="btn btn-primary mr-75 mb-0"
+                          for="change-picture"
+                        >
                           <span class="d-none d-sm-block">Change</span>
                           <input
                             class="form-control"
@@ -52,8 +62,15 @@
                             <i class="mr-0" data-feather="edit"></i>
                           </span>
                         </label>
-                        <button class="btn btn-outline-secondary d-none d-sm-block" rippleEffect>Remove</button>
-                        <button class="btn btn-outline-secondary d-block d-sm-none">
+                        <button
+                          class="btn btn-outline-secondary d-none d-sm-block"
+                          rippleEffect
+                        >
+                          Remove
+                        </button>
+                        <button
+                          class="btn btn-outline-secondary d-block d-sm-none"
+                        >
                           <i class="mr-0" data-feather="trash-2"></i>
                         </button>
                       </div>
@@ -61,24 +78,32 @@
                   </div>
                   <!-- users edit media object ends -->
                   <!-- users edit account form start -->
-                  <form class="form-validate" (ngSubmit)="(accountForm.form.valid)" #accountForm="ngForm">
+                  <form
+                    class="form-validate"
+                    (ngSubmit)="(customerForm.valid)"
+                    [formGroup]="customerForm"
+                  >
                     <div class="row">
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="username">Username</label>
+                          <label for="name">Full Name</label>
                           <input
+                            formControlName="name"
                             type="text"
-                            id="username"
+                            id="name"
                             class="form-control"
-                            placeholder="Username"
-                            name="username"
-                            [(ngModel)]="currentRow.username"
-                            [class.error]="accountForm.submitted && UserNameRef.invalid"
-                            #UserNameRef="ngModel"
-                            required
+                            placeholder="Name"
+                            name="fullName"
+                            [class.error]="submitted && f.name.errors"
                           />
-                          <span *ngIf="accountForm.submitted && UserNameRef.invalid" class="invalid-form">
-                            <small class="form-text text-danger" *ngIf="UserNameRef.errors.required"
+
+                          <span
+                            *ngIf="submitted && f.name.errors"
+                            class="invalid-form"
+                          >
+                            <small
+                              class="form-text text-danger"
+                              *ngIf="submitted && f.name.errors"
                               >This field is required!</small
                             >
                           </span>
@@ -86,20 +111,48 @@
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="name">Name</label>
-                          <input
-                            type="text"
-                            id="name"
-                            class="form-control"
-                            placeholder="Name"
-                            name="fullName"
-                            [(ngModel)]="currentRow.fullName"
-                            [class.error]="accountForm.submitted && FullNameRef.invalid"
-                            #FullNameRef="ngModel"
-                            required
-                          />
-                          <span *ngIf="accountForm.submitted && FullNameRef.invalid" class="invalid-form">
-                            <small class="form-text text-danger" *ngIf="FullNameRef.errors.required"
+                          <label
+                            class="form-label"
+                            for="basic-default-password1"
+                            >Password</label
+                          >
+                          <div
+                            class="input-group input-group-merge form-password-toggle"
+                          >
+                            <input
+                              formControlName="password"
+                              [type]="passwordTextType ? 'text' : 'password'"
+                              id="basic-default-password1"
+                              placeholder="Your password"
+                              class="form-control"
+                              aria-label="jdoe1"
+                              aria-describedby="basic-default-password1"
+                              name="user-name"
+                              [class.error]="submitted && f.password.errors"
+                            />
+                            <div
+                              class="input-group-append"
+                              (click)="passwordTextType = !passwordTextType"
+                            >
+                              <span class="input-group-text cursor-pointer"
+                                ><i
+                                  class="feather"
+                                  [ngClass]="{
+                                    'icon-eye-off': passwordTextType,
+                                    'icon-eye': !passwordTextType
+                                  }"
+                                ></i
+                              ></span>
+                            </div>
+                          </div>
+
+                          <span
+                            *ngIf="submitted && f.password.errors"
+                            class="invalid-form"
+                          >
+                            <small
+                              class="form-text text-danger"
+                              *ngIf="submitted && f.password.errors"
                               >This field is required!</small
                             >
                           </span>
@@ -109,18 +162,21 @@
                         <div class="form-group">
                           <label for="email">E-mail</label>
                           <input
+                            formControlName="email"
                             type="email"
                             id="email"
                             class="form-control"
                             placeholder="Email"
                             name="email"
-                            [(ngModel)]="currentRow.email"
-                            [class.error]="accountForm.submitted && EmailRef.invalid"
-                            #EmailRef="ngModel"
-                            required
                           />
-                          <span *ngIf="accountForm.submitted && EmailRef.invalid" class="invalid-form">
-                            <small class="form-text text-danger" *ngIf="EmailRef.errors.required"
+
+                          <span
+                            *ngIf="submitted && f.email.errors"
+                            class="invalid-form"
+                          >
+                            <small
+                              class="form-text text-danger"
+                              *ngIf="submitted && f.email.errors"
                               >This field is required!</small
                             >
                           </span>
@@ -129,39 +185,74 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label for="status">Status</label>
-                          <select class="form-control" [(ngModel)]="currentRow.status" name="status" id="status">
-                            <option>active</option>
-                            <option>inactive</option>
-                            <option>pending</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label for="role">Role</label>
-                          <select class="form-control" [(ngModel)]="currentRow.role" name="role" id="role">
-                            <option>Maintainer</option>
-                            <option>Subscriber</option>
-                            <option>Author</option>
-                            <option>Editor</option>
-                            <option>Admin</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label for="company">Company</label>
-                          <input
-                            type="text"
+                          <select
+                            formControlName="selectedOption"
                             class="form-control"
-                            [(ngModel)]="currentRow.company"
-                            placeholder="Company name"
-                            id="company"
-                            name="company"
-                          />
+                            name="status"
+                            id="status"
+                          >
+                            <option value="ACTIVE">Active</option>
+                            <option value="INACTIVE">Inactive</option>
+                          </select>
                         </div>
                       </div>
-                      <div class="col-12">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label
+                            class="form-label"
+                            for="basic-icon-default-uname"
+                            >Phone number</label
+                          >
+                          <input
+                            formControlName="phone"
+                            type="text"
+                            placeholder="Your Phone Number"
+                            class="form-control"
+                            name="phone"
+                            id="phone"
+                            [class.error]="submitted && f.phone.errors"
+                          />
+                          <span
+                            *ngIf="submitted && f.phone.errors"
+                            class="invalid-form"
+                          >
+                            <small
+                              class="form-text text-danger"
+                              *ngIf="submitted && f.phone.errors"
+                              >This field is required!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label
+                            class="form-label"
+                            for="basic-icon-default-uname"
+                            >Date of birth</label
+                          >
+                          <input
+                            formControlName="dateOfBirth"
+                            type="text"
+                            placeholder=" For example 2020-03-05"
+                            class="form-control"
+                            aria-label="jdoe1"
+                            name="user-name"
+                            [class.error]="submitted && f.dateOfBirth.errors"
+                          />
+                          <span
+                            *ngIf="submitted && f.dateOfBirth.errors"
+                            class="invalid-form"
+                          >
+                            <small
+                              class="form-text text-danger"
+                              *ngIf="submitted && f.dateOfBirth.errors"
+                              >This field is required!</small
+                            >
+                          </span>
+                        </div>
+                      </div>
+                      <!-- <div class="col-12">
                         <div class="table-responsive border rounded mt-1">
                           <h6 class="py-1 mx-1 mb-0 font-medium-2">
                             <i data-feather="lock" [size]="20" class="mr-25"></i>
@@ -316,7 +407,7 @@
                             </tbody>
                           </table>
                         </div>
-                      </div>
+                      </div> -->
                       <div class="col-12 d-flex flex-sm-row flex-column mt-2">
                         <button
                           type="submit"
@@ -326,7 +417,11 @@
                         >
                           Save Changes
                         </button>
-                        <button (click)="resetFormWithDefaultValues()" class="btn btn-outline-secondary" rippleEffect>
+                        <button
+                          (click)="resetFormWithDefaultValues()"
+                          class="btn btn-outline-secondary"
+                          rippleEffect
+                        >
                           Reset
                         </button>
                       </div>
@@ -339,17 +434,25 @@
             </li>
             <li ngbNavItem>
               <a ngbNavLink class="d-flex align-items-center">
-                <i data-feather="info" class="mr-sm-50"></i><span class="d-none d-sm-block">Information</span></a
+                <i data-feather="info" class="mr-sm-50"></i
+                ><span class="d-none d-sm-block">Information</span></a
               >
               <ng-template ngbNavContent>
-                <!-- Information Tab starts -->
-                <div class="tab-pane" id="information" aria-labelledby="information-tab" role="tabpanel">
-                  <!-- users edit Info form start  -->
+                <div
+                  class="tab-pane"
+                  id="information"
+                  aria-labelledby="information-tab"
+                  role="tabpanel"
+                >
                   <form class="form-validate">
                     <div class="row mt-1">
                       <div class="col-12">
                         <h4 class="mb-1">
-                          <i data-feather="user" [size]="16" class="mr-75 font-medium-4"></i>
+                          <i
+                            data-feather="user"
+                            [size]="16"
+                            class="mr-75 font-medium-4"
+                          ></i>
                           <span class="align-middle">Personal Information</span>
                         </h4>
                       </div>
@@ -367,7 +470,13 @@
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label for="mobile">Mobile</label>
-                          <input id="mobile" type="text" class="form-control" value="&#43;6595895857" name="phone" />
+                          <input
+                            id="mobile"
+                            type="text"
+                            class="form-control"
+                            value="&#43;6595895857"
+                            name="phone"
+                          />
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-6">
@@ -400,36 +509,85 @@
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label class="d-block mb-1">Gender</label>
-                          <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="male" name="gender" class="custom-control-input" />
-                            <label class="custom-control-label" for="male">Male</label>
+                          <div
+                            class="custom-control custom-radio custom-control-inline"
+                          >
+                            <input
+                              type="radio"
+                              id="male"
+                              name="gender"
+                              class="custom-control-input"
+                            />
+                            <label class="custom-control-label" for="male"
+                              >Male</label
+                            >
                           </div>
-                          <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="female" name="gender" class="custom-control-input" checked />
-                            <label class="custom-control-label" for="female">Female</label>
+                          <div
+                            class="custom-control custom-radio custom-control-inline"
+                          >
+                            <input
+                              type="radio"
+                              id="female"
+                              name="gender"
+                              class="custom-control-input"
+                              checked
+                            />
+                            <label class="custom-control-label" for="female"
+                              >Female</label
+                            >
                           </div>
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label class="d-block mb-1">Contact Options</label>
-                          <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="email-cb" checked />
-                            <label class="custom-control-label" for="email-cb">Email</label>
+                          <div
+                            class="custom-control custom-checkbox custom-control-inline"
+                          >
+                            <input
+                              type="checkbox"
+                              class="custom-control-input"
+                              id="email-cb"
+                              checked
+                            />
+                            <label class="custom-control-label" for="email-cb"
+                              >Email</label
+                            >
                           </div>
-                          <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="message" checked />
-                            <label class="custom-control-label" for="message">Message</label>
+                          <div
+                            class="custom-control custom-checkbox custom-control-inline"
+                          >
+                            <input
+                              type="checkbox"
+                              class="custom-control-input"
+                              id="message"
+                              checked
+                            />
+                            <label class="custom-control-label" for="message"
+                              >Message</label
+                            >
                           </div>
-                          <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="phone" />
-                            <label class="custom-control-label" for="phone">Phone</label>
+                          <div
+                            class="custom-control custom-checkbox custom-control-inline"
+                          >
+                            <input
+                              type="checkbox"
+                              class="custom-control-input"
+                              id="phone"
+                            />
+                            <label class="custom-control-label" for="phone"
+                              >Phone</label
+                            >
                           </div>
                         </div>
                       </div>
                       <div class="col-12">
                         <h4 class="mb-1 mt-2">
-                          <i data-feather="map-pin" [size]="16" class="mr-75 font-medium-4"></i>
+                          <i
+                            data-feather="map-pin"
+                            [size]="16"
+                            class="mr-75 font-medium-4"
+                          ></i>
                           <span class="align-middle">Address</span>
                         </h4>
                       </div>
@@ -448,25 +606,48 @@
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label for="address-2">Address Line 2</label>
-                          <input id="address-2" type="text" class="form-control" placeholder="T-78, Groove Street" />
+                          <input
+                            id="address-2"
+                            type="text"
+                            class="form-control"
+                            placeholder="T-78, Groove Street"
+                          />
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label for="postcode">Postcode</label>
-                          <input id="postcode" type="text" class="form-control" placeholder="597626" name="zip" />
+                          <input
+                            id="postcode"
+                            type="text"
+                            class="form-control"
+                            placeholder="597626"
+                            name="zip"
+                          />
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label for="city">City</label>
-                          <input id="city" type="text" class="form-control" value="New York" name="city" />
+                          <input
+                            id="city"
+                            type="text"
+                            class="form-control"
+                            value="New York"
+                            name="city"
+                          />
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-6">
                         <div class="form-group">
                           <label for="state">State</label>
-                          <input id="state" type="text" class="form-control" name="state" placeholder="Manhattan" />
+                          <input
+                            id="state"
+                            type="text"
+                            class="form-control"
+                            name="state"
+                            placeholder="Manhattan"
+                          />
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-6">
@@ -482,26 +663,38 @@
                         </div>
                       </div>
                       <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                        <button type="submit" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" rippleEffect>
+                        <button
+                          type="submit"
+                          class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1"
+                          rippleEffect
+                        >
                           Save Changes
                         </button>
-                        <button type="reset" class="btn btn-outline-secondary" rippleEffect>Reset</button>
+                        <button
+                          type="reset"
+                          class="btn btn-outline-secondary"
+                          rippleEffect
+                        >
+                          Reset
+                        </button>
                       </div>
                     </div>
                   </form>
-                  <!-- users edit Info form ends -->
                 </div>
-                <!-- Information Tab ends -->
               </ng-template>
             </li>
             <li ngbNavItem>
               <a ngbNavLink class="d-flex align-items-center"
-                ><i data-feather="share-2" class="mr-sm-50"></i><span class="d-none d-sm-block">Social</span></a
+                ><i data-feather="share-2" class="mr-sm-50"></i
+                ><span class="d-none d-sm-block">Social</span></a
               >
               <ng-template ngbNavContent>
-                <!-- Social Tab starts -->
-                <div class="tab-pane" id="social" aria-labelledby="social-tab" role="tabpanel">
-                  <!-- users edit social form start -->
+                <div
+                  class="tab-pane"
+                  id="social"
+                  aria-labelledby="social-tab"
+                  role="tabpanel"
+                >
                   <form class="form-validate">
                     <div class="row">
                       <div class="col-lg-4 col-md-6 form-group">
@@ -509,7 +702,10 @@
                         <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon3">
-                              <i class="font-medium-2" data-feather="twitter"></i>
+                              <i
+                                class="font-medium-2"
+                                data-feather="twitter"
+                              ></i>
                             </span>
                           </div>
                           <input
@@ -527,7 +723,10 @@
                         <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon4">
-                              <i class="font-medium-2" data-feather="facebook"></i>
+                              <i
+                                class="font-medium-2"
+                                data-feather="facebook"
+                              ></i>
                             </span>
                           </div>
                           <input
@@ -545,7 +744,10 @@
                         <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon5">
-                              <i class="font-medium-2" data-feather="instagram"></i>
+                              <i
+                                class="font-medium-2"
+                                data-feather="instagram"
+                              ></i>
                             </span>
                           </div>
                           <input
@@ -563,7 +765,10 @@
                         <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon9">
-                              <i class="font-medium-2" data-feather="github"></i>
+                              <i
+                                class="font-medium-2"
+                                data-feather="github"
+                              ></i>
                             </span>
                           </div>
                           <input
@@ -581,7 +786,10 @@
                         <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon12">
-                              <i class="font-medium-2" data-feather="codepen"></i>
+                              <i
+                                class="font-medium-2"
+                                data-feather="codepen"
+                              ></i>
                             </span>
                           </div>
                           <input
@@ -614,16 +822,24 @@
                       </div>
 
                       <div class="col-12 d-flex flex-sm-row flex-column mt-2">
-                        <button type="submit" class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1" rippleEffect>
+                        <button
+                          type="submit"
+                          class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1"
+                          rippleEffect
+                        >
                           Save Changes
                         </button>
-                        <button type="reset" class="btn btn-outline-secondary" rippleEffect>Reset</button>
+                        <button
+                          type="reset"
+                          class="btn btn-outline-secondary"
+                          rippleEffect
+                        >
+                          Reset
+                        </button>
                       </div>
                     </div>
                   </form>
-                  <!-- users edit socail form ends -->
                 </div>
-                <!-- Social Tab ends -->
               </ng-template>
             </li>
           </ul>
