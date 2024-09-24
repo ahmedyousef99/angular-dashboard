@@ -18,6 +18,8 @@ import {
   Validators,
 } from "@angular/forms";
 import { CustomerList } from "../../models/customer.model";
+import { AdminListService } from "./admin-list.service";
+import { AllAdmins } from "../../models/admins.model";
 
 @Component({
   selector: "app-admin-list",
@@ -37,7 +39,7 @@ export class AdminListComponent implements OnInit {
   public previousStatusFilter = "";
   public customerDataForDelete: { id: number; name: string };
   public deleteLoader: boolean = false;
-  public comingData: CustomerList;
+  public comingData: AllAdmins;
   public search: FormGroup;
   public searchControl = new FormControl("");
   public counterPerPage = new FormControl("");
@@ -87,11 +89,11 @@ export class AdminListComponent implements OnInit {
    * Constructor
    *
    * @param {CoreConfigService} _coreConfigService
-   * @param {UserListService} _userListService
+   * @param {UserListService} _adminListService
    * @param {CoreSidebarService} _coreSidebarService
    */
   constructor(
-    private _userListService: UserListService,
+    private _adminListService: AdminListService,
     private _coreSidebarService: CoreSidebarService,
     private _coreConfigService: CoreConfigService,
     private toastr: ToastrService,
@@ -99,7 +101,7 @@ export class AdminListComponent implements OnInit {
     private _formBuilder: FormBuilder
   ) {
     this._unsubscribeAll = new Subject();
-    this._userListService
+    this._adminListService
       .getCustomerUpdated()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
@@ -210,32 +212,32 @@ export class AdminListComponent implements OnInit {
    *
    * @param event
    */
-  filterByPlan(event) {
-    const filter = event ? event.value : "";
-    this.previousPlanFilter = filter;
-    this.temp = this.filterRows(
-      this.previousRoleFilter,
-      filter,
-      this.previousStatusFilter
-    );
-    this.rows = this.temp;
-  }
+  // filterByPlan(event) {
+  //   const filter = event ? event.value : "";
+  //   this.previousPlanFilter = filter;
+  //   this.temp = this.filterRows(
+  //     this.previousRoleFilter,
+  //     filter,
+  //     this.previousStatusFilter
+  //   );
+  //   this.rows = this.temp;
+  // }
 
   /**
    * Filter By Status
    *
    * @param event
    */
-  filterByStatus(event) {
-    const filter = event ? event.value : "";
-    this.previousStatusFilter = filter;
-    this.temp = this.filterRows(
-      this.previousRoleFilter,
-      this.previousPlanFilter,
-      filter
-    );
-    this.rows = this.temp;
-  }
+  // filterByStatus(event) {
+  //   const filter = event ? event.value : "";
+  //   this.previousStatusFilter = filter;
+  //   this.temp = this.filterRows(
+  //     this.previousRoleFilter,
+  //     this.previousPlanFilter,
+  //     filter
+  //   );
+  //   this.rows = this.temp;
+  // }
   public modalOpenWarning(modalWarning, id: number, name: string) {
     this.customerDataForDelete = { id: id, name: name };
     this.modalService.open(modalWarning, {
@@ -247,8 +249,8 @@ export class AdminListComponent implements OnInit {
   ///////////////////// Delete Selected
   public onDelete(): void {
     this.deleteLoader = true;
-    this._userListService
-      .deleteCustomer(this.customerDataForDelete.id)
+    this._adminListService
+      .deleteAdmin(this.customerDataForDelete.id)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response) => {
         this.modalService.dismissAll();
@@ -299,8 +301,8 @@ export class AdminListComponent implements OnInit {
     }
   ): void {
     this.blockUI.start();
-    this._userListService
-      .getDataTableRows(searchData)
+    this._adminListService
+      .getAllAdmins(searchData)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         this.blockUI.stop();

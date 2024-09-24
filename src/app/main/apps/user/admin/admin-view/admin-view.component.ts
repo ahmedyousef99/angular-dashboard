@@ -7,6 +7,7 @@ import { takeUntil } from "rxjs/operators";
 import { UserViewService } from "app/main/apps/user/user-view/user-view.service";
 import { UserListService } from "../../user-list/user-list.service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { AdminListService } from "../admin-list/admin-list.service";
 
 @Component({
   selector: "app-admin-view",
@@ -33,9 +34,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
    */
   constructor(
     private router: Router,
-    private _userViewService: UserViewService,
     private route: ActivatedRoute,
-    private _userListService: UserListService
+    private _AdminListService: AdminListService
   ) {
     this._unsubscribeAll = new Subject();
     this.lastValue = this.url.substr(this.url.lastIndexOf("/") + 1);
@@ -53,8 +53,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       .subscribe((params: Params) => {
         this.productId = +params[`id`];
         this.blockUI.start();
-        this._userListService
-          .getCustomerDetails(this.productId)
+        this._AdminListService
+          .getAdminDetails(this.productId)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(
             (res) => {

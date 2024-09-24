@@ -1,17 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
-import { UserService } from "app/auth/service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { ToastrService } from "ngx-toastr";
-import { UserListService } from "../../../user-list/user-list.service";
+import { AdminListService } from "../admin-list.service";
 
 @Component({
   selector: "app-new-admin-sidebar",
   templateUrl: "./new-admin-sidebar.component.html",
 })
 export class NewAdminSidebarComponent implements OnInit {
-  public customerForm: FormGroup;
+  public adminForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;
   public formMessage: string = ``;
@@ -25,7 +24,7 @@ export class NewAdminSidebarComponent implements OnInit {
   constructor(
     private _coreSidebarService: CoreSidebarService,
     private _formBuilder: FormBuilder,
-    private _userListService: UserListService,
+    private _adminListService: AdminListService,
     private toastr: ToastrService
   ) {}
 
@@ -43,7 +42,7 @@ export class NewAdminSidebarComponent implements OnInit {
     this.passwordTextType = !this.passwordTextType;
   }
   get f() {
-    return this.customerForm.controls;
+    return this.adminForm.controls;
   }
 
   /**
@@ -52,26 +51,26 @@ export class NewAdminSidebarComponent implements OnInit {
    * @param form
    */
   submit() {
-    this.toastr.success(`The customer  has been created`, "Success!", {
-      positionClass: `toast-top-left`,
-      toastClass: "toast ngx-toastr",
-      closeButton: true,
-    });
     this.formMessage = ``;
     this.submitted = true;
-    if (this.customerForm.valid) {
+    if (this.adminForm.valid) {
       this.isSubmitLoading = true;
-      this._userListService.createCustomer(this.customerForm.value).subscribe(
+      this._adminListService.createAdmin(this.adminForm.value).subscribe(
         (res) => {
           this.isSubmitLoading = false;
           this._coreSidebarService
             .getSidebarRegistry("new-user-sidebar")
             .close();
-          this._userListService.setCustomerUpdated(true);
+          this._adminListService.setCustomerUpdated(true);
 
           this.formMessage = ``;
-          this.customerForm.reset();
+          this.adminForm.reset();
           this.submitted = false;
+          this.toastr.success(`${res.message}`, "Success!", {
+            positionClass: `toast-top-left`,
+            toastClass: "toast ngx-toastr",
+            closeButton: true,
+          });
         },
         (error) => {
           this.isSubmitLoading = false;
@@ -84,13 +83,10 @@ export class NewAdminSidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.customerForm = this._formBuilder.group({
+    this.adminForm = this._formBuilder.group({
       name: [``, [Validators.required]],
       email: [``, [Validators.required, Validators.email]],
       password: [``, Validators.required],
-      phone: [``],
-      dateOfBirth: [``, Validators.required],
-      avatar: [``],
     });
   }
 }

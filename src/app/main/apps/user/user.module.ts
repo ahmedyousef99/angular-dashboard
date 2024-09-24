@@ -29,6 +29,7 @@ import { AdminEditComponent } from "./admin/admin-edit/admin-edit.component";
 import { AdminListComponent } from "./admin/admin-list/admin-list.component";
 import { NewAdminSidebarComponent } from "./admin/admin-list/new-admin-sidebar/new-user-sidebar.component";
 import { AdminViewComponent } from "./admin/admin-view/admin-view.component";
+import { AdminListService } from "./admin/admin-list/admin-list.service";
 
 // routing
 const routes: Routes = [
@@ -38,33 +39,30 @@ const routes: Routes = [
 
     data: { animation: "UserListComponent" },
   },
-  // {
-  //   path: "admin-list",
-  //   component: ,
-
-  //   data: { animation: "AdminListComponent" },
-  // },
+  {
+    path: "admin-list",
+    component: AdminListComponent,
+    data: { animation: "AdminListComponent" },
+  },
+  {
+    path: "admin-view/:id",
+    component: AdminViewComponent,
+    data: { animation: "AdminViewComponent" },
+  },
   {
     path: "user-view/:id",
     component: UserViewComponent,
     data: { animation: "UserViewComponent" },
   },
-  {
-    path: "admin-view/:id",
-    component: UserViewComponent,
-    data: { animation: "AdminViewComponent" },
-  },
+
   {
     path: "admin-edit/:id",
-    component: UserEditComponent,
+    component: AdminEditComponent,
     data: { animation: "AdminEditComponent" },
   },
   {
     path: "user-edit/:id",
     component: UserEditComponent,
-    resolve: {
-      ues: UserEditService,
-    },
     data: { animation: "UserEditComponent" },
   },
   {
@@ -102,6 +100,11 @@ const routes: Routes = [
     InvoiceModule,
     CoreSidebarModule,
   ],
-  providers: [UserListService, UserViewService, UserEditService],
+  providers: [
+    UserListService,
+    UserViewService,
+    UserEditService,
+    AdminListService,
+  ],
 })
 export class UserModule {}

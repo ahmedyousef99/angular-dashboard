@@ -7,8 +7,8 @@
     <div class="modal-dialog">
       <form
         class="add-new-user modal-content pt-0"
-        (ngSubmit)="(customerForm.valid)"
-        [formGroup]="customerForm"
+        (ngSubmit)="(adminForm.valid)"
+        [formGroup]="adminForm"
       >
         <button
           type="button"
@@ -20,7 +20,7 @@
           ×
         </button>
         <div class="modal-header mb-1">
-          <h5 class="modal-title" id="exampleModalLabel">New User</h5>
+          <h5 class="modal-title" id="exampleModalLabel">New Admin</h5>
         </div>
         <div class="modal-body flex-grow-1">
           <div class="form-group">
@@ -51,9 +51,7 @@
             <label class="form-label" for="basic-default-password1"
               >Password</label
             >
-            <div
-              class="input-group input-group-merge form-password-toggle mb-2"
-            >
+            <div class="input-group input-group-merge form-password-toggle">
               <input
                 formControlName="password"
                 [type]="passwordTextType ? 'text' : 'password'"
@@ -107,73 +105,6 @@
               <small
                 class="form-text text-danger"
                 *ngIf="submitted && f.email.errors"
-                >This field is required!</small
-              >
-            </span>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="basic-icon-default-uname"
-              >Phone number</label
-            >
-            <input
-              formControlName="phone"
-              type="text"
-              placeholder="Your Phone Number"
-              class="form-control"
-              aria-label="jdoe1"
-              name="user-name"
-              [class.error]="submitted && f.phone.errors"
-            />
-            <span *ngIf="submitted && f.phone.errors" class="invalid-form">
-              <small
-                class="form-text text-danger"
-                *ngIf="submitted && f.phone.errors"
-                >This field is required!</small
-              >
-            </span>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="basic-icon-default-uname"
-              >Date of birth</label
-            >
-            <input
-              formControlName="dateOfBirth"
-              type="text"
-              placeholder=" For example 2020-03-05"
-              class="form-control"
-              aria-label="jdoe1"
-              name="user-name"
-              [class.error]="submitted && f.dateOfBirth.errors"
-            />
-
-            <span
-              *ngIf="submitted && f.dateOfBirth.errors"
-              class="invalid-form"
-            >
-              <small
-                class="form-text text-danger"
-                *ngIf="submitted && f.dateOfBirth.errors"
-                >This field is required!</small
-              >
-            </span>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="basic-icon-default-uname"
-              >Avatar</label
-            >
-            <input
-              formControlName="avatar"
-              type="text"
-              placeholder="Your Phone Number"
-              class="form-control"
-              aria-label="jdoe1"
-              name="user-name"
-              [class.error]="submitted && f.avatar.errors"
-            />
-            <span *ngIf="submitted && f.avatar.errors" class="invalid-form">
-              <small
-                class="form-text text-danger"
-                *ngIf="submitted && f.avatar.errors"
                 >This field is required!</small
               >
             </span>

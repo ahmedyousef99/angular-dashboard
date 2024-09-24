@@ -7,18 +7,12 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
-
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { FlatpickrOptions } from "ng2-flatpickr";
-import { cloneDeep } from "lodash";
-
-import { UserEditService } from "app/main/apps/user/user-edit/user-edit.service";
-
 import { ActivatedRoute, Params } from "@angular/router";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
-import { Customers, CreateCustomerReq } from "../../models/customer.model";
-import { UserListService } from "../admin-list/admin-list.service";
+import { AdminListService } from "../admin-list/admin-list.service";
+import { Admin, CreateAdminReq } from "../../models/admins.model";
 
 @Component({
   selector: "app-admin-edit",
@@ -31,10 +25,10 @@ export class AdminEditComponent implements OnInit, OnDestroy {
   public url = this.router.url;
   public urlLastValue;
   public rows;
-  public currentRow: Customers;
+  public currentRow: Admin;
   public tempRow;
   public avatarImage: string;
-  public customerForm: FormGroup;
+  public adminForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;
   @BlockUI() blockUI: NgBlockUI;
@@ -63,9 +57,8 @@ export class AdminEditComponent implements OnInit, OnDestroy {
    */
   constructor(
     private router: Router,
-    private _userEditService: UserEditService,
     private _formBuilder: FormBuilder,
-    private _userListService: UserListService,
+    private _adminListService: AdminListService,
     private route: ActivatedRoute
   ) {
     this._unsubscribeAll = new Subject();
@@ -78,7 +71,7 @@ export class AdminEditComponent implements OnInit, OnDestroy {
    * Reset Form With Default Values
    */
   resetFormWithDefaultValues() {
-    this.customerForm.reset();
+    this.adminForm.reset();
   }
 
   /**
@@ -92,8 +85,8 @@ export class AdminEditComponent implements OnInit, OnDestroy {
 
       reader.onload = (event: any) => {
         this.avatarImage = event.target.result;
-        this.customerForm.get(`avatar`).patchValue(this.avatarImage);
-        console.log(this.customerForm.value);
+        this.adminForm.get(`avatar`).patchValue(this.avatarImage);
+        console.log(this.adminForm.value);
         console.log(this.avatarImage);
       };
 
@@ -105,12 +98,12 @@ export class AdminEditComponent implements OnInit, OnDestroy {
     this.passwordTextType = !this.passwordTextType;
   }
   get f() {
-    return this.customerForm.controls;
+    return this.adminForm.controls;
   }
 
-  private editCustomer(id: number, data: CreateCustomerReq): void {
-    this._userListService
-      .updateCustomer(id, data)
+  private editAdmin(id: number, data: CreateAdminReq): void {
+    this._adminListService
+      .updateAdmin(id, data)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         console.log(res);
@@ -125,10 +118,10 @@ export class AdminEditComponent implements OnInit, OnDestroy {
 
   submit() {
     this.submitted = true;
-    console.log(this.customerForm.value);
-    if (this.customerForm.valid) {
+    console.log(this.adminForm.value);
+    if (this.adminForm.valid) {
       console.log(`test`);
-      this.editCustomer(this.productId, this.customerForm.value);
+      this.editAdmin(this.productId, this.adminForm.value);
       // this.toggleSidebar("new-user-sidebar");
     }
   }
@@ -145,17 +138,16 @@ export class AdminEditComponent implements OnInit, OnDestroy {
         this.productId = +params[`id`];
         this.blockUI.start();
         console.log(this.productId);
-        this._userListService
-          .getCustomerDetails(this.productId)
+        this._adminListService
+          .getAdminDetails(this.productId)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(
             (res) => {
               console.log(res, `the res`);
               this.currentRow = res.data;
-              this.avatarImage = this.currentRow.avatar;
-              this.customerForm.patchValue(this.currentRow);
+              this.adminForm.patchValue(this.currentRow);
               this.blockUI.stop();
-              console.log(this.customerForm.value, `the form`);
+              console.log(this.adminForm.value, `the form`);
             },
             (error) => {
               this.blockUI.stop();
@@ -163,28 +155,11 @@ export class AdminEditComponent implements OnInit, OnDestroy {
           );
         // this.getDetails(this.productId);
       });
-    // this._userEditService.onUserEditChanged
-    //   .pipe(takeUntil(this._unsubscribeAll))
-    //   .subscribe((response) => {
-    //     this.rows = response;
-    //     this.rows.map((row) => {
-    //       if (row.id == this.productId) {
-    //         this.currentRow = row;
-    //         this.avatarImage = this.currentRow.avatar;
-    //         this.customerForm.patchValue(this.currentRow);
-    //         console.log(this.customerForm.value);
-    //         this.tempRow = cloneDeep(row);
-    //       }
-    //     });
-    //   });
-    this.customerForm = this._formBuilder.group({
+
+    this.adminForm = this._formBuilder.group({
       name: [``, [Validators.required]],
       email: [``, [Validators.required, Validators.email]],
       password: [``],
-      phone: [``],
-      dateOfBirth: [``, [Validators.required]],
-      avatar: [``],
-      status: [``], //INACTIVE or Active
     });
   }
 

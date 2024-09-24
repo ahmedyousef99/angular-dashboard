@@ -12,7 +12,7 @@
                 <div
                   class="col-xl-6 col-lg-12 d-flex flex-column justify-content-between border-container-lg"
                 >
-                  <div class="user-avatar-section">
+                  <div *ngIf="data?.avatar" class="user-avatar-section">
                     <div class="d-flex justify-content-start">
                       <div *ngIf="data?.avatar; else customAvatar">
                         <img
@@ -51,7 +51,7 @@
                         </div>
                         <div class="d-flex flex-wrap">
                           <a
-                            routerLink="/apps/user/user-edit/{{ data?.id }}"
+                            routerLink="/apps/user/admin-edit/{{ data?.id }}"
                             class="btn btn-primary"
                             rippleEffect
                             >Edit</a
@@ -93,7 +93,14 @@
                     </div>
                   </div> -->
                 </div>
-                <div class="col-xl-6 col-lg-12 mt-2 mt-xl-0">
+
+                <div class="col-xl-8 col-lg-12 mt-2 mt-xl-0">
+                  <a
+                    routerLink="/apps/user/admin-edit/{{ data?.id }}"
+                    class="btn btn-primary"
+                    rippleEffect
+                    >Edit</a
+                  >
                   <div class="user-info-wrapper">
                     <div class="d-flex flex-wrap">
                       <div class="user-info-title">
@@ -123,46 +130,7 @@
                         {{ data?.status }}
                       </p>
                     </div>
-                    <div class="d-flex flex-wrap my-50">
-                      <div class="user-info-title">
-                        <i data-feather="phone" class="mr-1"></i>
-                        <span
-                          class="card-text user-info-title font-weight-bold mb-0"
-                          >Phone</span
-                        >
-                      </div>
-                      <p class="card-text mb-0">{{ data?.phone }}</p>
-                    </div>
-                    <div class="d-flex flex-wrap my-50">
-                      <div class="user-info-title">
-                        <i data-feather="flag" class="mr-1"></i>
-                        <span
-                          class="card-text user-info-title font-weight-bold mb-0"
-                          >Date Of Birth</span
-                        >
-                      </div>
-                      <p class="card-text mb-0">{{ data.dateOfBirth }}</p>
-                    </div>
-                    <div class="d-flex flex-wrap my-50">
-                      <div class="user-info-title">
-                        <i data-feather="mail" class="mr-1"></i>
-                        <span
-                          class="card-text user-info-title font-weight-bold mb-0"
-                          >Email Verified ?</span
-                        >
-                      </div>
-                      <p
-                        [ngClass]="{
-                          'text-success': data?.isEmailVerified,
-                          'text-secondary': !data?.isEmailVerified
-                        }"
-                        class="mb-0"
-                      >
-                        {{
-                          data?.isEmailVerified ? "Verified" : "Not verified"
-                        }}
-                      </p>
-                    </div>
+
                     <div class="d-flex flex-wrap my-50">
                       <div class="user-info-title">
                         <i data-feather="bell" class="mr-1"></i>
