@@ -2,15 +2,15 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 import { UserService } from "app/auth/service";
-import { UserListService } from "../user-list.service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { ToastrService } from "ngx-toastr";
+import { UserListService } from "../../../user-list/user-list.service";
 
 @Component({
-  selector: "app-new-user-sidebar",
-  templateUrl: "./new-user-sidebar.component.html",
+  selector: "app-new-admin-sidebar",
+  templateUrl: "./new-admin-sidebar.component.html",
 })
-export class NewUserSidebarComponent implements OnInit {
+export class NewAdminSidebarComponent implements OnInit {
   public customerForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;

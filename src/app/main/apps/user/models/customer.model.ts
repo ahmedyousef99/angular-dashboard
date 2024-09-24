@@ -17,8 +17,8 @@ export interface Customers {
   id: number;
   name: string;
   email: string;
-  phone: string | number;
-  avatar: string | number;
+  phone: string;
+  avatar: string;
   dateOfBirth: string;
   status: string;
   isEmailVerified: boolean;
@@ -46,8 +46,8 @@ export interface NewCustomer {
   id: number;
   name: string;
   email: string;
-  phone: string | number;
-  avatar: string | number;
+  phone: string;
+  avatar: string;
   dateOfBirth: string;
   status: string;
   isEmailVerified: boolean;

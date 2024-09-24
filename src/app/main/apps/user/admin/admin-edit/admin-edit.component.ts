@@ -14,18 +14,19 @@ import { FlatpickrOptions } from "ng2-flatpickr";
 import { cloneDeep } from "lodash";
 
 import { UserEditService } from "app/main/apps/user/user-edit/user-edit.service";
-import { UserListService } from "../user-list/user-list.service";
-import { CreateCustomerReq, Customers } from "../models/customer.model";
+
 import { ActivatedRoute, Params } from "@angular/router";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { Customers, CreateCustomerReq } from "../../models/customer.model";
+import { UserListService } from "../admin-list/admin-list.service";
 
 @Component({
-  selector: "app-user-edit",
-  templateUrl: "./user-edit.component.html",
-  styleUrls: ["./user-edit.component.scss"],
+  selector: "app-admin-edit",
+  templateUrl: "./admin-edit.component.html",
+  styleUrls: ["./admin-edit.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class UserEditComponent implements OnInit, OnDestroy {
+export class AdminEditComponent implements OnInit, OnDestroy {
   // Public
   public url = this.router.url;
   public urlLastValue;

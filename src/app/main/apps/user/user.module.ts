@@ -25,25 +25,39 @@ import { UserListService } from "app/main/apps/user/user-list/user-list.service"
 import { UserViewComponent } from "app/main/apps/user/user-view/user-view.component";
 import { UserViewService } from "app/main/apps/user/user-view/user-view.service";
 import { NewUserSidebarComponent } from "app/main/apps/user/user-list/new-user-sidebar/new-user-sidebar.component";
+import { AdminEditComponent } from "./admin/admin-edit/admin-edit.component";
+import { AdminListComponent } from "./admin/admin-list/admin-list.component";
+import { NewAdminSidebarComponent } from "./admin/admin-list/new-admin-sidebar/new-user-sidebar.component";
+import { AdminViewComponent } from "./admin/admin-view/admin-view.component";
 
 // routing
 const routes: Routes = [
   {
     path: "user-list",
     component: UserListComponent,
-    resolve: {
-      uls: UserListService,
-    },
+
     data: { animation: "UserListComponent" },
   },
+  // {
+  //   path: "admin-list",
+  //   component: ,
+
+  //   data: { animation: "AdminListComponent" },
+  // },
   {
     path: "user-view/:id",
     component: UserViewComponent,
-    resolve: {
-      data: UserViewService,
-      InvoiceListService,
-    },
-    data: { path: "view/:id", animation: "UserViewComponent" },
+    data: { animation: "UserViewComponent" },
+  },
+  {
+    path: "admin-view/:id",
+    component: UserViewComponent,
+    data: { animation: "AdminViewComponent" },
+  },
+  {
+    path: "admin-edit/:id",
+    component: UserEditComponent,
+    data: { animation: "AdminEditComponent" },
   },
   {
     path: "user-edit/:id",
@@ -69,6 +83,10 @@ const routes: Routes = [
     UserViewComponent,
     UserEditComponent,
     NewUserSidebarComponent,
+    AdminEditComponent,
+    AdminListComponent,
+    NewAdminSidebarComponent,
+    AdminViewComponent,
   ],
   imports: [
     CommonModule,

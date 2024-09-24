@@ -5,16 +5,16 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 import { UserViewService } from "app/main/apps/user/user-view/user-view.service";
-import { UserListService } from "../user-list/user-list.service";
+import { UserListService } from "../../user-list/user-list.service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 
 @Component({
-  selector: "app-user-view",
-  templateUrl: "./user-view.component.html",
-  styleUrls: ["./user-view.component.scss"],
+  selector: "app-admin-view",
+  templateUrl: "./admin-view.component.html",
+  styleUrls: ["./admin-view.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class UserViewComponent implements OnInit, OnDestroy {
+export class AdminViewComponent implements OnInit, OnDestroy {
   // public
   public url = this.router.url;
   public lastValue;

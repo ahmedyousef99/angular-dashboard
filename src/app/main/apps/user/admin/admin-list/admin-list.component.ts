@@ -11,21 +11,21 @@ import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { UserListService } from "app/main/apps/user/user-list/user-list.service";
 import { Toast, ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { CustomerList } from "../models/customer.model";
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { CustomerList } from "../../models/customer.model";
 
 @Component({
-  selector: "app-user-list",
-  templateUrl: "./user-list.component.html",
-  styleUrls: ["./user-list.component.scss"],
+  selector: "app-admin-list",
+  templateUrl: "./admin-list.component.html",
+  styleUrls: ["./admin-list.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class UserListComponent implements OnInit {
+export class AdminListComponent implements OnInit {
   // Public
   public sidebarToggleRef = false;
   public rows;

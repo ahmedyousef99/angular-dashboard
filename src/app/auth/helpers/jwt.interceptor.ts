@@ -35,7 +35,6 @@ export class JwtInterceptor implements HttpInterceptor {
     console.log(request.url);
     console.log(isApiUrl);
     if (isLoggedIn && isApiUrl) {
-      console.log(currentUser.data.accessToken);
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + `${currentUser.data.accessToken}`,
