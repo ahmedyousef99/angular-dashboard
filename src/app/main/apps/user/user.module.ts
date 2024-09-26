@@ -30,6 +30,11 @@ import { AdminListComponent } from "./admin/admin-list/admin-list.component";
 import { NewAdminSidebarComponent } from "./admin/admin-list/new-admin-sidebar/new-user-sidebar.component";
 import { AdminViewComponent } from "./admin/admin-view/admin-view.component";
 import { AdminListService } from "./admin/admin-list/admin-list.service";
+import { WorkerListService } from "./workers/workers-list/worker-list.service";
+import { WorkerEditComponent } from "./workers/workers-edit/worker-edit.component";
+import { WorkerListComponent } from "./workers/workers-list/worker-list.component";
+import { NewWorkerSidebarComponent } from "./workers/workers-list/new-worker-sidebar/new-worker-sidebar.component";
+import { WorkerViewComponent } from "./workers/workers-view/worker-view.component";
 
 // routing
 const routes: Routes = [
@@ -45,8 +50,18 @@ const routes: Routes = [
     data: { animation: "AdminListComponent" },
   },
   {
+    path: "worker-list",
+    component: WorkerListComponent,
+    data: { animation: "AdminListComponent" },
+  },
+  {
     path: "admin-view/:id",
     component: AdminViewComponent,
+    data: { animation: "AdminViewComponent" },
+  },
+  {
+    path: "worker-view/:id",
+    component: WorkerViewComponent,
     data: { animation: "AdminViewComponent" },
   },
   {
@@ -61,17 +76,14 @@ const routes: Routes = [
     data: { animation: "AdminEditComponent" },
   },
   {
+    path: "worker-edit/:id",
+    component: WorkerEditComponent,
+    data: { animation: "AdminEditComponent" },
+  },
+  {
     path: "user-edit/:id",
     component: UserEditComponent,
     data: { animation: "UserEditComponent" },
-  },
-  {
-    path: "user-view",
-    redirectTo: "/apps/user/user-view/2", // Redirection
-  },
-  {
-    path: "user-edit",
-    redirectTo: "/apps/user/user-edit/2", // Redirection
   },
 ];
 
@@ -85,6 +97,10 @@ const routes: Routes = [
     AdminListComponent,
     NewAdminSidebarComponent,
     AdminViewComponent,
+    WorkerEditComponent,
+    WorkerListComponent,
+    NewWorkerSidebarComponent,
+    WorkerViewComponent,
   ],
   imports: [
     CommonModule,
@@ -105,6 +121,7 @@ const routes: Routes = [
     UserViewService,
     UserEditService,
     AdminListService,
+    WorkerListService,
   ],
 })
 export class UserModule {}

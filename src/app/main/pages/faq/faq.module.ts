@@ -1,32 +1,41 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
-import { AuthGuard } from 'app/auth/helpers';
-import { CoreCommonModule } from '@core/common.module';
-import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
+import { AuthGuard } from "app/auth/helpers";
+import { CoreCommonModule } from "@core/common.module";
+import { ContentHeaderModule } from "app/layout/components/content-header/content-header.module";
 
-import { FaqComponent } from 'app/main/pages/faq/faq.component';
-import { FAQService } from 'app/main/pages/faq/faq.service';
+import { FaqComponent } from "app/main/pages/faq/faq.component";
+import { FAQService } from "app/main/pages/faq/faq.service";
+import { NewFaqSidebarComponent } from "./new-faq-sidebar/new-faq-sidebar.component";
+import { CoreSidebarModule } from "@core/components";
 
 const routes: Routes = [
   {
-    path: 'faq',
+    path: "faq",
     component: FaqComponent,
     canActivate: [AuthGuard],
     resolve: {
-      faqData: FAQService
+      faqData: FAQService,
     },
-    data: { animation: 'faq' }
-  }
+    data: { animation: "faq" },
+  },
 ];
 
 @NgModule({
-  declarations: [FaqComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), NgbModule, CoreCommonModule, ContentHeaderModule],
+  declarations: [FaqComponent, NewFaqSidebarComponent],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    NgbModule,
+    CoreCommonModule,
+    ContentHeaderModule,
+    CoreSidebarModule,
+  ],
 
-  providers: [FAQService]
+  providers: [FAQService],
 })
 export class FaqModule {}

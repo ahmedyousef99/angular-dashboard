@@ -2,16 +2,16 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 import { UserService } from "app/auth/service";
-import { UserListService } from "../user-list.service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { ToastrService } from "ngx-toastr";
+import { WorkerListService } from "../worker-list.service";
 
 @Component({
-  selector: "app-new-user-sidebar",
-  templateUrl: "./new-user-sidebar.component.html",
+  selector: "app-new-worker-sidebar",
+  templateUrl: "./new-worker-sidebar.component.html",
 })
-export class NewUserSidebarComponent implements OnInit {
-  public customerForm: FormGroup;
+export class NewWorkerSidebarComponent implements OnInit {
+  public workerForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;
   public formMessage: string = ``;
@@ -26,7 +26,7 @@ export class NewUserSidebarComponent implements OnInit {
   constructor(
     private _coreSidebarService: CoreSidebarService,
     private _formBuilder: FormBuilder,
-    private _userListService: UserListService,
+    private _workerListService: WorkerListService,
     private toastr: ToastrService
   ) {}
 
@@ -44,7 +44,7 @@ export class NewUserSidebarComponent implements OnInit {
     this.passwordTextType = !this.passwordTextType;
   }
   get f() {
-    return this.customerForm.controls;
+    return this.workerForm.controls;
   }
   uploadImage(event: any) {
     console.log(event);
@@ -52,15 +52,19 @@ export class NewUserSidebarComponent implements OnInit {
       let reader = new FileReader();
 
       reader.onload = (event: any) => {
+        console.log(typeof event.target.result);
+
+        console.log(event.target.result);
         this.avatarImage = event.target.result;
-        this.customerForm.get(`avatar`).patchValue(this.avatarImage);
-        console.log(this.customerForm.value);
+        this.workerForm.get(`avatar`).patchValue(this.avatarImage);
+        console.log(this.workerForm.value);
         console.log(this.avatarImage);
       };
 
       reader.readAsDataURL(event.target.files[0]);
     }
   }
+
   /**
    * Submit
    *
@@ -74,18 +78,18 @@ export class NewUserSidebarComponent implements OnInit {
     });
     this.formMessage = ``;
     this.submitted = true;
-    if (this.customerForm.valid) {
+    if (this.workerForm.valid) {
       this.isSubmitLoading = true;
-      this._userListService.createCustomer(this.customerForm.value).subscribe(
+      this._workerListService.createWorker(this.workerForm.value).subscribe(
         (res) => {
           this.isSubmitLoading = false;
           this._coreSidebarService
             .getSidebarRegistry("new-user-sidebar")
             .close();
-          this._userListService.setCustomerUpdated(true);
+          this._workerListService.setCustomerUpdated(true);
 
           this.formMessage = ``;
-          this.customerForm.reset();
+          this.workerForm.reset();
           this.submitted = false;
         },
         (error) => {
@@ -99,13 +103,14 @@ export class NewUserSidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.customerForm = this._formBuilder.group({
+    this.workerForm = this._formBuilder.group({
       name: [``, [Validators.required]],
       email: [``, [Validators.required, Validators.email]],
       password: [``, Validators.required],
       phone: [``],
       dateOfBirth: [``, Validators.required],
       avatar: [``],
+      address: [``],
     });
   }
 }

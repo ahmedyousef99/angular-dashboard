@@ -62,6 +62,14 @@ export const menu: CoreMenu[] = [
         url: "apps/todo",
       },
       {
+        id: "faq",
+        title: "FAQ",
+        translate: "MENU.PAGES.FAQ",
+        type: "item",
+        icon: "circle",
+        url: "pages/faq",
+      },
+      {
         id: "pages",
         title: "Pages",
         translate: "MENU.PAGES.SECTION",
@@ -85,15 +93,6 @@ export const menu: CoreMenu[] = [
             url: "pages/profile",
             // collapsed: true
           },
-          {
-            id: "faq",
-            title: "FAQ",
-            translate: "MENU.PAGES.FAQ",
-            type: "item",
-            icon: "circle",
-            url: "pages/faq",
-          },
-
           {
             id: "blog",
             title: "Blog",
@@ -317,7 +316,7 @@ export const menu: CoreMenu[] = [
       },
       {
         id: "users",
-        title: "Customer",
+        title: "Customers",
         translate: "MENU.APPS.USER.COLLAPSIBLE",
         type: "item",
         icon: "user",
@@ -351,11 +350,27 @@ export const menu: CoreMenu[] = [
       },
       {
         id: "admins",
-        title: "Admin",
+        title: "Admins",
         translate: "MENU.APPS.USER.COLLAPSIBLE",
         type: "item",
         icon: "user-plus",
         url: "apps/user/admin-list",
+      },
+      {
+        id: "workers",
+        title: "Workers",
+        translate: "MENU.APPS.USER.COLLAPSIBLE",
+        type: "item",
+        icon: "tool",
+        url: "apps/user/worker-list",
+      },
+      {
+        id: "Categories",
+        title: "Categories",
+        translate: "MENU.APPS.USER.COLLAPSIBLE",
+        type: "item",
+        icon: "layers",
+        url: "apps/categories/category-list",
       },
     ],
   },

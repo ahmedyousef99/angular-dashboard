@@ -7,8 +7,8 @@
     <div class="modal-dialog">
       <form
         class="add-new-user modal-content pt-0"
-        (ngSubmit)="(customerForm.valid)"
-        [formGroup]="customerForm"
+        (ngSubmit)="(workerForm.valid)"
+        [formGroup]="workerForm"
       >
         <button
           type="button"
@@ -20,7 +20,7 @@
           ×
         </button>
         <div class="modal-header mb-1">
-          <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+          <h5 class="modal-title" id="exampleModalLabel">New Worker</h5>
         </div>
         <div class="modal-body flex-grow-1">
           <div class="form-group">
@@ -37,7 +37,7 @@
               <ng-template #customAvatar>
                 <div class="mr-1 ml-0 bg-light-secondary">
                   <div class="rounded p-3">
-                    {{ customerForm.get("name").value | initials }}
+                    {{ workerForm.get("name").value | initials }}
                   </div>
                 </div>
               </ng-template>
@@ -58,6 +58,13 @@
                       (change)="uploadImage($event)"
                     />
                   </label>
+                  <button
+                    (click)="avatarImage = ''"
+                    class="btn btn-outline-danger ml-1"
+                    rippleEffect
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
@@ -165,6 +172,27 @@
               <small
                 class="form-text text-danger"
                 *ngIf="submitted && f.phone.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Address</label
+            >
+            <input
+              formControlName="address"
+              type="text"
+              placeholder="Your Address"
+              class="form-control"
+              aria-label="jdoe1"
+              name="user-name"
+              [class.error]="submitted && f.address.errors"
+            />
+            <span *ngIf="submitted && f.address.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.address.errors"
                 >This field is required!</small
               >
             </span>
