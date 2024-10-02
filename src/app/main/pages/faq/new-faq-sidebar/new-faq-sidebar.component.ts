@@ -101,8 +101,12 @@ export class NewFaqSidebarComponent implements OnInit, OnDestroy {
           .updateFaq(this.faq.id, this.workerForm.value)
           .subscribe(
             (res) => {
+              this.isSubmitLoading = false;
               console.log(res);
               this._faqService.setFaqsUpdated(true);
+              this._coreSidebarService
+                .getSidebarRegistry("new-user-sidebar")
+                .close();
             },
             (error) => {
               console.log(error);

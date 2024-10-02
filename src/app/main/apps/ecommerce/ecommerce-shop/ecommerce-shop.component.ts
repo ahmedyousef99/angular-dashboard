@@ -1,34 +1,47 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 
-import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
+import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 
-import { EcommerceService } from 'app/main/apps/ecommerce/ecommerce.service';
+import { EcommerceService } from "app/main/apps/ecommerce/ecommerce.service";
+import { DataService } from "app/main/forms/form-elements/select/data.service";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { DataServiceRes, getAllServices } from "../services.model";
+import { BlockUI, NgBlockUI } from "ng-block-ui";
 @Component({
-  selector: 'app-ecommerce-shop',
-  templateUrl: './ecommerce-shop.component.html',
-  styleUrls: ['./ecommerce-shop.component.scss'],
+  selector: "app-ecommerce-shop",
+  templateUrl: "./ecommerce-shop.component.html",
+  styleUrls: ["./ecommerce-shop.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  host: { class: 'ecommerce-application' }
+  host: { class: "ecommerce-application" },
 })
-export class EcommerceShopComponent implements OnInit {
+export class EcommerceShopComponent implements OnInit, OnDestroy {
   // public
   public contentHeader: object;
   public shopSidebarToggle = false;
   public shopSidebarReset = false;
-  public gridViewRef = true;
-  public products;
+  public gridViewRef = false;
+  public products: DataServiceRes[];
   public wishlist;
   public cartList;
   public page = 1;
   public pageSize = 9;
-  public searchText = '';
+  public searchText = "";
+  public serviceRes: getAllServices;
+  private _unsubscribeAll: Subject<any>;
+  @BlockUI() blockUI: NgBlockUI;
 
   /**
    *
    * @param {CoreSidebarService} _coreSidebarService
    * @param {EcommerceService} _ecommerceService
    */
-  constructor(private _coreSidebarService: CoreSidebarService, private _ecommerceService: EcommerceService) {}
+  constructor(
+    private _coreSidebarService: CoreSidebarService,
+    private _ecommerceService: EcommerceService
+  ) {
+    this._unsubscribeAll = new Subject();
+  }
 
   // Public Methods
   // -----------------------------------------------------------------------------------------------------
@@ -45,16 +58,6 @@ export class EcommerceShopComponent implements OnInit {
   /**
    * Update to List View
    */
-  listView() {
-    this.gridViewRef = false;
-  }
-
-  /**
-   * Update to Grid View
-   */
-  gridView() {
-    this.gridViewRef = true;
-  }
 
   /**
    * Sort Product
@@ -71,47 +74,63 @@ export class EcommerceShopComponent implements OnInit {
    */
   ngOnInit(): void {
     // Subscribe to ProductList change
-
-    this._ecommerceService.onProductListChange.subscribe(res => {
-      this.products = res;
-      this.products.isInWishlist = false;
-    });
+    this.blockUI.start();
+    this._ecommerceService
+      .getAllServices()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        this.blockUI.stop();
+        this.serviceRes = res;
+        this.products = res.data.data;
+      });
 
     // Subscribe to Wishlist change
-    this._ecommerceService.onWishlistChange.subscribe(res => (this.wishlist = res));
+    this._ecommerceService.onWishlistChange.subscribe(
+      (res) => (this.wishlist = res)
+    );
 
     // Subscribe to Cartlist change
-    this._ecommerceService.onCartListChange.subscribe(res => (this.cartList = res));
+    this._ecommerceService.onCartListChange.subscribe(
+      (res) => (this.cartList = res)
+    );
 
     // update product is in Wishlist & is in CartList : Boolean
-    this.products.forEach(product => {
-      product.isInWishlist = this.wishlist.findIndex(p => p.productId === product.id) > -1;
-      product.isInCart = this.cartList.findIndex(p => p.productId === product.id) > -1;
-    });
 
     // content header
     this.contentHeader = {
-      headerTitle: 'Shop',
+      headerTitle: "Shop",
       actionButton: true,
       breadcrumb: {
-        type: '',
+        type: "",
         links: [
           {
-            name: 'Home',
+            name: "Home",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'eCommerce',
+            name: "eCommerce",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'Shop',
-            isLink: false
-          }
-        ]
-      }
+            name: "Shop",
+            isLink: false,
+          },
+        ],
+      },
     };
+  }
+
+  public sliderPriceValue(value: any): void {
+    console.log(value);
+  }
+  public pageChange(value: any): void {
+    console.log(value);
+  }
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }

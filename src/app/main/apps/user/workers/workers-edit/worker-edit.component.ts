@@ -29,7 +29,7 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
   public currentRow: Admin;
   public tempRow;
   public avatarImage: string;
-  public adminForm: FormGroup;
+  public workerForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;
   @BlockUI() blockUI: NgBlockUI;
@@ -72,7 +72,7 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
    * Reset Form With Default Values
    */
   resetFormWithDefaultValues() {
-    this.adminForm.reset();
+    this.workerForm.reset();
   }
 
   /**
@@ -86,8 +86,8 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
 
       reader.onload = (event: any) => {
         this.avatarImage = event.target.result;
-        this.adminForm.get(`avatar`).patchValue(this.avatarImage);
-        console.log(this.adminForm.value);
+        this.workerForm.get(`avatar`).patchValue(this.avatarImage);
+        console.log(this.workerForm.value);
         console.log(this.avatarImage);
       };
 
@@ -99,7 +99,7 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
     this.passwordTextType = !this.passwordTextType;
   }
   get f() {
-    return this.adminForm.controls;
+    return this.workerForm.controls;
   }
 
   private editAdmin(id: number, data: CreateWorkerReq): void {
@@ -119,10 +119,10 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
 
   submit() {
     this.submitted = true;
-    console.log(this.adminForm.value);
-    if (this.adminForm.valid) {
+    console.log(this.workerForm.value);
+    if (this.workerForm.valid) {
       console.log(`test`);
-      this.editAdmin(this.productId, this.adminForm.value);
+      this.editAdmin(this.productId, this.workerForm.value);
       // this.toggleSidebar("new-user-sidebar");
     }
   }
@@ -146,9 +146,9 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
             (res) => {
               console.log(res, `the res`);
               this.currentRow = res.data;
-              this.adminForm.patchValue(this.currentRow);
+              this.workerForm.patchValue(this.currentRow);
               this.blockUI.stop();
-              console.log(this.adminForm.value, `the form`);
+              console.log(this.workerForm.value, `the form`);
             },
             (error) => {
               this.blockUI.stop();
@@ -157,7 +157,7 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
         // this.getDetails(this.productId);
       });
 
-    this.adminForm = this._formBuilder.group({
+    this.workerForm = this._formBuilder.group({
       name: [``, [Validators.required]],
       email: [``, [Validators.required, Validators.email]],
       password: [``],

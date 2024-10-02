@@ -7,8 +7,8 @@
 // 	Author URL: http://www.themeforest.net/user/pixinvent
 // ================================================================================================
 
-@import '../bootstrap-extended/include'; // Bootstrap includes
-@import '../components/include'; // Components includes
+@import "../bootstrap-extended/include"; // Bootstrap includes
+@import "../components/include"; // Components includes
 
 $search-bar-height: 48px;
 
@@ -65,7 +65,7 @@ $search-bar-height: 48px;
           transform: translate(-50%, -15%);
 
           &:before {
-            content: '$ ';
+            content: "$ ";
           }
         }
         &:active {
@@ -259,11 +259,6 @@ $search-bar-height: 48px;
       }
 
       // Hiding list view items
-      .shipping,
-      .item-company,
-      .item-options .item-price {
-        display: none;
-      }
 
       .item-options {
         display: flex;
@@ -350,10 +345,12 @@ $search-bar-height: 48px;
       }
       // Common for list-view, checkout and wishlist
       .item-company {
-        display: inline-flex;
+        display: flex;
         font-weight: $font-weight-normal;
-        margin: 0.3rem 0 0.5rem;
+        margin: 0.3rem 0 0.2rem;
         font-size: 0.875rem;
+        align-items: center;
+        gap: 2px;
 
         .company-name {
           font-weight: $font-weight-bolder;

@@ -201,15 +201,45 @@
                             <span>{{ faq.questionEn }}</span>
                           </ng-template>
                           <ng-template ngbPanelContent>
-                            {{ faq.answerEn }}
-                            <button
-                              type="button"
-                              class="btn btn-danger"
-                              rippleEffect
-                              (click)="modalOpenWarning(modalWarning, faq?.id)"
-                            >
-                              Delete
-                            </button>
+                            <div class="d-flex justify-content-between">
+                              <span> {{ faq.answerEn }} </span>
+                              <div
+                                style="width: 30%; gap: 10px"
+                                class="d-flex justify-content-end"
+                              >
+                                <div
+                                  style="cursor: pointer"
+                                  rippleEffect
+                                  (click)="
+                                    toggleSidebar(
+                                      'new-user-sidebar',
+                                      'edit',
+                                      faq
+                                    )
+                                  "
+                                >
+                                  <i
+                                    data-feather="edit"
+                                    rippleEffect
+                                    class="font-medium-3 text-primary toggle-icon"
+                                  >
+                                  </i>
+                                </div>
+                                <div
+                                  style="cursor: pointer"
+                                  rippleEffect
+                                  (click)="
+                                    modalOpenWarning(modalWarning, faq?.id)
+                                  "
+                                >
+                                  <i
+                                    data-feather="trash"
+                                    class="font-medium-3 text-danger toggle-icon"
+                                  >
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
                           </ng-template>
                         </ngb-panel>
                       </ngb-accordion>

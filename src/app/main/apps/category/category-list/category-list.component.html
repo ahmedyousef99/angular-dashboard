@@ -8,7 +8,10 @@
             <div class="d-flex justify-content-between align-items-center m-1">
               <label class="d-flex align-items-center"
                 >Show
-                <select class="form-control mx-25">
+                <select
+                  (change)="onSelectChange($event)"
+                  class="form-control mx-25"
+                >
                   <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="15">15</option>
@@ -24,31 +27,46 @@
             <div
               class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0"
             >
-              <label class="d-flex align-items-center ml-1 ml-md-0"
-                >Search:<input
-                  name="searchValue"
-                  type="search"
-                  class="form-control ml-25"
-              /></label>
-              <button class="btn btn-primary ml-1" rippleEffect>
+              <button
+                class="btn btn-primary ml-1"
+                rippleEffect
+                (click)="toggleSidebar('new-category-sidebar')"
+              >
                 <i
                   data-feather="plus"
                   class="d-sm-none d-inline-block mr-0 mr-sm-1"
                 ></i
-                ><span class="d-none d-sm-inline-block">Add New Worker</span>
+                ><span class="d-none d-sm-inline-block">Add New Category</span>
               </button>
             </div>
           </div>
         </div>
         <ngx-datatable
           [rows]="rows"
-          [rowHeight]="50"
+          [rowHeight]="80"
           class="bootstrap core-bootstrap"
           [columnMode]="ColumnMode.force"
           [headerHeight]="50"
           [footerHeight]="50"
           [scrollbarH]="true"
+          [treeFromRelation]="'parentId'"
+          [treeToRelation]="'id'"
+          (treeAction)="onTreeAction($event)"
         >
+          <ngx-datatable-column
+            [isTreeColumn]="true"
+            [width]="1"
+            [treeLevelIndent]="20"
+          >
+            <ng-template ngx-datatable-tree-toggle let-tree="cellContext">
+              <button (click)="tree.onTreeAction()">
+                <span *ngIf="tree.treeStatus === 'loading'"> ... </span>
+                <span *ngIf="tree.treeStatus === 'collapsed'"> ↑ </span>
+                <span *ngIf="tree.treeStatus === 'expanded'"> ↓ </span>
+                <span *ngIf="tree.treeStatus === 'disabled'"> ⃠ </span>
+              </button>
+            </ng-template>
+          </ngx-datatable-column>
           <ngx-datatable-column name="User" prop="fullName" [width]="180">
             <ng-template
               let-row="row"
@@ -56,12 +74,12 @@
               ngx-datatable-cell-template
             >
               <div class="d-flex align-items-center">
-                <div *ngIf="row?.avatar?.length > 0; else customAvatar">
+                <div *ngIf="row?.image?.length > 0; else customAvatar">
                   <img
                     class="rounded-circle mr-1"
-                    src="{{ row?.avatar }}"
-                    height="32"
-                    width="32"
+                    src="{{ row?.image }}"
+                    height="60"
+                    width="60"
                     alt="datatable-avatar"
                   />
                 </div>
@@ -69,8 +87,8 @@
                   <div
                     class="avatar mr-1 ml-0"
                     [ngClass]="{
-                      'bg-light-success': row?.status == 'ACTIVE',
-                      'bg-light-secondary': row?.status == 'INACTIVE'
+                      'badge-light-success': row?.isActive,
+                      'badge-light-secondary': row?.isActive
                     }"
                   >
                     <div class="avatar-content">{{ name | initials }}</div>
@@ -78,85 +96,26 @@
                 </ng-template>
                 <div class="cell-line-height">
                   <a
-                    routerLink="/apps/user/worker-view/{{ row?.id }}"
+                    routerLink="/apps/categories/category-view/{{ row?.id }}"
                     class="font-medium-1 d-block"
-                    ><span class="font-weight-bold">{{ row?.name }}</span></a
+                    ><span class="font-weight-bold">{{ row?.nameEn }}</span></a
                   >
                   <!-- <span class="text-muted font-small-2"> @{{ row?.name }}</span> for user name -->
                 </div>
               </div>
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Email" [width]="180">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <div>
-                  <i
-                    ngbTooltip="Verified"
-                    placement="bottom"
-                    *ngIf="row?.isEmailVerified"
-                    class="feather font-medium-3 text-success"
-                    data-feather="user-check"
-                  ></i>
-                </div>
-                <div placement="bottom" ngbTooltip="Not Verified">
-                  <i
-                    *ngIf="!row?.isEmailVerified"
-                    ngbTooltip="Not Verified"
-                    class="feather font-medium-3 text-danger"
-                    data-feather="user-x"
-                  ></i>
-                  {{ row?.email }}
-                </div>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Birth Day" prop="Role" [width]="100">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.dateOfBirth }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Phone" prop="Role" [width]="100">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.phone }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Address" prop="Role" [width]="150">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.address }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column
-            name="Notifications"
-            prop="row?.name"
-            [width]="80"
-          >
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.isNotificationsEnabled ? "Enabled" : "Disabled" }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
+
           <ngx-datatable-column name="Status" prop="status" [width]="50">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <div
                 class="badge badge-pill"
                 [ngClass]="{
-                  'badge-light-success': row?.status == 'ACTIVE',
-                  'badge-light-secondary': row?.status == 'INACTIVE'
+                  'badge-light-success': row?.isActive,
+                  'badge-light-danger': !row?.isActive
                 }"
               >
-                {{ row?.status }}
+                {{ row?.isActive ? "Active" : "InActive" }}
               </div>
             </ng-template>
           </ngx-datatable-column>
@@ -166,17 +125,17 @@
                 <button
                   ngbDropdownToggle
                   type="button"
-                  class="btn icon-btn btn-sm hide-arrow"
+                  class="btn icon-btn text-primary btn-sm hide-arrow"
                   rippleEffect
                 >
                   <span
                     [data-feather]="'more-vertical'"
-                    [class]="'cursor-pointer'"
+                    [class]="'cursor-pointer '"
                   ></span>
                 </button>
                 <div ngbDropdownMenu>
                   <a
-                    routerLink="/apps/user/worker-view/{{ row.id }}"
+                    routerLink="/apps/categories/category-view/{{ row.id }}"
                     ngbDropdownItem
                     ><span
                       [data-feather]="'file-text'"
@@ -185,7 +144,7 @@
                     ></span>
                     Details</a
                   ><a
-                    routerLink="/apps/user/worker-edit/{{ row.id }}"
+                    routerLink="/apps/categories/category-edit/{{ row.id }}"
                     ngbDropdownItem
                     ><span
                       [data-feather]="'edit'"
@@ -208,6 +167,23 @@
               </div>
             </ng-template>
           </ngx-datatable-column>
+          <ngx-datatable-column
+            name="Sub Category"
+            [width]="40"
+            [sortable]="false"
+          >
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <button
+                style="padding: 5px 6px"
+                *ngIf="!row.parentId"
+                class="btn btn-primary"
+                rippleEffect
+                (click)="toggleSidebar('new-category-sidebar', row)"
+              >
+                <i data-feather="plus" class="mr-0ذ"></i>
+              </button>
+            </ng-template>
+          </ngx-datatable-column>
         </ngx-datatable>
       </div>
     </section>
@@ -217,10 +193,10 @@
   <!-- New User Sidebar -->
   <core-sidebar
     class="modal modal-slide-in sidebar-todo-modal fade"
-    name="new-user-sidebar"
+    name="new-category-sidebar"
     overlayClass="modal-backdrop"
   >
-    <!-- <app-new-worker-sidebar></app-new-worker-sidebar> -->
+    <app-new-category-sidebar></app-new-category-sidebar>
   </core-sidebar>
   <!--/ New User Sidebar -->
 </div>

@@ -232,47 +232,7 @@ export const menu: CoreMenu[] = [
           },
         ],
       },
-      {
-        id: "invoice",
-        title: "Invoice",
-        translate: "MENU.APPS.INVOICE.COLLAPSIBLE",
-        type: "collapsible",
-        icon: "file-text",
-        children: [
-          {
-            id: "invoice-list",
-            title: "List",
-            translate: "MENU.APPS.INVOICE.LIST",
-            type: "item",
-            icon: "circle",
-            url: "apps/invoice/list",
-          },
-          {
-            id: "invoicePreview",
-            title: "Preview",
-            translate: "MENU.APPS.INVOICE.PREVIEW",
-            type: "item",
-            icon: "circle",
-            url: "apps/invoice/preview",
-          },
-          {
-            id: "invoiceEdit",
-            title: "Edit",
-            translate: "MENU.APPS.INVOICE.EDIT",
-            type: "item",
-            icon: "circle",
-            url: "apps/invoice/edit",
-          },
-          {
-            id: "invoiceAdd",
-            title: "Add",
-            translate: "MENU.APPS.INVOICE.ADD",
-            type: "item",
-            icon: "circle",
-            url: "apps/invoice/add",
-          },
-        ],
-      },
+
       {
         id: "e-commerce",
         title: "eCommerce",

@@ -10,7 +10,9 @@
         collapsibleSidebar="bs-gt-lg"
         overlayClass="body-content-overlay"
       >
-        <ecommerce-sidebar></ecommerce-sidebar>
+        <ecommerce-sidebar
+          (sliderPriceValue)="sliderPriceValue($event)"
+        ></ecommerce-sidebar>
       </core-sidebar>
     </div>
   </div>
@@ -30,9 +32,14 @@
                   data-toggle="collapse"
                   (click)="toggleSidebar('ecommerce-sidebar')"
                 >
-                  <span class="navbar-toggler-icon d-block d-lg-none"><i data-feather="menu"></i></span>
+                  <span class="navbar-toggler-icon d-block d-lg-none"
+                    ><i data-feather="menu"></i
+                  ></span>
                 </button>
-                <div class="search-results">{{ (products | filter: searchText:'name').length }} results found</div>
+                <div class="search-results">
+                  {{ (products | filter : searchText : "name").length }} results
+                  found
+                </div>
               </div>
               <div class="view-options d-flex">
                 <div class="btn-group dropdown-sort" ngbDropdown>
@@ -48,26 +55,25 @@
                     <span class="active-sorting">Featured</span>
                   </button>
                   <div ngbDropdownMenu>
-                    <a ngbDropdownItem href="javascript:void(0);" (click)="sortProduct('featured')">Featured</a>
-                    <a ngbDropdownItem href="javascript:void(0);" (click)="sortProduct('price-asc')">Lowest</a>
-                    <a ngbDropdownItem href="javascript:void(0);" (click)="sortProduct('price-desc')">Highest</a>
+                    <a
+                      ngbDropdownItem
+                      href="javascript:void(0);"
+                      (click)="sortProduct('featured')"
+                      >Featured</a
+                    >
+                    <a
+                      ngbDropdownItem
+                      href="javascript:void(0);"
+                      (click)="sortProduct('price-asc')"
+                      >Lowest</a
+                    >
+                    <a
+                      ngbDropdownItem
+                      href="javascript:void(0);"
+                      (click)="sortProduct('price-desc')"
+                      >Highest</a
+                    >
                   </div>
-                </div>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label
-                    class="btn btn-icon btn-outline-primary view-btn grid-view-btn"
-                    [class.active]="gridViewRef === true"
-                  >
-                    <input type="radio" name="radio_options" id="radio_option1" (click)="gridView()" />
-                    <i data-feather="grid" class="font-medium-3"></i>
-                  </label>
-                  <label
-                    class="btn btn-icon btn-outline-primary view-btn list-view-btn"
-                    [class.active]="gridViewRef !== true"
-                  >
-                    <input type="radio" name="radio_options" id="radio_option2" (click)="listView()" />
-                    <i data-feather="list" class="font-medium-3"></i>
-                  </label>
                 </div>
               </div>
             </div>
@@ -89,7 +95,9 @@
                 [(ngModel)]="searchText"
               />
               <div class="input-group-append">
-                <span class="input-group-text"><i data-feather="search" class="text-muted"></i></span>
+                <span class="input-group-text"
+                  ><i data-feather="search" class="text-muted"></i
+                ></span>
               </div>
             </div>
           </div>
@@ -98,15 +106,14 @@
       <!-- E-commerce Head Section Starts -->
 
       <!-- E-commerce Products Starts -->
-      <section id="ecommerce-products" [ngClass]="gridViewRef === true ? 'grid-view' : 'list-view'">
+      <section
+        id="ecommerce-products"
+        [ngClass]="gridViewRef === true ? 'grid-view' : 'list-view'"
+      >
         <app-ecommerce-item
           class="card ecommerce-card"
           [product]="product"
-          *ngFor="
-            let product of products
-              | filter: searchText:'name'
-              | slice: (page - 1) * pageSize:(page - 1) * pageSize + pageSize
-          "
+          *ngFor="let product of products"
         ></app-ecommerce-item>
       </section>
       <!-- E-commerce Products Ends -->
@@ -117,25 +124,40 @@
           <div class="col-sm-12">
             <div class="d-flex justify-content-center">
               <ngb-pagination
-                [collectionSize]="(products | filter: searchText:'name').length"
-                [(page)]="page"
-                [maxSize]="5"
+                [collectionSize]="
+                  (products | filter : searchText : 'name').length
+                "
+                [(page)]="serviceRes?.data.currentPage"
+                [maxSize]="serviceRes?.data.total"
                 [rotate]="true"
                 [ellipses]="false"
                 [boundaryLinks]="true"
+                (pageChange)="pageChange($event)"
               >
                 <!-- Custom pagination icons -->
                 <ng-template ngbPaginationPrevious
-                  ><span [data-feather]="'chevron-left'" [class]="'font-weight-bolder'" [size]="18"></span>
+                  ><span
+                    [data-feather]="'chevron-left'"
+                    [class]="'font-weight-bolder'"
+                  ></span>
                 </ng-template>
                 <ng-template ngbPaginationFirst
-                  ><span [data-feather]="'chevrons-left'" [class]="'font-weight-bolder'" [size]="18"></span>
+                  ><span
+                    [data-feather]="'chevrons-left'"
+                    [class]="'font-weight-bolder'"
+                  ></span>
                 </ng-template>
                 <ng-template ngbPaginationNext
-                  ><span [data-feather]="'chevron-right'" [class]="'font-weight-bolder'" [size]="18"></span
+                  ><span
+                    [data-feather]="'chevron-right'"
+                    [class]="'font-weight-bolder'"
+                  ></span
                 ></ng-template>
                 <ng-template ngbPaginationLast
-                  ><span [data-feather]="'chevrons-right'" [class]="'font-weight-bolder'" [size]="18"></span>
+                  ><span
+                    [data-feather]="'chevrons-right'"
+                    [class]="'font-weight-bolder'"
+                  ></span>
                 </ng-template>
               </ngb-pagination>
             </div>
@@ -146,3 +168,4 @@
     </div>
   </div>
 </div>
+<block-ui> </block-ui>
