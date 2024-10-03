@@ -7,8 +7,8 @@
 //  Author URL: http://www.themeforest.net/user/pixinvent
 // ================================================================================================
 
-@import '../bootstrap-extended/include'; // Bootstrap includes
-@import '../components/include'; // Components includes
+@import "../bootstrap-extended/include"; // Bootstrap includes
+@import "../components/include"; // Components includes
 
 // App e-commerce detail style
 .ecommerce-application {
@@ -139,14 +139,18 @@
     left: 0;
 
     &:after {
-      background-image: url(str-replace(str-replace($chevron-left, 'currentColor', $primary), '#', '%23'));
+      background-image: url(str-replace(
+        str-replace($chevron-left, "currentColor", $primary),
+        "#",
+        "%23"
+      ));
       background-repeat: no-repeat;
       background-position: center;
       background-size: 44px;
       color: $body-color;
       width: 44px;
       height: 44px;
-      content: '';
+      content: "";
     }
   }
 
@@ -154,41 +158,53 @@
     right: 0;
 
     &:after {
-      background-image: url(str-replace(str-replace($chevron-right, 'currentColor', $primary), '#', '%23'));
+      background-image: url(str-replace(
+        str-replace($chevron-right, "currentColor", $primary),
+        "#",
+        "%23"
+      ));
       background-repeat: no-repeat;
       background-position: center;
       background-size: 44px;
       color: $body-color;
       width: 44px;
       height: 44px;
-      content: '';
+      content: "";
     }
   }
 
   .swiper-container-rtl {
     .swiper-button-prev {
       &:after {
-        background-image: url(str-replace(str-replace($chevron-right, 'currentColor', $primary), '#', '%23'));
+        background-image: url(str-replace(
+          str-replace($chevron-right, "currentColor", $primary),
+          "#",
+          "%23"
+        ));
         background-repeat: no-repeat;
         background-position: center;
         background-size: 44px;
         color: $body-color;
         width: 44px;
         height: 44px;
-        content: '';
+        content: "";
       }
     }
 
     .swiper-button-next {
       &:after {
-        background-image: url(str-replace(str-replace($chevron-left, 'currentColor', $primary), '#', '%23'));
+        background-image: url(str-replace(
+          str-replace($chevron-left, "currentColor", $primary),
+          "#",
+          "%23"
+        ));
         background-repeat: no-repeat;
         background-position: center;
         background-size: 44px;
         color: $body-color;
         width: 44px;
         height: 44px;
-        content: '';
+        content: "";
       }
     }
   }
@@ -204,8 +220,13 @@
       padding: 3px;
 
       .filloption {
-        height: 18px;
-        width: 18px;
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+      }
+      .main-image {
+        height: 60px;
+        width: 60px;
         border-radius: 50%;
       }
     }
@@ -267,7 +288,9 @@
 }
 
 @include media-breakpoint-down(sm) {
-  .ecommerce-application .swiper-responsive-breakpoints.swiper-container .swiper-slide {
+  .ecommerce-application
+    .swiper-responsive-breakpoints.swiper-container
+    .swiper-slide {
     padding: 1rem;
   }
 }

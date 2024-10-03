@@ -5,9 +5,10 @@ import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.s
 import { EcommerceService } from "app/main/apps/ecommerce/ecommerce.service";
 import { DataService } from "app/main/forms/form-elements/select/data.service";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { DataServiceRes, getAllServices } from "../services.model";
+import { debounceTime, takeUntil } from "rxjs/operators";
+import { DataServiceRes, getAllServices } from "../models/services.model";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { FormControl, FormBuilder } from "@angular/forms";
 @Component({
   selector: "app-ecommerce-shop",
   templateUrl: "./ecommerce-shop.component.html",
@@ -30,6 +31,22 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
   public serviceRes: getAllServices;
   private _unsubscribeAll: Subject<any>;
   @BlockUI() blockUI: NgBlockUI;
+  public searchControl = new FormControl("");
+  public searchValues: any;
+  public searchInput: any;
+  public filters: {
+    rate?: number;
+    priceTo?: number;
+    priceFrom?: number;
+    categoryId?: number;
+    search?: string;
+  } = {
+    rate: 0,
+    priceTo: 0,
+    priceFrom: 0,
+    categoryId: 0,
+    search: "",
+  };
 
   /**
    *
@@ -38,9 +55,24 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
    */
   constructor(
     private _coreSidebarService: CoreSidebarService,
-    private _ecommerceService: EcommerceService
+    private _ecommerceService: EcommerceService,
+    private _formBuilder: FormBuilder
   ) {
     this._unsubscribeAll = new Subject();
+    this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((res) => {
+      console.log(res, `seaaaarch`);
+      this.searchValues = null;
+      this.searchInput = res;
+
+      if (res.length > 0) {
+        console.log(res);
+        this.filters.search = res;
+        // this.rows = [];
+        // this.getWrokersList({}, { search: res });
+      } else {
+        // this.getWrokersList();
+      }
+    });
   }
 
   // Public Methods
@@ -122,8 +154,17 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
     };
   }
 
-  public sliderPriceValue(value: any): void {
-    console.log(value);
+  public getFilters(filter: {
+    rate?: number;
+    priceTo?: number;
+    priceFrom?: number;
+    categoryId?: number;
+  }): void {
+    console.log(filter);
+    console.log(this.filters, 11111);
+    this.filters = filter;
+    this.filters.search = `23`;
+    console.log(this.filters, 22222);
   }
   public pageChange(value: any): void {
     console.log(value);

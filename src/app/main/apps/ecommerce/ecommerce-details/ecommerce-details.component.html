@@ -3,51 +3,156 @@
   <div class="content-body">
     <!-- app e-commerce details start -->
     <section class="app-ecommerce-details">
-      <div class="card">
+      <div *ngIf="dataServices" class="card">
         <!-- Product Details starts -->
         <div class="card-body">
           <div class="row my-2">
-            <div class="col-12 col-md-5 d-flex align-items-center justify-content-center mb-2 mb-md-0">
+            <div
+              class="col-12 col-md-5 d-flex align-items-center justify-content-center mb-2 mb-md-0"
+            >
               <div class="d-flex align-items-center justify-content-center">
-                <img [src]="product.image" class="img-fluid product-img" alt="product image" />
+                <img
+                  [src]="dataServices.mainImage"
+                  class="img-fluid product-img"
+                  alt="product image"
+                />
               </div>
             </div>
             <div class="col-12 col-md-7">
-              <h4>{{ product.name }}</h4>
+              <h4>{{ dataServices.nameEn }}</h4>
               <span class="card-text item-company"
-                >By <a href="javascript:void(0)" class="company-name">{{ product.brand }}</a></span
+                >By
+                <a
+                  routerLink="/apps/user/worker-view/{{
+                    dataServices.worker.id
+                  }}"
+                  class="company-name"
+                  >{{ dataServices.worker.name }}</a
+                ></span
               >
-              <div class="ecommerce-details-price d-flex flex-wrap mt-1">
-                <h4 class="item-price mr-1">${{ product.price }}</h4>
-                <div class="rating rating-sm pl-1 border-left mb-1">
-                  <ngb-rating [rate]="product.rating" [readonly]="true" [max]="5" class="outline-none">
+              <br />
+              <span class="card-text item-company"
+                >Category
+                <a
+                  routerLink="/apps/categories/category-view/{{
+                    dataServices.category.id
+                  }}"
+                  class="company-name"
+                  >{{ dataServices.category.nameEn }}</a
+                ></span
+              >
+              <div
+                class="ecommerce-details-price d-flex align-items-center flex-wrap mt-1"
+              >
+                <h4 class="item-price mr-1 mb-1">${{ dataServices.price }}</h4>
+                <div
+                  class="rating rating-sm px-1 border-right border-left mb-1"
+                >
+                  <ngb-rating
+                    [rate]="dataServices.averageRate"
+                    [readonly]="true"
+                    [max]="5"
+                    class="outline-none"
+                  >
                     <ng-template let-fill="fill" let-index="index"
-                      ><span class="fa fa-star-o mr-25" [class.fa-star]="fill === 100"></span
+                      ><span
+                        class="fa fa-star-o mr-25"
+                        [class.fa-star]="fill === 100"
+                      ></span
                     ></ng-template>
                   </ngb-rating>
                 </div>
+                <div
+                  style="gap: 5px; font-size: 19px"
+                  class="pl-1 mb-1 d-flex align-items-center eye-icon"
+                >
+                  <i data-feather="eye"></i>
+                  <strong class="text-info">{{
+                    dataServices.reviewsCount
+                  }}</strong>
+                </div>
               </div>
-              <p class="card-text">Available - <span class="text-success">In stock</span></p>
+              <h6>
+                Years Of Experience:
+                <strong class="text-info"
+                  >{{ dataServices.yearsOfExperience }} Years
+                </strong>
+              </h6>
               <p class="card-text">
-                {{ product.description }}
+                {{ dataServices.descriptionEn }}
               </p>
-              <ul class="product-features list-unstyled">
-                <li *ngIf="product.hasFreeShipping"><i data-feather="shopping-cart"></i> <span>Free Shipping</span></li>
+
+              <hr />
+
+              <div class="table-responsive">
+                <h6 class="pt-2 pb-1">Services Working Time</h6>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>Starting Hour</th>
+                      <th>Ending Hour</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-striped">
+                    <tr
+                      *ngFor="let time of dataServices.serviceWorkingTimeList"
+                    >
+                      <td>{{ time.dayKey }}</td>
+                      <td>{{ time.startingHour }}</td>
+                      <td>{{ time.endingHour }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- <ul class="product-features list-unstyled">
+                <li *ngIf="product.hasFreeShipping">
+                  <i data-feather="shopping-cart"></i>
+                  <span>Free Shipping</span>
+                </li>
                 <li>
                   <i data-feather="dollar-sign"></i>
                   <span>EMI options available</span>
                 </li>
-              </ul>
-              <hr />
+              </ul> -->
+              <!-- <hr /> -->
               <div class="product-color-options">
-                <h6>Colors</h6>
+                <h6>More Images</h6>
                 <ul class="list-unstyled mb-0">
-                  <li class="d-inline-block selected">
-                    <div class="color-option b-primary">
-                      <div class="filloption bg-primary"></div>
+                  <li class="d-inline-block">
+                    <div class="color-option b-danger">
+                      <div
+                        [ngStyle]="{
+                          'background-image': 'url(' + mainImage + ')'
+                        }"
+                        class="filloption main-image"
+                      ></div>
                     </div>
                   </li>
-                  <li class="d-inline-block">
+                  <li
+                    *ngFor="let image of dataServices.serviceImageList"
+                    class="d-inline-block"
+                    [ngClass]="selectedId == image.id ? 'selected' : ''"
+                  >
+                    <div
+                      (click)="
+                        onImageChange({ image: image.image, id: image.id })
+                      "
+                      class="color-option b-success"
+                    >
+                      <div
+                        [ngStyle]="{
+                          'background-image': 'url(' + image.image + ')'
+                        }"
+                        class="filloption"
+                      >
+                        <!-- <img class="img-fluid" src="{{ image.image }}" alt="" /> -->
+                      </div>
+                    </div>
+                  </li>
+
+                  <!-- <li class="d-inline-block">
                     <div class="color-option b-success">
                       <div class="filloption bg-success"></div>
                     </div>
@@ -66,7 +171,7 @@
                     <div class="color-option b-info">
                       <div class="filloption bg-info"></div>
                     </div>
-                  </li>
+                  </li> -->
                 </ul>
               </div>
               <hr />
@@ -97,11 +202,18 @@
                 >
                   <i
                     class="fa mr-50"
-                    [ngClass]="product.isInWishlist === true ? 'fa-heart text-danger' : 'fa-heart-o'"
+                    [ngClass]="
+                      product.isInWishlist === true
+                        ? 'fa-heart text-danger'
+                        : 'fa-heart-o'
+                    "
                   ></i>
                   <span>Wishlist</span>
                 </a>
-                <div class="btn-group dropdown-icon-wrapper btn-share" ngbDropdown>
+                <div
+                  class="btn-group dropdown-icon-wrapper btn-share"
+                  ngbDropdown
+                >
                   <button
                     ngbDropdownToggle
                     type="button"
@@ -141,21 +253,30 @@
               <div class="w-75 mx-auto">
                 <i data-feather="award"></i>
                 <h4 class="mt-2 mb-1">100% Original</h4>
-                <p class="card-text">Chocolate bar candy canes ice cream toffee. Croissant pie cookie halvah.</p>
+                <p class="card-text">
+                  Chocolate bar candy canes ice cream toffee. Croissant pie
+                  cookie halvah.
+                </p>
               </div>
             </div>
             <div class="col-12 col-md-4 mb-4 mb-md-0">
               <div class="w-75 mx-auto">
                 <i data-feather="clock"></i>
                 <h4 class="mt-2 mb-1">10 Day Replacement</h4>
-                <p class="card-text">Marshmallow biscuit donut dragée fruitcake. Jujubes wafer cupcake.</p>
+                <p class="card-text">
+                  Marshmallow biscuit donut dragée fruitcake. Jujubes wafer
+                  cupcake.
+                </p>
               </div>
             </div>
             <div class="col-12 col-md-4 mb-4 mb-md-0">
               <div class="w-75 mx-auto">
                 <i data-feather="shield"></i>
                 <h4 class="mt-2 mb-1">1 Year Warranty</h4>
-                <p class="card-text">Cotton candy gingerbread cake I love sugar plum I love sweet croissant.</p>
+                <p class="card-text">
+                  Cotton candy gingerbread cake I love sugar plum I love sweet
+                  croissant.
+                </p>
               </div>
             </div>
           </div>
@@ -168,26 +289,50 @@
             <h4>Related Products</h4>
             <p class="card-text">People also search for this items</p>
           </div>
-          <div class="swiper-responsive-breakpoints swiper-container px-4 py-2" [swiper]="swiperResponsive">
+          <div
+            class="swiper-responsive-breakpoints swiper-container px-4 py-2"
+            [swiper]="swiperResponsive"
+          >
             <div class="swiper-wrapper mb-2">
-              <div class="swiper-slide" *ngFor="let relatedProduct of relatedProducts">
+              <div
+                class="swiper-slide"
+                *ngFor="let relatedProduct of relatedProducts"
+              >
                 <a href="javascript:void(0)">
                   <div class="item-heading">
-                    <h5 class="text-truncate mb-0">{{ relatedProduct.name }}</h5>
-                    <small class="text-body">by {{ relatedProduct.brand }}</small>
+                    <h5 class="text-truncate mb-0">
+                      {{ relatedProduct.name }}
+                    </h5>
+                    <small class="text-body"
+                      >by {{ relatedProduct.brand }}</small
+                    >
                   </div>
                   <div class="img-container mx-auto py-75">
-                    <img [src]="relatedProduct.image" class="img-fluid" alt="image" />
+                    <img
+                      [src]="relatedProduct.image"
+                      class="img-fluid"
+                      alt="image"
+                    />
                   </div>
                   <div class="item-meta">
                     <div class="rating rating-sm">
-                      <ngb-rating [rate]="relatedProduct.rating" [readonly]="true" [max]="5" class="outline-none">
+                      <ngb-rating
+                        [rate]="relatedProduct.rating"
+                        [readonly]="true"
+                        [max]="5"
+                        class="outline-none"
+                      >
                         <ng-template let-fill="fill" let-index="index"
-                          ><span class="fa fa-star-o mr-25" [class.fa-star]="fill === 100"></span
+                          ><span
+                            class="fa fa-star-o mr-25"
+                            [class.fa-star]="fill === 100"
+                          ></span
                         ></ng-template>
                       </ngb-rating>
                     </div>
-                    <p class="card-text text-primary mb-0">${{ relatedProduct.price }}</p>
+                    <p class="card-text text-primary mb-0">
+                      ${{ relatedProduct.price }}
+                    </p>
                   </div>
                 </a>
               </div>
@@ -203,3 +348,4 @@
     <!-- app e-commerce details end -->
   </div>
 </div>
+<block-ui> </block-ui>

@@ -1,3 +1,21 @@
-@import '@core/scss/base/pages/app-ecommerce-details.scss';
-@import '@core/scss/angular/libs/swiper.component.scss';
-@import '@core/scss/angular/libs/ratings.component.scss';
+@import "@core/scss/base/pages/app-ecommerce-details.scss";
+@import "@core/scss/angular/libs/swiper.component.scss";
+@import "@core/scss/angular/libs/ratings.component.scss";
+table {
+  text-align: center;
+}
+
+tbody {
+  tr {
+    &:nth-of-type(odd) {
+      background-color: $theme-dark-table-striped-bg;
+    }
+  }
+}
+
+.eye-icon {
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}

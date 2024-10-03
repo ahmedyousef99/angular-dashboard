@@ -10,9 +10,7 @@
         collapsibleSidebar="bs-gt-lg"
         overlayClass="body-content-overlay"
       >
-        <ecommerce-sidebar
-          (sliderPriceValue)="sliderPriceValue($event)"
-        ></ecommerce-sidebar>
+        <ecommerce-sidebar (filters)="getFilters($event)"></ecommerce-sidebar>
       </core-sidebar>
     </div>
   </div>
@@ -86,13 +84,13 @@
           <div class="col-sm-12">
             <div class="input-group input-group-merge">
               <input
+                [formControl]="searchControl"
                 type="text"
                 class="form-control search-product"
                 id="shop-search"
                 placeholder="Search Product"
                 aria-label="Search..."
                 aria-describedby="shop-search"
-                [(ngModel)]="searchText"
               />
               <div class="input-group-append">
                 <span class="input-group-text"

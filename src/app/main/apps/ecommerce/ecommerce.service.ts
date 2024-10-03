@@ -8,7 +8,8 @@ import {
 import { environment } from "environments/environment";
 
 import { BehaviorSubject, Observable } from "rxjs";
-import { getAllServices, ServiceFilters } from "./services.model";
+import { getAllServices, ServiceFilters } from "./models/services.model";
+import { ServicesDetails } from "./models/services-details.model";
 
 @Injectable({
   providedIn: "root",
@@ -89,8 +90,8 @@ export class EcommerceService implements Resolve<any> {
     );
   }
 
-  public getServiceDetails(id: number): Observable<any> {
-    return this._httpClient.get<any>(
+  public getServiceDetails(id: number): Observable<ServicesDetails> {
+    return this._httpClient.get<ServicesDetails>(
       `${environment.apiUrl}admin/service/${id}`
     );
   }

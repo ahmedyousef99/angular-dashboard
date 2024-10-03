@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
 
 import { EcommerceService } from "app/main/apps/ecommerce/ecommerce.service";
-import { DataServiceRes } from "../services.model";
+import { DataServiceRes } from "../models/services.model";
 
 @Component({
   selector: "app-ecommerce-item",
