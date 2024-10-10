@@ -1,6 +1,6 @@
 <!-- Ecommerce Item -->
 <div *ngIf="product" class="item-img text-center">
-  <a [routerLink]="'/apps/e-commerce/details/' + product.id">
+  <a [routerLink]="'/apps/services/details/' + product.id">
     <img
       class="img-fluid card-img-top"
       [src]="product.mainImage"
@@ -35,7 +35,7 @@
     <h6 class="item-name">
       <a
         class="text-body"
-        [routerLink]="'/apps/e-commerce/details/' + product.id"
+        [routerLink]="'/apps/services/details/' + product.id"
       >
         {{ product.nameEn }}</a
       >
@@ -99,7 +99,7 @@
       <span class="file-text">Delete</span>
     </a>
     <a
-      [routerLink]="'/apps/e-commerce/details/' + product.id"
+      [routerLink]="'/apps/services/details/' + product.id"
       class="text-primary"
       rippleEffect
     >
@@ -107,7 +107,7 @@
       <span>Details</span>
     </a>
     <a
-      routerLink="/apps/e-commerce/update/{{ +product.id }}"
+      routerLink="/apps/services/update/{{ +product.id }}"
       class="text-warning"
       rippleEffect
     >

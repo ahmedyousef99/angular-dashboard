@@ -132,10 +132,10 @@ export class UpdateServiceComponent implements OnInit, OnDestroy {
           {
             name: "Services List",
             isLink: true,
-            link: `/apps/e-commerce/shop`,
+            link: `/apps/services/shop`,
           },
           {
-            name: " Update Services",
+            name: "Update Services",
             isLink: false,
           },
         ],

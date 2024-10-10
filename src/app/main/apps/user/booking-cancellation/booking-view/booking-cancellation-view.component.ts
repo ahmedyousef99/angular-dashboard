@@ -9,6 +9,11 @@ import { UserListService } from "../../user-list/user-list.service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { getBookingDetailsData } from "../../models/booking-details.model";
 import { BookingCancellationListService } from "../booking-list/booking-cancellation-list.service";
+import { BookingListService } from "../../booking/booking-list/booking-list.service";
+import {
+  cancellationDetails,
+  CancellationDetailsData,
+} from "../../models/cancellation-bookings-model";
 
 @Component({
   selector: "app-booking-cancellation-view",
@@ -21,6 +26,7 @@ export class BookingCancellationViewComponent implements OnInit, OnDestroy {
   public url = this.router.url;
   public lastValue;
   public data: getBookingDetailsData;
+  public canceledData: CancellationDetailsData;
   @BlockUI() blockUI: NgBlockUI;
 
   // private
@@ -37,7 +43,8 @@ export class BookingCancellationViewComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private bookingCancellationListService: BookingCancellationListService
+    private bookingCancellationListService: BookingCancellationListService,
+    private bookingListService: BookingListService
   ) {
     this._unsubscribeAll = new Subject();
     this.lastValue = this.url.substr(this.url.lastIndexOf("/") + 1);
@@ -51,12 +58,17 @@ export class BookingCancellationViewComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.contentHeader = {
-      headerTitle: "Bookings Cancellation ",
+      headerTitle: "Bookings",
       breadcrumb: {
         type: "",
         links: [
           {
-            name: "Bookings Cancellation List",
+            name: " Canceled Bookings List",
+            isLink: true,
+            link: `/apps/user/booking-cancellation-list`,
+          },
+          {
+            name: "Canceled Booking Details",
             isLink: false,
           },
         ],
@@ -67,16 +79,32 @@ export class BookingCancellationViewComponent implements OnInit, OnDestroy {
       .subscribe((params: Params) => {
         this.productId = +params[`id`];
         this.blockUI.start();
+
         this.bookingCancellationListService
           .getBookingCancellationDetails(this.productId)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(
             (res) => {
               console.log(res, `the res`);
-              this.data = res.data;
+              this.canceledData = res.data;
+              this.bookingListService
+                .getBookingDetails(this.canceledData.bookingId)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe(
+                  (res) => {
+                    console.log(res, `the res`);
+                    this.data = res.data;
+                    // this.avatarImage = this.currentRow.avatar;
+                    // this.customerForm.patchValue(this.currentRow);
+                    this.blockUI.stop();
+                    // console.log(this.customerForm.value, `the form`);
+                  },
+                  (error) => {
+                    this.blockUI.stop();
+                  }
+                );
               // this.avatarImage = this.currentRow.avatar;
               // this.customerForm.patchValue(this.currentRow);
-              this.blockUI.stop();
               // console.log(this.customerForm.value, `the form`);
             },
             (error) => {

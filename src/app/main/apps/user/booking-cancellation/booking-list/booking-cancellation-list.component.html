@@ -36,102 +36,11 @@
             >
               <option value="">All</option>
               <option value="PENDING">Pending</option>
-              <option value="ACCEPTED">Accepted</option>
-              <option value="ON_MY_WAY">On my way</option>
-              <option value="START_WORKING">Start Working</option>
-              <option value="FINISHED_WORKING">Finished</option>
-              <option value="COMPLETED">Completed</option>
+              <option value="DONE">Done</option>
               <option value="REJECTED">Rejected</option>
-              <option value="CANCELED">Canceled</option>
             </select>
           </div>
         </div>
-        <form class="form-inline my-1 px-1">
-          <div
-            class="form-group w-100 col-md-4 col-12 d-flex flex-column align-items-start"
-          >
-            <label for="status"> Select Date Filter </label>
-            <select
-              class="form-control w-100"
-              name="status"
-              id="status"
-              (change)="onTimeSelect($event.target.value)"
-            >
-              <option value="CUSTOM">Custom Date</option>
-              <option value="TODAY">Today</option>
-              <option value="THIS_WEEK">This Week</option>
-              <option value="THIS_MONTH">This Month</option>
-              <option selected value="THIS_YEAR">This Year</option>
-            </select>
-          </div>
-          <div class="form-group align-items-start flex-column col-md-4 col-12">
-            <label for="">Start Date:</label>
-            <div class="input-group">
-              <input
-                [disabled]="!selectedTimeType"
-                placeholder="yyyy-mm-dd"
-                name="datepicker"
-                class="form-control"
-                ngbDatepicker
-                #rangeSelectionDP="ngbDatepicker"
-                [autoClose]="'outside'"
-                (dateSelect)="onDateSelection($event)"
-                [displayMonths]="2"
-                [dayTemplate]="t"
-                outsideDays="hidden"
-                [startDate]="fromDate!"
-                [value]="formatter.format(fromDate)"
-              />
-              <ng-template #t let-date let-focused="focused">
-                <span
-                  class="custom-day"
-                  [class.focused]="focused"
-                  [class.range]="isRange(date)"
-                  [class.faded]="isHovered(date) || isInside(date)"
-                  (mouseenter)="hoveredDate = date"
-                  (mouseleave)="hoveredDate = null"
-                >
-                  {{ date.day }}
-                </span>
-              </ng-template>
-              <div class="input-group-append">
-                <button
-                  [disabled]="!selectedTimeType"
-                  class="btn btn-outline-secondary feather icon-calendar"
-                  (click)="rangeSelectionDP.toggle()"
-                  type="button"
-                  rippleEffect
-                ></button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="form-group mt align-items-start flex-column col-md-4 col-12"
-          >
-            <label for="">End Date:</label>
-
-            <div class="input-group">
-              <input
-                [disabled]="!selectedTimeType"
-                #dpToDate
-                class="form-control"
-                placeholder="yyyy-mm-dd"
-                name="dpToDate"
-                [value]="formatter.format(toDate)"
-              />
-              <div class="input-group-append">
-                <button
-                  [disabled]="!selectedTimeType"
-                  class="btn btn-outline-secondary feather icon-calendar"
-                  (click)="rangeSelectionDP.toggle()"
-                  type="button"
-                  rippleEffect
-                ></button>
-              </div>
-            </div>
-          </div>
-        </form>
-
         <ngx-datatable
           [rows]="rows"
           [rowHeight]="50"
@@ -146,167 +55,7 @@
           (page)="setPage($event)"
           [count]="comingData?.data.total"
         >
-          <ngx-datatable-column name="Service" [width]="200">
-            <ng-template
-              let-row="row"
-              let-name="value"
-              ngx-datatable-cell-template
-            >
-              <div class="d-flex align-items-center">
-                <div
-                  *ngIf="row?.service.mainImage.length > 0; else customAvatar"
-                >
-                  <img
-                    class="rounded-circle mr-1"
-                    src="{{ row?.service?.mainImage }}"
-                    height="32"
-                    width="32"
-                    alt="datatable-avatar"
-                  />
-                </div>
-                <ng-template #customAvatar>
-                  <div class="avatar mr-1 ml-0 'bg-light-success'">
-                    <div class="avatar-content">
-                      {{ row.service.nameEn | initials }}
-                    </div>
-                  </div>
-                </ng-template>
-                <div class="cell-line-height">
-                  <a
-                    routerLink="/apps/user/user-view/{{ row?.id }}"
-                    class="font-medium-1 d-block"
-                    ><span class="font-weight-bold">{{
-                      row.service.nameEn
-                    }}</span></a
-                  >
-                </div>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Customer" [width]="120">
-            <ng-template
-              let-row="row"
-              let-name="value"
-              ngx-datatable-cell-template
-            >
-              <div class="d-flex align-items-center">
-                <div class="cell-line-height">
-                  <a
-                    routerLink="/apps/user/user-view/{{ row?.customer.id }}"
-                    class="font-medium-1 d-block"
-                    ><span class="font-weight-bold">{{
-                      row?.customer.name
-                    }}</span></a
-                  >
-                </div>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Worker" [width]="120">
-            <ng-template
-              let-row="row"
-              let-name="value"
-              ngx-datatable-cell-template
-            >
-              <div class="d-flex align-items-center">
-                <div class="cell-line-height">
-                  <a
-                    routerLink="/apps/user/worker-view/{{ row?.worker.id }}"
-                    class="font-medium-1 d-block"
-                    ><span class="font-weight-bold">{{
-                      row?.worker.name
-                    }}</span></a
-                  >
-                </div>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Day Date" [width]="110">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.dayDate | date }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Status" prop="status" [width]="100">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div
-                class="badge badge-pill"
-                [ngClass]="{
-                  'badge-light-success': row?.status == 'ACTIVE',
-                  'badge-light-secondary': row?.status == 'INACTIVE',
-                  'badge-light-warning': row?.status == 'PENDING',
-                  'badge-light-info': row?.status == 'ACCEPTED',
-                  'badge-light-primary': row?.status == 'ON_MY_WAY',
-                  'badge-light-primary': row?.status == 'START_WORKING',
-                  'badge-light-dark': row?.status == 'FINISHED',
-                  'badge-light-dark': row?.status == 'COMPLETED',
-                  'badge-light-danger': row?.status == 'REJECTED',
-                  'badge-light-danger': row?.status == 'CANCELED'
-                }"
-              >
-                {{ row?.status }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Day" [width]="80">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.dayKey }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Working hr" [width]="120">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div class="text-center">
-                <i class="feather font-medium-3"></i>
-                {{ row?.workingHours }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Ending hr" [width]="120">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.endingHour }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Starting hr" [width]="120">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.startingHour }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Service Price" [width]="120">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.servicePrice | currency }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Total Price" [width]="100">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.totalPrice | currency }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="City" [width]="100">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div>
-                <i class="feather font-medium-3"></i>
-                {{ row?.city }}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Actions" [width]="100" [sortable]="false">
+          <ngx-datatable-column name="Actions" [sortable]="false" [width]="50">
             <ng-template ngx-datatable-cell-template let-row="row">
               <div ngbDropdown container="body">
                 <button
@@ -348,6 +97,96 @@
                     ></span>
                     Delete</a
                   >
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Booking ID:" [width]="100">
+            <ng-template
+              let-row="row"
+              let-name="value"
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a
+                    routerLink="/apps/user/booking-cancellation-view/{{
+                      row?.booking.id
+                    }}"
+                    class="font-medium-1 d-block"
+                    ><span class="font-weight-bold">#{{ row?.id }}</span></a
+                  >
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Cancelled By" [width]="120">
+            <ng-template
+              let-row="row"
+              let-name="value"
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a class="font-medium-1 d-block"
+                    ><span class="font-weight-bold">{{
+                      row.submittedByType
+                    }}</span></a
+                  >
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Status" prop="status" [width]="90">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div
+                class="badge badge-pill"
+                [ngClass]="{
+                  'badge-light-success': row?.status == 'DONE',
+                  'badge-light-warning': row?.status == 'PENDING',
+                  'badge-light-danger': row?.status == 'REJECTED'
+                }"
+              >
+                {{ row?.status }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Total Price" [width]="100">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                <i class="feather font-medium-3"></i>
+                {{ row?.booking.totalPrice | currency }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="City" [width]="80">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                <i class="feather font-medium-3"></i>
+                {{ row?.booking.city }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Reason">
+            <ng-template
+              let-row="row"
+              let-name="value"
+              ngx-datatable-cell-template
+            >
+              <div class="d-flex align-items-center">
+                <div class="cell-line-height">
+                  <a
+                    routerLink="/apps/user/booking-cancellation-view/{{
+                      row?.id
+                    }}"
+                    class="font-medium-1 d-block"
+                    ><span class="font-weight-bold px-1">{{
+                      row?.reason
+                    }}</span></a
+                  >
+                  <!-- routerLink="/apps/user/user-view/{{ row?.customer.id }}" -->
                 </div>
               </div>
             </ng-template>
@@ -406,69 +245,19 @@
     </button>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
-    <form [formGroup]="bookingUpdate" action="#">
+    <form>
       <div class="form-group">
         <label for="status">Status:</label>
         <select
-          formControlName="status"
+          [formControl]="statusControl"
           class="form-control w-100"
           name="status"
           id="status"
         >
           <option value="PENDING">Pending</option>
-          <option value="ACCEPTED">Accepted</option>
-          <option value="ON_MY_WAY">On my way</option>
-          <option value="START_WORKING">Start Working</option>
-          <option value="FINISHED_WORKING">Finished</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="REJECTED">Rejected</option>
-          <option value="CANCELED">Canceled</option>
+          <option value="DONE">Done</option>
+          <option value="REJECTED">REJECTED</option>
         </select>
-        <div
-          *ngIf="submitted && f.status.errors"
-          class="text-danger my-1"
-          style="font-size: 12px"
-        >
-          Status is required.
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.status.value === 'CANCELED'">
-        <label>Cancellation Reason:</label>
-        <input
-          [class.error]="submitted && f.cancellationReason.errors"
-          formControlName="cancellationReason"
-          type="text"
-          placeholder="Write Cancellation Reason"
-          class="form-control"
-          [@fadeIn]="'in'"
-        />
-        <div
-          *ngIf="submitted && f.cancellationReason.errors?.required"
-          class="text-danger my-1"
-          style="font-size: 12px"
-        >
-          Cancellation Reason is required.
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.status.value === 'REJECTED'">
-        <label>Rejection Reason:</label>
-        <input
-          [class.error]="submitted && f.rejectionReason.errors"
-          formControlName="rejectionReason"
-          type="text"
-          placeholder="Write Rejection Reason"
-          class="form-control"
-          [@fadeIn]="'in'"
-        />
-        <div
-          *ngIf="submitted && f.rejectionReason.errors?.required"
-          class="text-danger my-1"
-          style="font-size: 12px"
-        >
-          Rejection Reason is required.
-        </div>
       </div>
     </form>
   </div>

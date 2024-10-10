@@ -22,9 +22,6 @@ import { EcommerceDetailsComponent } from "app/main/apps/ecommerce/ecommerce-det
 import { EcommerceItemComponent } from "app/main/apps/ecommerce/ecommerce-item/ecommerce-item.component";
 import { EcommerceShopComponent } from "app/main/apps/ecommerce/ecommerce-shop/ecommerce-shop.component";
 import { EcommerceSidebarComponent } from "app/main/apps/ecommerce/ecommerce-shop/sidebar/sidebar.component";
-import { EcommerceWishlistComponent } from "app/main/apps/ecommerce/ecommerce-wishlist/ecommerce-wishlist.component";
-import { EcommerceCheckoutComponent } from "app/main/apps/ecommerce/ecommerce-checkout/ecommerce-checkout.component";
-import { EcommerceCheckoutItemComponent } from "app/main/apps/ecommerce/ecommerce-checkout/ecommerce-checkout-item/ecommerce-checkout-item.component";
 import { TreeModule } from "@circlon/angular-tree-component";
 import { UpdateServiceComponent } from "./update-service/update-service.component";
 
@@ -36,40 +33,13 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
 // routing
 const routes: Routes = [
   {
-    path: "shop",
+    path: "services-list",
     component: EcommerceShopComponent,
-    resolve: {
-      ecommerce: EcommerceService,
-    },
     data: { animation: "EcommerceShopComponent" },
   },
   {
     path: "details/:id",
     component: EcommerceDetailsComponent,
-    resolve: {
-      ecommerce: EcommerceService,
-    },
-    data: { animation: "EcommerceDetailsComponent" },
-  },
-  {
-    path: "wishlist",
-    component: EcommerceWishlistComponent,
-    resolve: {
-      ecommerce: EcommerceService,
-    },
-    data: { animation: "EcommerceWishlistComponent" },
-  },
-  {
-    path: "checkout",
-    component: EcommerceCheckoutComponent,
-    resolve: {
-      ecommerce: EcommerceService,
-    },
-    data: { animation: "EcommerceCheckoutComponent" },
-  },
-  {
-    path: "details",
-    redirectTo: "/apps/e-commerce/update/11",
     data: { animation: "EcommerceDetailsComponent" },
   },
   {
@@ -84,10 +54,7 @@ const routes: Routes = [
     EcommerceShopComponent,
     EcommerceSidebarComponent,
     EcommerceDetailsComponent,
-    EcommerceWishlistComponent,
-    EcommerceCheckoutComponent,
     EcommerceItemComponent,
-    EcommerceCheckoutItemComponent,
     UpdateServiceComponent,
   ],
   imports: [

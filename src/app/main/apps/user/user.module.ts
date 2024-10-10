@@ -51,7 +51,7 @@ const routes: Routes = [
   {
     path: "admin-list",
     component: AdminListComponent,
-    data: { animation: "AdminListComponent" },
+    data: { animation: "UserViewComponent" },
   },
   {
     path: "worker-list",
@@ -61,6 +61,11 @@ const routes: Routes = [
   {
     path: "booking-list",
     component: BookingListComponent,
+    data: { animation: "AdminListComponent" },
+  },
+  {
+    path: "booking-cancellation-list",
+    component: BookingCancellationListComponent,
     data: { animation: "AdminListComponent" },
   },
   {
@@ -81,6 +86,11 @@ const routes: Routes = [
   {
     path: "booking-view/:id",
     component: BookingViewComponent,
+    data: { animation: "UserViewComponent" },
+  },
+  {
+    path: "booking-cancellation-view/:id",
+    component: BookingCancellationViewComponent,
     data: { animation: "UserViewComponent" },
   },
 

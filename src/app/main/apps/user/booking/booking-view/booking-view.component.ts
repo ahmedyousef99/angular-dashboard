@@ -9,6 +9,7 @@ import { UserViewService } from "app/main/apps/user/user-view/user-view.service"
 import { UserListService } from "../../user-list/user-list.service";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { getBookingDetailsData } from "../../models/booking-details.model";
+import { link } from "fs";
 
 @Component({
   selector: "app-booking-view",
@@ -21,6 +22,7 @@ export class BookingViewComponent implements OnInit, OnDestroy {
   public url = this.router.url;
   public lastValue;
   public data: getBookingDetailsData;
+  contentHeader: object;
   @BlockUI() blockUI: NgBlockUI;
 
   // private
@@ -49,6 +51,23 @@ export class BookingViewComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Bookings",
+      breadcrumb: {
+        type: "",
+        links: [
+          {
+            name: "Bookings List",
+            isLink: true,
+            link: `/apps/user/booking-list`,
+          },
+          {
+            name: "Booking Details",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {

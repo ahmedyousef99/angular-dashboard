@@ -11,9 +11,18 @@ import {
   NgbModal,
 } from "@ng-bootstrap/ng-bootstrap";
 import { Bookings, GetAllBooking } from "../../models/booking.model";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { BookingCancellationListService } from "./booking-cancellation-list.service";
+import {
+  cancellationDetails,
+  GetAllCancellationBookings,
+} from "../../models/cancellation-bookings-model";
 
 @Component({
   selector: "app-booking-cancellation-list",
@@ -35,31 +44,25 @@ export class BookingCancellationListComponent implements OnInit {
   public fromDate: NgbDate | null;
   public toDate: NgbDate | null;
   public selectedTimeType: boolean = false;
-  public rows: Bookings[];
-  public row: Bookings = null;
+  public rows: cancellationDetails[];
+  public row: cancellationDetails = null;
   public ColumnMode = ColumnMode;
   public bookingDataForDelete: { id: number; name: string };
   public deleteLoader: boolean = false;
   public submitted = false;
-  public comingData: GetAllBooking;
+  public comingData: GetAllCancellationBookings;
   public page: { pageNumber: number; size: number };
   public contentHeader: object;
-  public bookingUpdate: FormGroup;
+  public statusControl = new FormControl("");
   public modalForm: any = null;
   public filter: {
     page?: number;
     limit?: number;
     status?: string;
-    dateFilterOption?: string;
-    startDate?: string;
-    endDate?: string;
   } = {
     page: 1,
     limit: 5,
     status: ``,
-    dateFilterOption: `THIS_YEAR`,
-    startDate: ``,
-    endDate: ``,
   };
   @BlockUI() blockUI: NgBlockUI;
   // Decorator
@@ -71,14 +74,8 @@ export class BookingCancellationListComponent implements OnInit {
     private toastr: ToastrService,
     private modalService: NgbModal,
     public formatter: NgbDateParserFormatter,
-    private bookingCancellationListService: BookingCancellationListService,
-    private _formBuilder: FormBuilder
+    private bookingCancellationListService: BookingCancellationListService
   ) {
-    this.bookingUpdate = this._formBuilder.group({
-      status: [``, [Validators.required]],
-      cancellationReason: [``],
-      rejectionReason: [``],
-    });
     this._unsubscribeAll = new Subject();
     this.bookingCancellationListService
       .getCustomerUpdated()
@@ -115,7 +112,6 @@ export class BookingCancellationListComponent implements OnInit {
           this.getBookingsList();
         }
       });
-    this.onStatusChange();
   }
   public onSelectChange(value): void {
     const perPage = value.target.value;
@@ -160,6 +156,7 @@ export class BookingCancellationListComponent implements OnInit {
     isAfterDelete?: boolean;
     name?: string;
   }): void {
+    this.rows = [];
     this.blockUI.start();
     this.bookingCancellationListService
       .getAllBookingsCancellation(this.filter)
@@ -187,129 +184,38 @@ export class BookingCancellationListComponent implements OnInit {
       );
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (
-      this.fromDate &&
-      !this.toDate &&
-      date &&
-      date.after(this.fromDate)
-    ) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
-    if (this.fromDate && this.toDate) {
-      console.log(
-        this.formatter.format(this.fromDate),
-        this.formatter.format(this.toDate)
-      );
-      this.filter.startDate = this.formatter.format(this.fromDate);
-      this.filter.endDate = this.formatter.format(this.toDate);
-      this.getBookingsList();
-    }
-  }
-
-  isHovered(date: NgbDate) {
-    return (
-      this.fromDate &&
-      !this.toDate &&
-      this.hoveredDate &&
-      date.after(this.fromDate) &&
-      date.before(this.hoveredDate)
-    );
-  }
-
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return (
-      date.equals(this.fromDate) ||
-      (this.toDate && date.equals(this.toDate)) ||
-      this.isInside(date) ||
-      this.isHovered(date)
-    );
-  }
-  public onTimeSelect(value: string): void {
-    this.filter.dateFilterOption = value;
-    this.fromDate = null;
-    this.toDate = null;
-    if (this.filter.dateFilterOption == "CUSTOM") {
-      this.selectedTimeType = true;
-    } else {
-      this.getBookingsList();
-      this.selectedTimeType = false;
-    }
-  }
   public onStatusSelect(value): void {
     value ? (this.filter.status = value) : (this.filter.status = null);
     console.log(this.filter);
     this.getBookingsList();
   }
-  get f() {
-    return this.bookingUpdate.controls;
-  }
-  // private getBookingDetails(id:number):void {
-  //   this.bookingCancellationListService.getBookingDetails(id)      .pipe(takeUntil(this._unsubscribeAll)).subscribe(
-  //     (res) => {
 
-  //     },(error) => {
-
-  //     }
-  //   )
-
-  // }
   modalOpenForm(modalForm, id: number) {
     this.modalForm = modalForm;
     this.row = this.rows.find((item) => item.id === id);
-    this.bookingUpdate.get(`status`).patchValue(this.row?.status);
-    this.bookingUpdate
-      .get(`cancellationReason`)
-      .patchValue(this.row?.cancellationReason);
-    this.bookingUpdate
-      .get(`rejectionReason`)
-      .patchValue(this.row?.rejectionReason);
+    this.statusControl.patchValue(this.row?.status);
     this.modalService.open(modalForm);
   }
   public onUpdateButton(): void {
     this.submitted = true;
-    console.log(this.bookingUpdate.value);
-    if (this.bookingUpdate.valid) {
+    if (this.statusControl.valid) {
+      this.blockUI.start();
       this.bookingCancellationListService
-        .updateBookingCancellation(this.row.id, this.bookingUpdate.value)
+        .updateBookingCancellation(this.row.id, {
+          status: this.statusControl.value,
+        })
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe(
           (res) => {
             this.getBookingsList();
             this.modalService.dismissAll();
+            this.blockUI.stop();
           },
-          (error) => {}
+          (error) => {
+            this.blockUI.stop();
+          }
         );
     }
-  }
-  onStatusChange(): void {
-    this.bookingUpdate.get("status")!.valueChanges.subscribe((status) => {
-      const cancellationControl = this.bookingUpdate.get("cancellationReason");
-      const rejectionControl = this.bookingUpdate.get("rejectionReason");
-
-      if (status === "CANCELED") {
-        cancellationControl!.setValidators([Validators.required]);
-        rejectionControl!.clearValidators();
-      } else if (status === "REJECTED") {
-        rejectionControl!.setValidators([Validators.required]);
-        cancellationControl!.clearValidators();
-      } else {
-        cancellationControl!.clearValidators();
-        rejectionControl!.clearValidators();
-      }
-
-      cancellationControl!.updateValueAndValidity();
-      rejectionControl!.updateValueAndValidity();
-    });
   }
 
   ngOnDestroy(): void {

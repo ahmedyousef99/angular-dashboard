@@ -276,6 +276,7 @@ export class BookingListComponent implements OnInit {
     this.modalService.open(modalForm);
   }
   public onUpdateButton(): void {
+    // this.bookingUpdate.disable();
     this.submitted = true;
     console.log(this.bookingUpdate.value);
     if (this.bookingUpdate.valid) {
@@ -284,6 +285,7 @@ export class BookingListComponent implements OnInit {
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe(
           (res) => {
+            // this.bookingUpdate.enable();
             this.getBookingsList();
             this.modalService.dismissAll();
           },

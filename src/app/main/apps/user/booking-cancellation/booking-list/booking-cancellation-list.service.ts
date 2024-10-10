@@ -14,8 +14,12 @@ import {
   CreateAdminReq,
   CreateAdminRes,
 } from "../../models/admins.model";
-import { GetAllBooking, UpdateBookingRes } from "../../models/booking.model";
 import { getBookingDetails } from "../../models/booking-details.model";
+import { UpdateBookingRes, GetAllBooking } from "../../models/booking.model";
+import {
+  CancellationDetails,
+  GetAllCancellationBookings,
+} from "../../models/cancellation-bookings-model";
 
 @Injectable()
 export class BookingCancellationListService implements Resolve<any> {
@@ -70,13 +74,14 @@ export class BookingCancellationListService implements Resolve<any> {
     id: number,
     data: {
       status: string;
-      cancellationReason?: string;
-      rejectionReason?: string;
     }
   ): Observable<UpdateBookingRes> {
     console.log(data, `from service`);
     return this._httpClient
-      .patch<UpdateBookingRes>(`${environment.apiUrl}admin/booking/${id}`, data)
+      .patch<UpdateBookingRes>(
+        `${environment.apiUrl}admin/booking-cancellation-order/${id}`,
+        data
+      )
       .pipe(
         catchError((error) => {
           console.error("Error updating Bookings:", error);
@@ -87,7 +92,7 @@ export class BookingCancellationListService implements Resolve<any> {
 
   public deleteBookingCancellation(id: number): Observable<any> {
     return this._httpClient.delete<any>(
-      `${environment.apiUrl}admin/booking/${id}`
+      `${environment.apiUrl}admin/booking-cancellation-order/${id}`
     );
   }
 
@@ -95,10 +100,7 @@ export class BookingCancellationListService implements Resolve<any> {
     page?: number;
     limit?: number;
     status?: string;
-    dateFilterOption?: string;
-    startDate?: string;
-    endDate?: string;
-  }): Observable<GetAllBooking> {
+  }): Observable<GetAllCancellationBookings> {
     this.searchData = {};
     for (const key in searchData) {
       if (
@@ -111,8 +113,8 @@ export class BookingCancellationListService implements Resolve<any> {
     }
     console.log(this.searchData);
 
-    return this._httpClient.get<GetAllBooking>(
-      `${environment.apiUrl}admin/booking`,
+    return this._httpClient.get<GetAllCancellationBookings>(
+      `${environment.apiUrl}admin/booking-cancellation-order`,
       {
         params: this.searchData,
       }
@@ -121,9 +123,9 @@ export class BookingCancellationListService implements Resolve<any> {
 
   public getBookingCancellationDetails(
     id: number
-  ): Observable<getBookingDetails> {
-    return this._httpClient.get<getBookingDetails>(
-      `${environment.apiUrl}admin/booking/${id}`
+  ): Observable<CancellationDetails> {
+    return this._httpClient.get<CancellationDetails>(
+      `${environment.apiUrl}admin/booking-cancellation-order/${id}`
     );
   }
 }

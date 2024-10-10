@@ -82,28 +82,12 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
    *
    * @param product
    */
-  toggleWishlist(product) {
-    if (product.isInWishlist === true) {
-      this._ecommerceService.removeFromWishlist(product.id).then((res) => {
-        product.isInWishlist = false;
-      });
-    } else {
-      this._ecommerceService.addToWishlist(product.id).then((res) => {
-        product.isInWishlist = true;
-      });
-    }
-  }
 
   /**
    * Add To Cart
    *
    * @param product
    */
-  addToCart(product) {
-    this._ecommerceService.addToCart(product.id).then((res) => {
-      product.isInCart = true;
-    });
-  }
 
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
@@ -135,26 +119,6 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
             }
           );
       });
-
-    // Subscribe to Selected Product change
-    this._ecommerceService.onSelectedProductChange.subscribe((res) => {
-      this.product = res[0];
-    });
-
-    // Subscribe to Wishlist change
-    this._ecommerceService.onWishlistChange.subscribe(
-      (res) => (this.wishlist = res)
-    );
-
-    // Subscribe to Cartlist change
-    this._ecommerceService.onCartListChange.subscribe(
-      (res) => (this.cartList = res)
-    );
-
-    // Get Related Products
-    this._ecommerceService.getRelatedProducts().then((response) => {
-      this.relatedProducts = response;
-    });
 
     this.product.isInWishlist =
       this.wishlist.findIndex((p) => p.productId === this.product.id) > -1;
