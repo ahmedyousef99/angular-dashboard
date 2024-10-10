@@ -36,14 +36,26 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     private _coreSidebarService: CoreSidebarService,
     private _coreConfigService: CoreConfigService,
     private toastr: ToastrService,
-    private modalService: NgbModal,
-    private _formBuilder: FormBuilder
+    private modalService: NgbModal
   ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
-    this.getCustomersList();
+    // Subscribe config change
+    this._coreConfigService.config
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)
+        if (config.layout.animation === "zoomIn") {
+          setTimeout(() => {
+            console.log(this.rows, `before`);
+            this.getCustomersList();
+          }, 1);
+        } else {
+          this.getCustomersList();
+        }
+      });
   }
   toggleSidebar(name: string, row?: Category): void {
     localStorage.removeItem("rowForSub");

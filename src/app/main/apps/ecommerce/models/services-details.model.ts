@@ -74,3 +74,26 @@ export interface Worker {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface UpdateServiceBody {
+  categoryId: number;
+  subCategoryId: number;
+  price: number;
+  yearsOfExperience: number;
+  nameEn: string;
+  nameEs: string;
+  nameAr: string;
+  descriptionEn: string;
+  descriptionEs: string;
+  descriptionAr: string;
+  mainImage: string;
+  images: string[];
+  serviceWorkingTimeList: {
+    id: number;
+    dayKey: string;
+    startingHour: number;
+    endingHour: number;
+  }[];
+  deletedServiceWorkingTimeIdsList: number[];
+  deletedServiceImagesIdsList: number[];
+}

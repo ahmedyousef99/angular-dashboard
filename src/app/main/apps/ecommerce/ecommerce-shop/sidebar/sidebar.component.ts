@@ -6,11 +6,10 @@ import {
   Output,
   ViewEncapsulation,
 } from "@angular/core";
-import { ITreeOptions } from "@circlon/angular-tree-component";
 import { CategoryService } from "app/main/apps/category/category.service";
+import { Category } from "app/main/apps/category/models/category.model";
 import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Category } from "../../models/services.model";
+import { debounceTime, switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "ecommerce-sidebar",
@@ -19,67 +18,96 @@ import { Category } from "../../models/services.model";
   encapsulation: ViewEncapsulation.None,
 })
 export class EcommerceSidebarComponent implements OnInit, OnDestroy {
-  private _unsubscribeAll: Subject<any>;
-  filtersObj: {
-    rate?: number;
-    priceTo?: number;
-    priceFrom?: number;
-    categoryId?: number;
-  } = {
+  public categoryList: Category[] = [];
+  private _unsubscribeAll: Subject<void> = new Subject();
+  private sliderValueChange: Subject<number[]> = new Subject<number[]>();
+
+  filtersObj = {
     rate: 0,
     priceTo: 0,
     priceFrom: 0,
     categoryId: 0,
+    subCategoryId: 0,
   };
-  public rate: number = 0;
-  // Public
+
+  public rate = 0;
   public someValue = [1, 100];
-  // @Output() public sliderPriceValue: EventEmitter<any> =
-  //   new EventEmitter<any>();
-  @Output() public filters: EventEmitter<{
-    rate?: number;
-    priceTo?: number;
-    priceFrom?: number;
-    categoryId?: number;
-  }> = new EventEmitter<any>();
-  rows: Category[];
-  constructor(public _categoryListService: CategoryService) {
-    this._unsubscribeAll = new Subject();
+
+  @Output() public filters: EventEmitter<typeof this.filtersObj> =
+    new EventEmitter();
+
+  constructor(private categoryService: CategoryService) {
+    this.sliderValueChange
+      .pipe(
+        debounceTime(1000),
+        switchMap((value) => {
+          this.updatePriceFilters(value);
+          return [];
+        }),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe();
   }
 
-  ngOnInit(): void {}
-  public onChange(value): void {
-    this.filtersObj.priceFrom = value[0];
-    this.filtersObj.priceTo = value[1];
-
-    // this.sliderPriceValue.emit(value);
-    this.filters.emit(this.filtersObj);
+  ngOnInit(): void {
+    this.loadCategories();
   }
 
-  getCustomersList(
-    isFromDelete?: {
-      isAfterDelete?: boolean;
-      name?: string;
-    },
-    searchData?: {
-      page?: number;
-      limit?: number;
-      search?: string;
-    }
-  ): void {
-    this._categoryListService
-      .getAllCategories(searchData)
+  public onChange(value: number[]): void {
+    this.sliderValueChange.next(value);
+  }
+
+  private loadCategories(): void {
+    this.categoryService
+      .getAllCategories()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        this.rows = res.data.data;
+        this.categoryList = res.data.data;
       });
   }
-  public onRateChange(value: any) {
-    this.filtersObj.rate = value;
+
+  public onRateChange(rate: number): void {
+    this.filtersObj.rate = rate;
+    this.emitFilters();
+  }
+
+  public updateCategoryId(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.filtersObj.categoryId = value === "all" ? 0 : Number(value);
+    this.filtersObj.subCategoryId = 0;
+    this.emitFilters();
+  }
+
+  public updateSubCategoryId(event: Event): void {
+    const sub: number = Number((event.target as HTMLSelectElement).value);
+    this.filtersObj.categoryId = sub;
+    this.filtersObj.subCategoryId = sub;
+    this.emitFilters();
+  }
+
+  public clearFilters(): void {
+    this.filtersObj = {
+      rate: 0,
+      priceTo: 0,
+      priceFrom: 0,
+      categoryId: 0,
+      subCategoryId: 0,
+    };
+    this.someValue = [1, 100];
+    this.emitFilters();
+  }
+
+  private emitFilters(): void {
     this.filters.emit(this.filtersObj);
   }
+
+  private updatePriceFilters(value: number[]): void {
+    this.filtersObj.priceFrom = value[0];
+    this.filtersObj.priceTo = value[1];
+    this.emitFilters();
+  }
+
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }

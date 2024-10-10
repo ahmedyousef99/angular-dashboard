@@ -32,6 +32,13 @@ import { WorkerEditComponent } from "./workers/workers-edit/worker-edit.componen
 import { WorkerListComponent } from "./workers/workers-list/worker-list.component";
 import { NewWorkerSidebarComponent } from "./workers/workers-list/new-worker-sidebar/new-worker-sidebar.component";
 import { WorkerViewComponent } from "./workers/workers-view/worker-view.component";
+import { BookingListComponent } from "./booking/booking-list/booking-list.component";
+import { BookingViewComponent } from "./booking/booking-view/booking-view.component";
+import { BookingListService } from "./booking/booking-list/booking-list.service";
+import { ContentHeaderModule } from "app/layout/components/content-header/content-header.module";
+import { BookingCancellationListService } from "./booking-cancellation/booking-list/booking-cancellation-list.service";
+import { BookingCancellationListComponent } from "./booking-cancellation/booking-list/booking-cancellation-list.component";
+import { BookingCancellationViewComponent } from "./booking-cancellation/booking-view/booking-cancellation-view.component";
 
 // routing
 const routes: Routes = [
@@ -52,6 +59,11 @@ const routes: Routes = [
     data: { animation: "AdminListComponent" },
   },
   {
+    path: "booking-list",
+    component: BookingListComponent,
+    data: { animation: "AdminListComponent" },
+  },
+  {
     path: "admin-view/:id",
     component: AdminViewComponent,
     data: { animation: "AdminViewComponent" },
@@ -64,6 +76,11 @@ const routes: Routes = [
   {
     path: "user-view/:id",
     component: UserViewComponent,
+    data: { animation: "UserViewComponent" },
+  },
+  {
+    path: "booking-view/:id",
+    component: BookingViewComponent,
     data: { animation: "UserViewComponent" },
   },
 
@@ -98,6 +115,10 @@ const routes: Routes = [
     WorkerListComponent,
     NewWorkerSidebarComponent,
     WorkerViewComponent,
+    BookingListComponent,
+    BookingViewComponent,
+    BookingCancellationListComponent,
+    BookingCancellationViewComponent,
   ],
   imports: [
     CommonModule,
@@ -111,6 +132,7 @@ const routes: Routes = [
     CorePipesModule,
     CoreDirectivesModule,
     CoreSidebarModule,
+    ContentHeaderModule,
   ],
   providers: [
     UserListService,
@@ -118,6 +140,8 @@ const routes: Routes = [
     UserEditService,
     AdminListService,
     WorkerListService,
+    BookingListService,
+    BookingCancellationListService,
   ],
 })
 export class UserModule {}

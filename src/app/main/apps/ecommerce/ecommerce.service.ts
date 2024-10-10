@@ -7,9 +7,13 @@ import {
 } from "@angular/router";
 import { environment } from "environments/environment";
 
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { getAllServices, ServiceFilters } from "./models/services.model";
-import { ServicesDetails } from "./models/services-details.model";
+import {
+  ServicesDetails,
+  UpdateServiceBody,
+} from "./models/services-details.model";
+import { catchError } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
@@ -113,20 +117,17 @@ export class EcommerceService implements Resolve<any> {
       }
     );
   }
-  // public updateWorker(
-  //   id: number,
-  //   data: CreateWorkerReq
-  // ): Observable<CreateWorkersRes> {
-  //   console.log(data, `from service`);
-  //   return this._httpClient
-  //     .patch<CreateWorkersRes>(`${environment.apiUrl}admin/worker/${id}`, data)
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.error("Error updating Admin:", error);
-  //         return throwError(error);
-  //       })
-  //     );
-  // }
+  public updateService(id: number, data: UpdateServiceBody): Observable<any> {
+    console.log(data, `from service`);
+    return this._httpClient
+      .patch<any>(`${environment.apiUrl}admin/service/${id}`, data)
+      .pipe(
+        catchError((error) => {
+          console.error("Error updating service:", error);
+          return throwError(error);
+        })
+      );
+  }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

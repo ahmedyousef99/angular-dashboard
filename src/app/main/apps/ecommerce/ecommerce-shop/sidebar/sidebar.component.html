@@ -6,398 +6,117 @@
 </div>
 <div class="card">
   <div class="card-body">
-    <!-- Price Filter starts -->
+    <!-- Categories Filter -->
     <div class="multi-range-price">
-      <h6 class="filter-title mt-0">Multi Range</h6>
+      <h6 class="filter-title mt-0">Categories</h6>
       <ul class="list-unstyled price-range" id="price-range">
         <li>
           <div class="custom-control custom-radio">
             <input
+              value="all"
               type="radio"
               id="priceAll"
               name="price-range"
               class="custom-control-input"
-              checked
+              (change)="updateCategoryId($event)"
+              [checked]="filtersObj.categoryId === 0"
             />
             <label class="custom-control-label" for="priceAll">All</label>
           </div>
         </li>
-        <li>
+        <li *ngFor="let category of categoryList">
           <div class="custom-control custom-radio">
             <input
+              [value]="category.id"
               type="radio"
-              id="priceRange1"
+              id="{{ category.id }}"
               name="price-range"
               class="custom-control-input"
+              (change)="updateCategoryId($event)"
+              [checked]="filtersObj.categoryId == category.id"
             />
-            <label class="custom-control-label" for="priceRange1"
-              >&lt;=$10</label
-            >
+            <label class="custom-control-label" for="{{ category.id }}">{{
+              category.nameEn
+            }}</label>
           </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="priceRange2"
-              name="price-range"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="priceRange2"
-              >$10 - $100</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="priceARange3"
-              name="price-range"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="priceARange3"
-              >$100 - $500</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="priceRange4"
-              name="price-range"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="priceRange4"
-              >&gt;= $500</label
-            >
-          </div>
+          <ul
+            class="list-unstyled mt-1 pl-1 mb-2"
+            *ngIf="category.subCategoryList.length > 0"
+          >
+            <li *ngFor="let subCategory of category.subCategoryList">
+              <div class="custom-control custom-radio">
+                <input
+                  [value]="subCategory.id"
+                  type="radio"
+                  id="{{ subCategory.id }}"
+                  name="sub-price-range"
+                  class="custom-control-input"
+                  (change)="updateSubCategoryId($event)"
+                  [checked]="filtersObj.subCategoryId == subCategory.id"
+                />
+                <label
+                  class="custom-control-label"
+                  for="{{ subCategory.id }}"
+                  >{{ subCategory.nameEn }}</label
+                >
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
-    <!-- Price Filter ends -->
+    <!-- Categories Filter Ends -->
 
-    <!-- Price Slider starts -->
+    <!-- Price Slider -->
     <div class="price-slider">
       <h6 class="filter-title">Price Range</h6>
-      <div class="price-slider">
-        <nouislider
-          [connect]="true"
-          [ngClass]="'mt-3'"
-          [behaviour]="'drag'"
-          [tooltips]="true"
-          [min]="1"
-          [max]="100"
-          [limit]="100"
-          [step]="2"
-          [(ngModel)]="someValue"
-          (ngModelChange)="onChange($event)"
-        ></nouislider>
-      </div>
+      <nouislider
+        [connect]="true"
+        class="mt-3"
+        [behaviour]="'drag'"
+        [tooltips]="true"
+        [min]="1"
+        [max]="100"
+        [limit]="100"
+        [step]="2"
+        [(ngModel)]="someValue"
+        (ngModelChange)="onChange($event)"
+      ></nouislider>
     </div>
-    <!-- Price Range ends -->
+    <!-- Price Slider Ends -->
 
-    <!-- Categories Starts -->
-    <div id="product-categories">
-      <h6 class="filter-title">Categories</h6>
-      <ul class="list-unstyled categories-list">
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category1"
-              name="category-filter"
-              class="custom-control-input"
-              checked
-            />
-            <label class="custom-control-label" for="category1"
-              >Appliances</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category2"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category2">Audio</label>
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category3"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category3"
-              >Cameras & Camcorders</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category4"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category4"
-              >Car Electronics & GPS</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category5"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category5"
-              >Cell Phones</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category6"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category6"
-              >Computers & Tablets</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category7"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category7"
-              >Health, Fitness & Beauty</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category8"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category8"
-              >Office & School Supplies</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category9"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category9"
-              >TV & Home Theater</label
-            >
-          </div>
-        </li>
-        <li>
-          <div class="custom-control custom-radio">
-            <input
-              type="radio"
-              id="category10"
-              name="category-filter"
-              class="custom-control-input"
-            />
-            <label class="custom-control-label" for="category10"
-              >Video Games</label
-            >
-          </div>
-        </li>
-      </ul>
-    </div>
-    <!-- Categories Ends -->
-
-    <!-- Brands starts -->
-    <div class="brands">
-      <h6 class="filter-title">Brands</h6>
-      <ul class="list-unstyled brand-list">
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand1"
-            />
-            <label class="custom-control-label" for="productBrand1"
-              >Insignia™</label
-            >
-          </div>
-          <span>746</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand2"
-              checked
-            />
-            <label class="custom-control-label" for="productBrand2"
-              >Samsung</label
-            >
-          </div>
-          <span>633</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand3"
-            />
-            <label class="custom-control-label" for="productBrand3"
-              >Metra</label
-            >
-          </div>
-          <span>591</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand4"
-            />
-            <label class="custom-control-label" for="productBrand4">HP</label>
-          </div>
-          <span>530</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand5"
-              checked
-            />
-            <label class="custom-control-label" for="productBrand5"
-              >Apple</label
-            >
-          </div>
-          <span>442</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand6"
-            />
-            <label class="custom-control-label" for="productBrand6">GE</label>
-          </div>
-          <span>394</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand7"
-            />
-            <label class="custom-control-label" for="productBrand7">Sony</label>
-          </div>
-          <span>350</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand8"
-            />
-            <label class="custom-control-label" for="productBrand8"
-              >Incipio</label
-            >
-          </div>
-          <span>320</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand9"
-            />
-            <label class="custom-control-label" for="productBrand9"
-              >KitchenAid</label
-            >
-          </div>
-          <span>318</span>
-        </li>
-        <li>
-          <div class="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              class="custom-control-input"
-              id="productBrand10"
-            />
-            <label class="custom-control-label" for="productBrand10"
-              >Whirlpool</label
-            >
-          </div>
-          <span>298</span>
-        </li>
-      </ul>
-    </div>
-    <!-- Brand ends -->
-
-    <!-- Rating starts -->
+    <!-- Ratings Filter -->
     <div id="ratings">
       <h6 class="filter-title">Ratings</h6>
       <div class="ratings-list">
-        <a href="javascript:void(0)">
-          <span class="rating rating-sm">
-            <ngb-rating
-              [rate]="rate"
-              [max]="5"
-              class="outline-none"
-              (rateChange)="onRateChange($event)"
-            >
-              <ng-template let-fill="fill" let-index="index"
-                ><span
-                  class="fa fa-star-o mr-25"
-                  [class.fa-star]="fill === 100"
-                ></span
-              ></ng-template>
-            </ngb-rating>
-          </span>
-          & up
-        </a>
+        <span class="rating rating-sm">
+          <ngb-rating
+            [rate]="filtersObj.rate"
+            [max]="5"
+            class="outline-none"
+            (rateChange)="onRateChange($event)"
+          >
+            <ng-template let-fill="fill" let-index="index">
+              <span
+                class="fa fa-star-o mr-25"
+                [class.fa-star]="fill === 100"
+              ></span>
+            </ng-template>
+          </ngb-rating>
+        </span>
+        & up
       </div>
     </div>
-    <!-- Rating ends -->
+    <!-- Ratings Filter Ends -->
 
-    <!-- Clear Filters Starts -->
+    <!-- Clear Filters -->
     <div id="clear-filters">
-      <button type="button" class="btn btn-block btn-primary" rippleEffect>
+      <button
+        (click)="clearFilters()"
+        type="button"
+        class="btn btn-block btn-primary"
+        rippleEffect
+      >
         Clear All Filters
       </button>
     </div>

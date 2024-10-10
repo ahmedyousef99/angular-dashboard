@@ -26,6 +26,7 @@ import { EcommerceWishlistComponent } from "app/main/apps/ecommerce/ecommerce-wi
 import { EcommerceCheckoutComponent } from "app/main/apps/ecommerce/ecommerce-checkout/ecommerce-checkout.component";
 import { EcommerceCheckoutItemComponent } from "app/main/apps/ecommerce/ecommerce-checkout/ecommerce-checkout-item/ecommerce-checkout-item.component";
 import { TreeModule } from "@circlon/angular-tree-component";
+import { UpdateServiceComponent } from "./update-service/update-service.component";
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   direction: "horizontal",
@@ -68,7 +69,12 @@ const routes: Routes = [
   },
   {
     path: "details",
-    redirectTo: "/apps/e-commerce/details/27", //Redirection
+    redirectTo: "/apps/e-commerce/update/11",
+    data: { animation: "EcommerceDetailsComponent" },
+  },
+  {
+    path: "update/:id",
+    component: UpdateServiceComponent,
     data: { animation: "EcommerceDetailsComponent" },
   },
 ];
@@ -82,6 +88,7 @@ const routes: Routes = [
     EcommerceCheckoutComponent,
     EcommerceItemComponent,
     EcommerceCheckoutItemComponent,
+    UpdateServiceComponent,
   ],
   imports: [
     CommonModule,

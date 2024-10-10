@@ -25,7 +25,7 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
   public cartList;
   public relatedProducts;
   private _unsubscribeAll: Subject<any>;
-  public ServiceId: number;
+  public serviceId: number;
   public dataServices: Data;
   public mainImage: string = ``;
   public selectedId: number = 0;
@@ -115,10 +115,10 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {
-        this.ServiceId = +params[`id`];
+        this.serviceId = +params[`id`];
         this.blockUI.start();
         this._ecommerceService
-          .getServiceDetails(this.ServiceId)
+          .getServiceDetails(this.serviceId)
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(
             (res) => {
@@ -163,28 +163,17 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
 
     // content header
     this.contentHeader = {
-      headerTitle: "Product Details",
-      actionButton: true,
+      headerTitle: "Services Details",
       breadcrumb: {
         type: "",
         links: [
           {
-            name: "Home",
+            name: "Services",
             isLink: true,
             link: "/",
           },
           {
-            name: "eCommerce",
-            isLink: true,
-            link: "/",
-          },
-          {
-            name: "Shop",
-            isLink: true,
-            link: "/",
-          },
-          {
-            name: "Details",
+            name: " Services Details",
             isLink: false,
           },
         ],

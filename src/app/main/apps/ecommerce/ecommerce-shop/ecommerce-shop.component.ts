@@ -9,6 +9,7 @@ import { debounceTime, takeUntil } from "rxjs/operators";
 import { DataServiceRes, getAllServices } from "../models/services.model";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { FormControl, FormBuilder } from "@angular/forms";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 @Component({
   selector: "app-ecommerce-shop",
   templateUrl: "./ecommerce-shop.component.html",
@@ -39,14 +40,18 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
     priceTo?: number;
     priceFrom?: number;
     categoryId?: number;
+    subCategoryId: number;
     search?: string;
   } = {
     rate: 0,
     priceTo: 0,
     priceFrom: 0,
     categoryId: 0,
+    subCategoryId: 0,
     search: "",
   };
+  deleteLoader: boolean;
+  customerDataForDelete: number;
 
   /**
    *
@@ -56,7 +61,7 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
   constructor(
     private _coreSidebarService: CoreSidebarService,
     private _ecommerceService: EcommerceService,
-    private _formBuilder: FormBuilder
+    private modalService: NgbModal
   ) {
     this._unsubscribeAll = new Subject();
     this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((res) => {
@@ -66,11 +71,12 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
 
       if (res.length > 0) {
         console.log(res);
+        this.filters.search = ``;
         this.filters.search = res;
-        // this.rows = [];
-        // this.getWrokersList({}, { search: res });
+        this.getAllServices(this.filters);
       } else {
-        // this.getWrokersList();
+        this.filters.search = ``;
+        this.getAllServices(this.filters);
       }
     });
   }
@@ -78,75 +84,36 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
   // Public Methods
   // -----------------------------------------------------------------------------------------------------
 
-  /**
-   * Toggle Sidebar
-   *
-   * @param name
-   */
-  toggleSidebar(name): void {
-    this._coreSidebarService.getSidebarRegistry(name).toggleOpen();
-  }
-
-  /**
-   * Update to List View
-   */
-
-  /**
-   * Sort Product
-   */
-  sortProduct(sortParam) {
-    this._ecommerceService.sortProduct(sortParam);
-  }
-
-  // Lifecycle Hooks
-  // -----------------------------------------------------------------------------------------------------
-
-  /**
-   * On init
-   */
-  ngOnInit(): void {
-    // Subscribe to ProductList change
+  private getAllServices(filters: {
+    rate?: number;
+    priceTo?: number;
+    priceFrom?: number;
+    categoryId?: number;
+    search?: string;
+  }): void {
     this.blockUI.start();
     this._ecommerceService
-      .getAllServices()
+      .getAllServices(this.filters)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         this.blockUI.stop();
         this.serviceRes = res;
+        this.products = [];
         this.products = res.data.data;
       });
-
-    // Subscribe to Wishlist change
-    this._ecommerceService.onWishlistChange.subscribe(
-      (res) => (this.wishlist = res)
-    );
-
-    // Subscribe to Cartlist change
-    this._ecommerceService.onCartListChange.subscribe(
-      (res) => (this.cartList = res)
-    );
-
-    // update product is in Wishlist & is in CartList : Boolean
+  }
+  ngOnInit(): void {
+    this.blockUI.start();
+    this.getAllServices(this.filters);
 
     // content header
     this.contentHeader = {
-      headerTitle: "Shop",
-      actionButton: true,
+      headerTitle: "Services",
       breadcrumb: {
         type: "",
         links: [
           {
-            name: "Home",
-            isLink: true,
-            link: "/",
-          },
-          {
-            name: "eCommerce",
-            isLink: true,
-            link: "/",
-          },
-          {
-            name: "Shop",
+            name: "Services List",
             isLink: false,
           },
         ],
@@ -159,16 +126,37 @@ export class EcommerceShopComponent implements OnInit, OnDestroy {
     priceTo?: number;
     priceFrom?: number;
     categoryId?: number;
+    subCategoryId: number;
   }): void {
-    console.log(filter);
-    console.log(this.filters, 11111);
     this.filters = filter;
-    this.filters.search = `23`;
-    console.log(this.filters, 22222);
+    this.getAllServices(filter);
   }
   public pageChange(value: any): void {
     console.log(value);
   }
+  public modalOpenWarning(id: number, modalWarning) {
+    this.customerDataForDelete = id;
+    console.log(id);
+    this.modalService.open(modalWarning, {
+      centered: true,
+      windowClass: "modal modal-warning",
+    });
+  }
+
+  public onDelete(): void {
+    this.deleteLoader = !this.deleteLoader;
+    // this.
+    // _ecommerceService.deleteService(this.customerDataForDelete)
+    //   .pipe(takeUntil(this._unsubscribeAll))
+    //   .subscribe((response) => {
+    //     this.modalService.dismissAll();
+    //     this.deleteLoader = false;
+    //     this.customerDataForDelete = 0;
+    //     this.getAllSErvices()
+
+    //   });
+  }
+
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();

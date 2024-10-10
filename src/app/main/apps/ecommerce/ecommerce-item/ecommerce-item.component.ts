@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from "@angular/core";
 
 import { EcommerceService } from "app/main/apps/ecommerce/ecommerce.service";
 import { DataServiceRes } from "../models/services.model";
@@ -13,31 +20,12 @@ import { DataServiceRes } from "../models/services.model";
 export class EcommerceItemComponent implements OnInit {
   // Input Decorotor
   @Input() product: DataServiceRes;
+  @Output() public onDeleteAction: EventEmitter<any> = new EventEmitter();
 
-  // Public
-
-  /**
-   *
-   * @param {EcommerceService} _ecommerceService
-   */
   constructor(private _ecommerceService: EcommerceService) {}
+  onDeleteItem(id: number): void {
+    this.onDeleteAction.emit(id);
+  }
 
-  // Public Methods
-  // -----------------------------------------------------------------------------------------------------
-
-  /**
-   * Toggle Wishlist
-   *
-   * @param product
-   */
-
-  /**
-   * Add To Cart
-   *
-   * @param product
-   */
-
-  // Lifecycle Hooks
-  // -----------------------------------------------------------------------------------------------------
   ngOnInit(): void {}
 }
