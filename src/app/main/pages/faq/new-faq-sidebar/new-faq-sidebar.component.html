@@ -1,0 +1,214 @@
+<div class="slideout-content">
+  <!-- Modal to add new user starts-->
+  <div
+    class="modalsd modal-slide-in sdfade new-user-modal"
+    id="modals-slide-in"
+  >
+    <div class="modal-dialog">
+      <form
+        class="add-new-user modal-content pt-0"
+        (ngSubmit)="(workerForm.valid)"
+        [formGroup]="workerForm"
+      >
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="toggleSidebar('new-user-sidebar')"
+        >
+          ×
+        </button>
+        <div class="modal-header mb-1">
+          <h5 *ngIf="formType" class="modal-title" id="exampleModalLabel">
+            Update FAQ
+          </h5>
+          <h5 *ngIf="!formType" class="modal-title" id="exampleModalLabel">
+            New FAQ
+          </h5>
+        </div>
+        <div class="modal-body flex-grow-1">
+          <div class="form-group">
+            <label for="status">User Type</label>
+            <select
+              formControlName="userType"
+              class="form-control"
+              name="status"
+              id="status"
+              [class.error]="submitted && f.userType.errors"
+            >
+              <option value="CUSTOMER">Customer</option>
+              <option value="WORKER">Worker</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-fullname"
+              >Question in English</label
+            >
+            <input
+              formControlName="questionEn"
+              type="text"
+              class="form-control dt-full-name"
+              id="basic-icon-default-fullname"
+              placeholder="Question in English"
+              name="user-fullname"
+              [class.error]="submitted && f.questionEn.errors"
+              required
+              aria-label="John Doe"
+              aria-describedby="basic-icon-default-fullname2"
+            />
+            <span *ngIf="submitted && f.questionEn.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.questionEn.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Question in Spanish</label
+            >
+            <input
+              formControlName="questionEs"
+              type="email"
+              placeholder="Question in Spanish"
+              class="form-control"
+              aria-label="jdoe1"
+              name="email"
+              [class.error]="submitted && f.questionEs.errors"
+              required
+            />
+            <span *ngIf="submitted && f.questionEs.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.questionEs.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Question in Arabic</label
+            >
+            <input
+              formControlName="questionAr"
+              type="text"
+              placeholder="Question in Arabic"
+              class="form-control"
+              aria-label="jdoe1"
+              name="user-name"
+              [class.error]="submitted && f.questionAr.errors"
+            />
+            <span *ngIf="submitted && f.questionAr.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.questionAr.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Answer in Spanish</label
+            >
+            <input
+              formControlName="answerEs"
+              type="text"
+              placeholder="Answer in Spanish"
+              class="form-control"
+              aria-label="jdoe1"
+              name="user-name"
+              [class.error]="submitted && f.answerEs.errors"
+            />
+
+            <span *ngIf="submitted && f.answerEs.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.answerEs.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Answer in English</label
+            >
+            <input
+              formControlName="answerEn"
+              type="text"
+              placeholder="Answer in English"
+              class="form-control"
+              aria-label="jdoe1"
+              name="user-name"
+              [class.error]="submitted && f.answerEs.errors"
+            />
+
+            <span *ngIf="submitted && f.answerEs.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.answerEs.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Answer in Arabic</label
+            >
+            <input
+              formControlName="answerAr"
+              type="text"
+              placeholder="Answer in Arabic"
+              class="form-control"
+              aria-label="jdoe1"
+              name="user-name"
+              [class.error]="submitted && f.answerAr.errors"
+            />
+
+            <span *ngIf="submitted && f.answerAr.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.answerAr.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary mr-1"
+            (click)="submit()"
+            rippleEffect
+          >
+            <span *ngIf="!isSubmitLoading">{{
+              formType ? "Update" : "Submit"
+            }}</span>
+            <div *ngIf="isSubmitLoading">
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+
+              <span class="ml-25 align-middle">Loading...</span>
+            </div>
+          </button>
+          <button
+            type="reset"
+            class="btn btn-outline-secondary"
+            (click)="toggleSidebar('new-user-sidebar')"
+            rippleEffect
+          >
+            Cancel
+          </button>
+          <span *ngIf="formMessage" class="invalid-form">
+            <span class="form-text text-danger">{{ formMessage }}!</span>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Modal to add new user Ends-->
+</div>

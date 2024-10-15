@@ -1,0 +1,281 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+  <div class="content-body">
+    <!-- app e-commerce details start -->
+    <section class="app-ecommerce-details">
+      <div *ngIf="dataServices" class="card">
+        <!-- Product Details starts -->
+        <div class="card-body">
+          <div class="row my-2">
+            <div
+              class="col-12 col-md-5 d-flex align-items-center justify-content-center mb-2 mb-md-0"
+            >
+              <div class="d-flex align-items-center justify-content-center">
+                <img
+                  [src]="dataServices.mainImage"
+                  class="img-fluid product-img"
+                  alt="product image"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-md-7">
+              <h4>{{ dataServices.nameEn }}</h4>
+              <span class="card-text item-company"
+                >By
+                <a
+                  routerLink="/apps/user/worker-view/{{
+                    dataServices.worker.id
+                  }}"
+                  class="company-name"
+                  >{{ dataServices.worker.name }}</a
+                ></span
+              >
+              <br />
+              <span class="card-text item-company"
+                >Category
+                <a
+                  routerLink="/apps/categories/category-view/{{
+                    dataServices.category.id
+                  }}"
+                  class="company-name"
+                  >{{ dataServices.category.nameEn }}</a
+                ></span
+              >
+              <div
+                class="ecommerce-details-price d-flex align-items-center flex-wrap mt-1"
+              >
+                <h4 class="item-price mr-1 mb-1">${{ dataServices.price }}</h4>
+                <div
+                  class="rating rating-sm px-1 border-right border-left mb-1"
+                >
+                  <ngb-rating
+                    [rate]="dataServices.averageRate"
+                    [readonly]="true"
+                    [max]="5"
+                    class="outline-none"
+                  >
+                    <ng-template let-fill="fill" let-index="index"
+                      ><span
+                        class="fa fa-star-o mr-25"
+                        [class.fa-star]="fill === 100"
+                      ></span
+                    ></ng-template>
+                  </ngb-rating>
+                </div>
+                <div
+                  style="gap: 5px; font-size: 19px"
+                  class="pl-1 mb-1 d-flex align-items-center eye-icon"
+                >
+                  <i data-feather="eye"></i>
+                  <strong class="text-info">{{
+                    dataServices.reviewsCount
+                  }}</strong>
+                </div>
+              </div>
+              <h6>
+                Years Of Experience:
+                <strong class="text-info"
+                  >{{ dataServices.yearsOfExperience }} Years
+                </strong>
+              </h6>
+              <p class="card-text">
+                {{ dataServices.descriptionEn }}
+              </p>
+
+              <hr />
+
+              <div class="table-responsive">
+                <h6 class="pt-2 pb-1">Services Working Time</h6>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>Starting Hour</th>
+                      <th>Ending Hour</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-striped">
+                    <tr
+                      *ngFor="let time of dataServices.serviceWorkingTimeList"
+                    >
+                      <td>{{ time.dayKey }}</td>
+                      <td>{{ time.startingHour }}</td>
+                      <td>{{ time.endingHour }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- <ul class="product-features list-unstyled">
+                <li *ngIf="product.hasFreeShipping">
+                  <i data-feather="shopping-cart"></i>
+                  <span>Free Shipping</span>
+                </li>
+                <li>
+                  <i data-feather="dollar-sign"></i>
+                  <span>EMI options available</span>
+                </li>
+              </ul> -->
+              <!-- <hr /> -->
+              <div class="product-color-options">
+                <h6>More Images</h6>
+                <ul class="list-unstyled mb-0">
+                  <li class="d-inline-block">
+                    <div class="color-option b-danger">
+                      <div
+                        [ngStyle]="{
+                          'background-image': 'url(' + mainImage + ')'
+                        }"
+                        class="filloption main-image"
+                      ></div>
+                    </div>
+                  </li>
+                  <li
+                    *ngFor="let image of dataServices.serviceImageList"
+                    class="d-inline-block"
+                    [ngClass]="selectedId == image.id ? 'selected' : ''"
+                  >
+                    <div
+                      (click)="
+                        onImageChange({ image: image.image, id: image.id })
+                      "
+                      class="color-option b-success"
+                    >
+                      <div
+                        [ngStyle]="{
+                          'background-image': 'url(' + image.image + ')'
+                        }"
+                        class="filloption"
+                      >
+                        <!-- <img class="img-fluid" src="{{ image.image }}" alt="" /> -->
+                      </div>
+                    </div>
+                  </li>
+
+                  <!-- <li class="d-inline-block">
+                    <div class="color-option b-success">
+                      <div class="filloption bg-success"></div>
+                    </div>
+                  </li>
+                  <li class="d-inline-block">
+                    <div class="color-option b-danger">
+                      <div class="filloption bg-danger"></div>
+                    </div>
+                  </li>
+                  <li class="d-inline-block">
+                    <div class="color-option b-warning">
+                      <div class="filloption bg-warning"></div>
+                    </div>
+                  </li>
+                  <li class="d-inline-block">
+                    <div class="color-option b-info">
+                      <div class="filloption bg-info"></div>
+                    </div>
+                  </li> -->
+                </ul>
+              </div>
+              <hr />
+              <div class="d-flex flex-column flex-sm-row pt-1">
+                <a
+                  routerLink="/apps/services/update/{{ serviceId }}"
+                  class="btn btn-primary btn-cart mr-0 mr-sm-1 mb-1 mb-sm-0"
+                  rippleEffect
+                >
+                  <i data-feather="edit" class="mr-25"></i>
+                  <span class="add-to-cart">Update it</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Product Details ends -->
+
+        <!-- Item features starts -->
+        <!-- Item features ends -->
+
+        <!-- Related Products starts -->
+
+        <!-- Related Products ends -->
+      </div>
+    </section>
+    <div *ngIf="reviews.length > 0" class="card">
+      <div class="card-body">
+        <div class="mt-4 mb-2 text-center">
+          <h4 class="text-light">Customer Reviews</h4>
+          <p class="card-text text-muted">See what our customers are saying</p>
+        </div>
+        <div
+          class="swiper-responsive-breakpoints swiper-container px-4 py-2"
+          [swiper]="swiperResponsive"
+        >
+          <div class="swiper-wrapper mb-2">
+            <div
+              class="swiper-slide p-0"
+              style="background: transparent"
+              *ngFor="let review of reviews"
+            >
+              <div class="review-card">
+                <div class="card-content">
+                  <div class="media">
+                    <div class="avatar mr-3">
+                      <ng-container
+                        *ngIf="review.customer.avatar; else defaultAvatar"
+                      >
+                        <img
+                          [src]="review.customer.avatar"
+                          width="50"
+                          height="50"
+                          alt="Avatar"
+                          class="rounded-circle"
+                        />
+                      </ng-container>
+                      <ng-template #defaultAvatar>
+                        <div class="default-avatar">
+                          {{ review.customer.name | initials }}
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div class="media-body">
+                      <div
+                        class="rating rating-sm px-1 border-right border-left mb-1"
+                      >
+                        <ngb-rating
+                          [(rate)]="review.rate"
+                          [readonly]="true"
+                          [max]="5"
+                          class="outline-none"
+                        >
+                          <ng-template let-fill="fill" let-index="index"
+                            ><span
+                              class="fa fa-star-o mr-25"
+                              [class.fa-star]="fill === 100"
+                            ></span
+                          ></ng-template>
+                        </ngb-rating>
+                      </div>
+                      <h6 class="font-weight-bold text-light mb-1">
+                        {{ review.customer.name }}
+                      </h6>
+                      <p class="review-date text-muted">
+                        {{ review.createdAt | date : "shortDate" }}
+                      </p>
+                      <p class="review-comment text-light">
+                        {{ review.comment }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Add Arrows -->
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- app e-commerce details end -->
+  </div>
+</div>
+<block-ui> </block-ui>

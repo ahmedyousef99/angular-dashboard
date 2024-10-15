@@ -1,0 +1,179 @@
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewEncapsulation,
+  ViewChild,
+} from "@angular/core";
+import { Router } from "@angular/router";
+import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ActivatedRoute, Params } from "@angular/router";
+import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { Admin, CreateAdminReq } from "../../models/admins.model";
+import { WorkerListService } from "../workers-list/worker-list.service";
+import { CreateWorkerReq } from "../../models/workers.model";
+
+@Component({
+  selector: "app-worker-edit",
+  templateUrl: "./worker-edit.component.html",
+  styleUrls: ["./worker-edit.component.scss"],
+  encapsulation: ViewEncapsulation.None,
+})
+export class WorkerEditComponent implements OnInit, OnDestroy {
+  // Public
+  public url = this.router.url;
+  public urlLastValue;
+  public rows;
+  public currentRow: Admin;
+  public tempRow;
+  public avatarImage: string;
+  public workerForm: FormGroup;
+  public passwordTextType: boolean;
+  public submitted = false;
+  @BlockUI() blockUI: NgBlockUI;
+  @ViewChild("accountForm") accountForm: NgForm;
+
+  public selectMultiLanguages = [
+    "English",
+    "Spanish",
+    "French",
+    "Russian",
+    "German",
+    "Arabic",
+    "Sanskrit",
+  ];
+  public selectMultiLanguagesSelected = [];
+
+  // Private
+  private _unsubscribeAll: Subject<any>;
+  productId: number;
+
+  /**
+   * Constructor
+   *
+   * @param {Router} router
+   * @param {UserEditService} _userEditService
+   */
+  constructor(
+    private router: Router,
+    private _formBuilder: FormBuilder,
+    private _workerListService: WorkerListService,
+    private route: ActivatedRoute
+  ) {
+    this._unsubscribeAll = new Subject();
+  }
+
+  // Public Methods
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * Reset Form With Default Values
+   */
+  resetFormWithDefaultValues() {
+    this.workerForm.reset();
+  }
+
+  /**
+   * Upload Image
+   *
+   * @param event
+   */
+  uploadImage(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+
+      reader.onload = (event: any) => {
+        this.avatarImage = event.target.result;
+        this.workerForm.get(`avatar`).patchValue(this.avatarImage);
+        console.log(this.workerForm.value);
+        console.log(this.avatarImage);
+      };
+
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  togglePasswordTextType() {
+    this.passwordTextType = !this.passwordTextType;
+  }
+  get f() {
+    return this.workerForm.controls;
+  }
+
+  private editAdmin(id: number, data: CreateWorkerReq): void {
+    this._workerListService
+      .updateWorker(id, data)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+
+  /**
+   * Submit
+   *
+   * @param form
+   */
+
+  submit() {
+    this.submitted = true;
+    console.log(this.workerForm.value);
+    if (this.workerForm.valid) {
+      console.log(`test`);
+      this.editAdmin(this.productId, this.workerForm.value);
+      // this.toggleSidebar("new-user-sidebar");
+    }
+  }
+
+  // Lifecycle Hooks
+  // -----------------------------------------------------------------------------------------------------
+  /**
+   * On init
+   */
+  ngOnInit(): void {
+    this.route.params
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((params: Params) => {
+        this.productId = +params[`id`];
+        this.blockUI.start();
+        console.log(this.productId);
+        this._workerListService
+          .getWorkersDetails(this.productId)
+          .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe(
+            (res) => {
+              console.log(res, `the res`);
+              this.currentRow = res.data;
+              this.workerForm.patchValue(this.currentRow);
+              this.blockUI.stop();
+              console.log(this.workerForm.value, `the form`);
+            },
+            (error) => {
+              this.blockUI.stop();
+            }
+          );
+        // this.getDetails(this.productId);
+      });
+
+    this.workerForm = this._formBuilder.group({
+      name: [``, [Validators.required]],
+      email: [``, [Validators.required, Validators.email]],
+      password: [``],
+      phone: [``],
+      dateOfBirth: [``, [Validators.required]],
+      avatar: [``],
+      status: [``], //INACTIVE or Active
+    });
+  }
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+}

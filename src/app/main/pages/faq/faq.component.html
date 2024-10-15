@@ -1,0 +1,315 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <!-- content-header component -->
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+    <!-- account setting page -->
+    <section id="faq">
+      <div class="row justify-content-end col-12">
+        <button
+          class="btn btn-primary ml-1"
+          rippleEffect
+          (click)="toggleSidebar('new-user-sidebar')"
+        >
+          <i
+            data-feather="plus"
+            class="d-sm-none d-inline-block mr-0 mr-sm-1"
+          ></i
+          ><span class="d-none d-sm-inline-block">Add New Faq</span>
+        </button>
+      </div>
+      <div class="row nav-vertical d-flex">
+        <div class="col-md-3 mb-2 mb-md-0">
+          <ul
+            ngbNav
+            #navVertical="ngbNav"
+            class="nav nav-pills flex-column nav-left"
+          >
+            <li class="nav-item" ngbNavItem>
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="payment"
+                data-toggle="pill"
+                href="#faq-payment"
+                aria-expanded="true"
+                role="tab"
+              >
+                <i [data-feather]="'user'" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">Customer</span>
+              </a>
+
+              <ng-template ngbNavContent>
+                <!-- payment panel -->
+                <div
+                  role="tabpanel"
+                  class="tab-pane active collapse-icon"
+                  id="faq-payment"
+                  aria-labelledby="payment"
+                  aria-expanded="true"
+                >
+                  <!-- icon and header -->
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-tag bg-light-primary mr-1">
+                      <i [data-feather]="'tool'" class="font-medium-4"></i>
+                    </div>
+                    <div>
+                      <h4 class="mb-0">Customer FAQs</h4>
+                    </div>
+                  </div>
+
+                  <!-- frequent answer and question  collapse  -->
+                  <div class="accordion collapse-margin mt-2">
+                    <ng-container
+                      *ngIf="
+                        (allCustomerFaqs | filter : searchText : 'question')
+                          .length;
+                        else noResults
+                      "
+                    >
+                      <ngb-accordion
+                        [destroyOnHide]="false"
+                        [closeOthers]="true"
+                        activeIds="paymentId1"
+                      >
+                        <ngb-panel
+                          id="paymentId{{ i }}"
+                          [cardClass]="'collapse-margin'"
+                          *ngFor="
+                            let faq of allCustomerFaqs
+                              | filter : searchText : 'question';
+                            let i = index
+                          "
+                        >
+                          <ng-template ngbPanelTitle>
+                            <span>{{ faq.questionEn }}</span>
+                          </ng-template>
+                          <ng-template ngbPanelContent>
+                            <div class="d-flex justify-content-between">
+                              <span> {{ faq.answerEn }} </span>
+                              <div
+                                style="width: 30%; gap: 10px"
+                                class="d-flex justify-content-end"
+                              >
+                                <div
+                                  style="cursor: pointer"
+                                  rippleEffect
+                                  (click)="
+                                    toggleSidebar(
+                                      'new-user-sidebar',
+                                      'edit',
+                                      faq
+                                    )
+                                  "
+                                >
+                                  <i
+                                    data-feather="edit"
+                                    rippleEffect
+                                    class="font-medium-3 text-primary toggle-icon"
+                                  >
+                                  </i>
+                                </div>
+                                <div
+                                  style="cursor: pointer"
+                                  rippleEffect
+                                  (click)="
+                                    modalOpenWarning(modalWarning, faq?.id)
+                                  "
+                                >
+                                  <i
+                                    data-feather="trash"
+                                    class="font-medium-3 text-danger toggle-icon"
+                                  >
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                          <div></div>
+                        </ngb-panel>
+                      </ngb-accordion>
+                    </ng-container>
+                    <ng-template #noResults>
+                      <div class="p-5 text-center">
+                        <h5 class="p-1">
+                          <i data-feather="info" size="19" class="mr-25"></i> No
+                          Results found
+                        </h5>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-template>
+            </li>
+            <li class="nav-item" ngbNavItem>
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="delivery"
+                data-toggle="pill"
+                href="#faq-delivery"
+                aria-expanded="false"
+                role="tab"
+              >
+                <i [data-feather]="'tool'" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">Workers</span>
+              </a>
+              <ng-template ngbNavContent>
+                <!-- delivery panel -->
+                <div
+                  class="tab-pane collapse-icon"
+                  id="faq-delivery"
+                  role="tabpanel"
+                  aria-labelledby="delivery"
+                  aria-expanded="false"
+                >
+                  <!-- icon and header -->
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-tag bg-light-primary mr-1">
+                      <i data-feather="tool" class="font-medium-4"></i>
+                    </div>
+                    <div>
+                      <h4 class="mb-0">Workers FAQs</h4>
+                      <!-- <span>{{ data.delivery.title }}</span> -->
+                    </div>
+                  </div>
+
+                  <!-- frequent answer and question  collapse  -->
+                  <div class="accordion collapse-margin mt-2">
+                    <ng-container
+                      *ngIf="
+                        (allWorkersFaqs | filter : searchText : 'question')
+                          .length;
+                        else noResults
+                      "
+                    >
+                      <ngb-accordion
+                        [destroyOnHide]="false"
+                        [closeOthers]="true"
+                        activeIds="deliveryId1"
+                      >
+                        <ngb-panel
+                          id="deliveryId{{ i }}"
+                          [cardClass]="'collapse-margin'"
+                          *ngFor="
+                            let faq of allWorkersFaqs
+                              | filter : searchText : 'question';
+                            let i = index
+                          "
+                        >
+                          <ng-template ngbPanelTitle>
+                            <span>{{ faq.questionEn }}</span>
+                          </ng-template>
+                          <ng-template ngbPanelContent>
+                            <div class="d-flex justify-content-between">
+                              <span> {{ faq.answerEn }} </span>
+                              <div
+                                style="width: 30%; gap: 10px"
+                                class="d-flex justify-content-end"
+                              >
+                                <div
+                                  style="cursor: pointer"
+                                  rippleEffect
+                                  (click)="
+                                    toggleSidebar(
+                                      'new-user-sidebar',
+                                      'edit',
+                                      faq
+                                    )
+                                  "
+                                >
+                                  <i
+                                    data-feather="edit"
+                                    rippleEffect
+                                    class="font-medium-3 text-primary toggle-icon"
+                                  >
+                                  </i>
+                                </div>
+                                <div
+                                  style="cursor: pointer"
+                                  rippleEffect
+                                  (click)="
+                                    modalOpenWarning(modalWarning, faq?.id)
+                                  "
+                                >
+                                  <i
+                                    data-feather="trash"
+                                    class="font-medium-3 text-danger toggle-icon"
+                                  >
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ngb-panel>
+                      </ngb-accordion>
+                    </ng-container>
+                    <ng-template #noResults>
+                      <div class="p-5 text-center">
+                        <h5 class="p-1">
+                          <i data-feather="info" size="19" class="mr-25"></i> No
+                          Results found
+                        </h5>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-template>
+            </li>
+
+            <!-- FAQ image -->
+            <img
+              src="assets/images/illustration/faq-illustrations.svg"
+              class="img-fluid d-none d-md-block pt-5"
+              alt="demand img"
+            />
+          </ul>
+        </div>
+        <div [ngbNavOutlet]="navVertical" class="col-12 col-md-9"></div>
+      </div>
+    </section>
+    <!--/ account setting page -->
+  </div>
+</div>
+<ng-template #modalWarning let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Delete FAQ</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    Are you sure you want to delete this FAQ
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-warning"
+      (click)="onDeleteFaq()"
+      rippleEffect
+    >
+      <span *ngIf="!deleteLoader"> Delete </span>
+      <div
+        *ngIf="deleteLoader"
+        style="width: 1rem; height: 1rem"
+        class="spinner-border text-light"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </button>
+  </div>
+</ng-template>
+<block-ui> </block-ui>
+<core-sidebar
+  class="modal modal-slide-in sidebar-todo-modal fade"
+  name="new-user-sidebar"
+  overlayClass="modal-backdrop"
+>
+  <app-new-faq-sidebar></app-new-faq-sidebar>
+</core-sidebar>

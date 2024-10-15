@@ -1,0 +1,181 @@
+<div class="content-wrapper container-xxl overflow-hidden p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+  <!-- Sidebar filters  -->
+  <div class="sidebar-detached sidebar-left">
+    <div class="sidebar">
+      <core-sidebar
+        class="sidebar-shop"
+        id="ecommerce-sidebar-toggler"
+        name="ecommerce-sidebar"
+        collapsibleSidebar="bs-gt-lg"
+        overlayClass="body-content-overlay"
+      >
+        <ecommerce-sidebar (filters)="getFilters($event)"></ecommerce-sidebar>
+      </core-sidebar>
+    </div>
+  </div>
+  <!--/ Sidebar filters -->
+
+  <div class="content-detached content-right">
+    <div class="content-body">
+      <!-- E-commerce Head Section Starts -->
+      <section *ngIf="products?.length > 0" id="ecommerce-header">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="ecommerce-header-items">
+              <div class="result-toggler">
+                <button
+                  class="navbar-toggler shop-sidebar-toggler"
+                  type="button"
+                  data-toggle="collapse"
+                  (click)="toggleSidebar('ecommerce-sidebar')"
+                >
+                  <span class="navbar-toggler-icon d-block d-lg-none"
+                    ><i data-feather="menu"></i
+                  ></span>
+                </button>
+                <div class="search-results">
+                  {{ (products | filter : searchText : "name").length }} results
+                  found
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ecommerce-searchbar" class="ecommerce-searchbar">
+        <div class="row mt-1">
+          <div class="col-sm-12">
+            <div class="input-group input-group-merge">
+              <input
+                [disabled]="products?.length == 0 && !filters.search"
+                [formControl]="searchControl"
+                type="text"
+                class="form-control search-product"
+                id="shop-search"
+                placeholder="Search services"
+                aria-label="Search..."
+                aria-describedby="shop-search"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text"
+                  ><i data-feather="search" class="text-muted"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- E-commerce Head Section Starts -->
+
+      <!-- E-commerce Products Starts -->
+      <ngb-alert
+        *ngIf="products?.length == 0"
+        [type]="'info'"
+        [dismissible]="false"
+        class="mt-1"
+      >
+        <div class="alert-body">There are no services available</div>
+      </ngb-alert>
+      <section
+        id="ecommerce-products"
+        [ngClass]="gridViewRef === true ? 'grid-view' : 'list-view'"
+      >
+        <app-ecommerce-item
+          class="card ecommerce-card"
+          (onDeleteAction)="modalOpenWarning($event, modalWarning)"
+          [product]="product"
+          *ngFor="let product of products"
+        ></app-ecommerce-item>
+      </section>
+      <!-- E-commerce Products Ends -->
+
+      <!-- E-commerce Pagination Starts -->
+      <section
+        *ngIf="serviceRes?.data.lastPage > 1 && products?.length > 0"
+        id="ecommerce-pagination"
+      >
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="d-flex justify-content-center">
+              <ngb-pagination
+                [collectionSize]="
+                  (products | filter : searchText : 'name').length
+                "
+                [(page)]="serviceRes?.data.currentPage"
+                [maxSize]="serviceRes?.data.total"
+                [rotate]="true"
+                [ellipses]="false"
+                [boundaryLinks]="true"
+                (pageChange)="pageChange($event)"
+              >
+                <!-- Custom pagination icons -->
+                <ng-template ngbPaginationPrevious
+                  ><span
+                    [data-feather]="'chevron-left'"
+                    [class]="'font-weight-bolder'"
+                  ></span>
+                </ng-template>
+                <ng-template ngbPaginationFirst
+                  ><span
+                    [data-feather]="'chevrons-left'"
+                    [class]="'font-weight-bolder'"
+                  ></span>
+                </ng-template>
+                <ng-template ngbPaginationNext
+                  ><span
+                    [data-feather]="'chevron-right'"
+                    [class]="'font-weight-bolder'"
+                  ></span
+                ></ng-template>
+                <ng-template ngbPaginationLast
+                  ><span
+                    [data-feather]="'chevrons-right'"
+                    [class]="'font-weight-bolder'"
+                  ></span>
+                </ng-template>
+              </ngb-pagination>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- E-commerce Pagination Ends -->
+    </div>
+  </div>
+</div>
+<ng-template #modalWarning let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel160">Delete Service</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    Are you sure you want to delete this Service
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-warning"
+      (click)="onDelete()"
+      rippleEffect
+    >
+      <span *ngIf="!deleteLoader"> Delete </span>
+      <div
+        *ngIf="deleteLoader"
+        style="width: 1rem; height: 1rem"
+        class="spinner-border text-light"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </button>
+  </div>
+</ng-template>
+<block-ui> </block-ui>

@@ -1,0 +1,14 @@
+@import "@core/scss/core.scss";
+@import "./assets/scss/styles";
+.datatable-tree-button {
+  background-color: transparent;
+  width: 20px;
+  height: 20px;
+  color: white;
+  border: none;
+  font-size: 24px;
+}
+.datatable-body-cell-label button:disabled {
+  color: #c4bdbd4f;
+  cursor: not-allowed;
+}

@@ -1,0 +1,328 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <!-- content-header component -->
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+    <!-- account setting page -->
+    <section id="page-account-settings">
+      <div class="row nav-vertical d-flex">
+        <div class="col-md-3 mb-2 mb-md-0">
+          <ul
+            ngbNav
+            #navVertical="ngbNav"
+            class="nav nav-pills flex-column nav-left"
+          >
+            <li class="nav-item" ngbNavItem>
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="account-pill-general"
+                data-toggle="pill"
+                href="#account-vertical-general"
+                aria-expanded="true"
+              >
+                <i data-feather="user" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">General</span>
+              </a>
+              <ng-template ngbNavContent>
+                <div class="card">
+                  <div class="card-body">
+                    <!-- form -->
+                    <form class="validate-form mt-2">
+                      <div *ngIf="alertMessage && isNameForm" class="mb-3">
+                        <ngb-alert
+                          [type]="alertType"
+                          [dismissible]="true"
+                          (close)="alertMessage = null"
+                        >
+                          <div class="alert-body">
+                            {{ alertMessage }}
+                          </div>
+                        </ngb-alert>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="account-name">Name</label>
+                            <input
+                              type="text"
+                              [formControl]="nameControl"
+                              class="form-control"
+                              id="account-name"
+                              name="name"
+                              placeholder="Name"
+                              [class.error]="submitted && nameControl.errors"
+                            />
+                          </div>
+                          <span
+                            *ngIf="submitted && nameControl.errors"
+                            class="invalid-form"
+                          >
+                            <small class="form-text text-danger"
+                              >This field is required!</small
+                            >
+                          </span>
+                        </div>
+
+                        <div class="col-12">
+                          <button
+                            (click)="onUpdateProfile()"
+                            type="submit"
+                            class="btn btn-primary mt-2 mr-1"
+                            rippleEffect
+                          >
+                            Save changes
+                          </button>
+                          <button
+                            (click)="emptyForm()"
+                            type="reset"
+                            class="btn btn-outline-secondary mt-2"
+                            rippleEffect
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                    <!--/ form -->
+                  </div>
+                </div>
+              </ng-template>
+            </li>
+            <li class="nav-item" ngbNavItem>
+              <a
+                ngbNavLink
+                class="nav-link d-flex py-75"
+                id="account-pill-password"
+                data-toggle="pill"
+                href="#account-vertical-password"
+                aria-expanded="false"
+              >
+                <i data-feather="lock" class="font-medium-3 mr-1"></i>
+                <span class="font-weight-bold">Change Password</span>
+              </a>
+              <ng-template ngbNavContent>
+                <div class="card">
+                  <div class="card-body">
+                    <!-- form -->
+                    <form [formGroup]="loginForm" class="validate-form">
+                      <div *ngIf="alertMessage && !isNameForm" class="mb-3">
+                        <ngb-alert
+                          [type]="alertType"
+                          [dismissible]="true"
+                          (close)="alertMessage = null"
+                        >
+                          <div class="alert-body">
+                            {{ alertMessage }}
+                          </div>
+                        </ngb-alert>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-12 col-sm-6">
+                          <div class="form-group">
+                            <label for="account-old-password"
+                              >Old Password</label
+                            >
+                            <div
+                              class="input-group form-password-toggle input-group-merge"
+                            >
+                              <input
+                                [type]="
+                                  passwordTextTypeOld ? 'text' : 'password'
+                                "
+                                class="form-control"
+                                id="account-old-password"
+                                placeholder="Enter you old password"
+                                formControlName="oldPassword"
+                                [class.error]="
+                                  submitted && f.oldPassword?.errors
+                                "
+                              />
+                              <div
+                                class="input-group-append"
+                                (click)="
+                                  passwordTextTypeOld = !passwordTextTypeOld
+                                "
+                              >
+                                <span class="input-group-text cursor-pointer">
+                                  <i
+                                    class="feather"
+                                    [ngClass]="{
+                                      'icon-eye-off': passwordTextTypeOld,
+                                      'icon-eye': !passwordTextTypeOld
+                                    }"
+                                  ></i>
+                                </span>
+                              </div>
+                            </div>
+                            <span
+                              *ngIf="submitted && f.oldPassword?.errors"
+                              class="invalid-form"
+                            >
+                              <small
+                                class="form-text text-danger"
+                                *ngIf="f.oldPassword.errors.required"
+                                >This field is required!</small
+                              >
+                              <small
+                                class="form-text text-danger"
+                                *ngIf="f.oldPassword.errors.minlength"
+                                >Password must be at least 8 characters!</small
+                              >
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-12 col-sm-6">
+                          <div class="form-group">
+                            <label for="account-new-password"
+                              >New Password</label
+                            >
+                            <div
+                              class="input-group form-password-toggle input-group-merge"
+                            >
+                              <input
+                                [type]="
+                                  passwordTextTypeNew ? 'text' : 'password'
+                                "
+                                id="account-new-password"
+                                class="form-control"
+                                placeholder="Enter your new Password"
+                                formControlName="newPassword"
+                                [class.error]="
+                                  submitted && f.newPassword?.errors
+                                "
+                              />
+                              <div
+                                class="input-group-append"
+                                (click)="
+                                  passwordTextTypeNew = !passwordTextTypeNew
+                                "
+                              >
+                                <span class="input-group-text cursor-pointer">
+                                  <i
+                                    class="feather"
+                                    [ngClass]="{
+                                      'icon-eye-off': passwordTextTypeNew,
+                                      'icon-eye': !passwordTextTypeNew
+                                    }"
+                                  ></i>
+                                </span>
+                              </div>
+                            </div>
+                            <span
+                              *ngIf="submitted && f.newPassword?.errors"
+                              class="invalid-form"
+                            >
+                              <small
+                                class="form-text text-danger"
+                                *ngIf="f.newPassword.errors.required"
+                                >This field is required!</small
+                              >
+                              <small
+                                class="form-text text-danger"
+                                *ngIf="f.newPassword.errors.minlength"
+                                >Password must be at least 8 characters!</small
+                              >
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                          <div class="form-group">
+                            <label for="account-retype-new-password"
+                              >Confirm Password</label
+                            >
+                            <div
+                              class="input-group form-password-toggle input-group-merge"
+                            >
+                              <input
+                                [type]="
+                                  passwordTextTypeRetype ? 'text' : 'password'
+                                "
+                                class="form-control"
+                                id="account-retype-new-password"
+                                formControlName="confirmNewPassword"
+                                placeholder="Confirm password"
+                                [class.error]="
+                                  submitted &&
+                                  (f.confirmNewPassword?.errors ||
+                                    (loginForm.errors?.mismatch && submitted))
+                                "
+                              />
+                              <div
+                                class="input-group-append"
+                                (click)="
+                                  passwordTextTypeRetype =
+                                    !passwordTextTypeRetype
+                                "
+                              >
+                                <span class="input-group-text cursor-pointer">
+                                  <i
+                                    class="feather"
+                                    [ngClass]="{
+                                      'icon-eye-off': passwordTextTypeRetype,
+                                      'icon-eye': !passwordTextTypeRetype
+                                    }"
+                                  ></i>
+                                </span>
+                              </div>
+                            </div>
+                            <span
+                              *ngIf="
+                                submitted &&
+                                (f.confirmNewPassword?.errors ||
+                                  (loginForm.errors?.mismatch && submitted))
+                              "
+                              class="invalid-form"
+                            >
+                              <small
+                                class="form-text text-danger"
+                                *ngIf="f.confirmNewPassword.errors?.required"
+                                >This field is required!</small
+                              >
+                              <small
+                                class="form-text text-danger"
+                                *ngIf="loginForm.errors?.mismatch"
+                                >Passwords do not match!</small
+                              >
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="col-12">
+                          <button
+                            (click)="onChangePassword()"
+                            type="submit"
+                            class="btn btn-primary mr-1 mt-1"
+                          >
+                            Save changes
+                          </button>
+                          <button
+                            (click)="emptyForm()"
+                            type="reset"
+                            class="btn btn-outline-secondary mt-1"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+
+                    <!--/ form -->
+                  </div>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+        </div>
+        <div [ngbNavOutlet]="navVertical" class="col-12 col-md-9"></div>
+      </div>
+    </section>
+    <!--/ account setting page -->
+  </div>
+</div>
+<block-ui></block-ui>
