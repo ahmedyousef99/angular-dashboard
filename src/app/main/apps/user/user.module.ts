@@ -39,6 +39,9 @@ import { ContentHeaderModule } from "app/layout/components/content-header/conten
 import { BookingCancellationListService } from "./booking-cancellation/booking-list/booking-cancellation-list.service";
 import { BookingCancellationListComponent } from "./booking-cancellation/booking-list/booking-cancellation-list.component";
 import { BookingCancellationViewComponent } from "./booking-cancellation/booking-view/booking-cancellation-view.component";
+import { CategoryListComponent } from "./categories/category-list/category-list.component";
+import { CategoryViewComponent } from "./categories/category-view/category-view.component";
+import { CategoryService } from "./categories/category.service";
 
 // routing
 const routes: Routes = [
@@ -69,6 +72,11 @@ const routes: Routes = [
     data: { animation: "AdminListComponent" },
   },
   {
+    path: "category-list",
+    component: CategoryListComponent,
+    data: { animation: "AdminListComponent" },
+  },
+  {
     path: "admin-view/:id",
     component: AdminViewComponent,
     data: { animation: "AdminViewComponent" },
@@ -91,6 +99,11 @@ const routes: Routes = [
   {
     path: "booking-cancellation-view/:id",
     component: BookingCancellationViewComponent,
+    data: { animation: "UserViewComponent" },
+  },
+  {
+    path: "category-view/:id",
+    component: CategoryViewComponent,
     data: { animation: "UserViewComponent" },
   },
 
@@ -129,6 +142,8 @@ const routes: Routes = [
     BookingViewComponent,
     BookingCancellationListComponent,
     BookingCancellationViewComponent,
+    CategoryListComponent,
+    CategoryViewComponent,
   ],
   imports: [
     CommonModule,
@@ -152,6 +167,7 @@ const routes: Routes = [
     WorkerListService,
     BookingListService,
     BookingCancellationListService,
+    CategoryService,
   ],
 })
 export class UserModule {}

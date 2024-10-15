@@ -6,8 +6,8 @@ import {
   Output,
   ViewEncapsulation,
 } from "@angular/core";
-import { CategoryService } from "app/main/apps/category/category.service";
-import { Category } from "app/main/apps/category/models/category.model";
+import { CategoryService } from "app/main/apps/user/categories/category.service";
+import { Category } from "app/main/apps/user/models/category.model";
 import { Subject } from "rxjs";
 import { debounceTime, switchMap, takeUntil } from "rxjs/operators";
 

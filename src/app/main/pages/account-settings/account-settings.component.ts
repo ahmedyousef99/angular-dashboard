@@ -1,30 +1,43 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-
-import { Subject } from 'rxjs';
-import { max, takeUntil } from 'rxjs/operators';
-import { FlatpickrOptions } from 'ng2-flatpickr';
-
-import { AccountSettingsService } from 'app/main/pages/account-settings/account-settings.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from "./../../../auth/service/authentication.service";
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { FlatpickrOptions } from "ng2-flatpickr";
+import { AccountSettingsService } from "app/main/pages/account-settings/account-settings.service";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { BlockUI, NgBlockUI } from "ng-block-ui";
 @Component({
-  selector: 'app-account-settings',
-  templateUrl: './account-settings.component.html',
-  styleUrls: ['./account-settings.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-account-settings",
+  templateUrl: "./account-settings.component.html",
+  styleUrls: ["./account-settings.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AccountSettingsComponent implements OnInit, OnDestroy {
   // public
+  @BlockUI() blockUI: NgBlockUI;
+
   public contentHeader: object;
   public data: any;
+  public nameControl = new FormControl("", Validators.required);
+  public submitted: boolean = false;
+
   public birthDateOptions: FlatpickrOptions = {
-    altInput: true
+    altInput: true,
   };
-  public passwordTextTypeOld = false;
-  public passwordTextTypeNew = false;
-  public passwordTextTypeRetype = false;
+  passwordTextTypeOld: boolean = false;
+  passwordTextTypeNew: boolean = false;
+  passwordTextTypeRetype: boolean = false;
   public avatarImage: string;
   public loginForm: FormGroup;
+  public isNameForm: boolean = false;
 
+  public alertType: string | null = null; // to store alert type
+  public alertMessage: string | null = null; // to store alert message
 
   // private
   private _unsubscribeAll: Subject<any>;
@@ -34,9 +47,10 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
    *
    * @param {AccountSettingsService} _accountSettingsService
    */
-  constructor(private _accountSettingsService: AccountSettingsService,
+  constructor(
+    private _accountSettingsService: AccountSettingsService,
     private _formBuilder: FormBuilder,
-
+    private authenticationService: AuthenticationService
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -64,6 +78,16 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   togglePasswordTextTypeRetype() {
     this.passwordTextTypeRetype = !this.passwordTextTypeRetype;
   }
+  passwordMatchValidator(form: FormGroup) {
+    return form.get("newPassword")?.value ===
+      form.get("confirmNewPassword")?.value
+      ? null
+      : { mismatch: true };
+  }
+
+  get f() {
+    return this.loginForm.controls;
+  }
 
   /**
    * Upload Image
@@ -89,65 +113,116 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit() {
-    this.loginForm = this._formBuilder.group({
-      oldPassword: [``,[Validators.required,Validators.maxLength(8) ]],
-      newPassword: [``,[Validators.required,Validators.maxLength(8)]],
-      reTyping: [``,[Validators.required,Validators.maxLength(8)]],
-    });
-    this._accountSettingsService.onSettingsChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
-      this.data = response;
-      this.avatarImage = this.data.accountSetting.general.avatar;
-    });
+    console.log(this.authenticationService.currentUserValue.data.name);
+    this.nameControl.patchValue(
+      this.authenticationService.currentUserValue.data.name
+    );
+    this.loginForm = this._formBuilder.group(
+      {
+        oldPassword: ["", [Validators.required, Validators.minLength(8)]],
+        newPassword: ["", [Validators.required, Validators.minLength(8)]],
+        confirmNewPassword: ["", Validators.required],
+      },
+      { validators: this.passwordMatchValidator }
+    );
+    this._accountSettingsService.onSettingsChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((response) => {
+        this.data = response;
+        this.avatarImage = this.data.accountSetting.general.avatar;
+      });
 
     // content header
     this.contentHeader = {
-      headerTitle: 'Account Settings',
+      headerTitle: "Account Settings",
       actionButton: true,
       breadcrumb: {
-        type: '',
+        type: "",
         links: [
           {
-            name: 'Home',
+            name: "Home",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'Pages',
+            name: "Pages",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'Account Settings',
-            isLink: false
-          }
-        ]
-      }
+            name: "Account Settings",
+            isLink: false,
+          },
+        ],
+      },
     };
   }
-  public onChangePassword():void {
-    console.log(this.loginForm.value);
+  public onChangePassword(): void {
+    this.alertMessage = ``;
+    this.alertType = ``;
+    this.isNameForm = false;
+    this.submitted = true;
+    if (this.loginForm.valid) {
+      this.blockUI.start();
 
-    if(this.loginForm.valid) {
-      console.log(this.loginForm.value);
-      this._accountSettingsService.changePassword(this.loginForm.value).subscribe(
-        (res) => {
-          console.log(`Done`);
-        }, 
-        (error) => {
-          console.log(`Erorrrr`);
-        }
-      )
+      this._accountSettingsService
+        .changePassword(this.loginForm.value)
+        .subscribe(
+          (res) => {
+            this.blockUI.stop();
+            this.alertType = "success"; // Set alert type to success
+            this.alertMessage = res.message; // Set success message
+          },
+          (error) => {
+            this.blockUI.stop();
+
+            this.alertType = "danger"; // Set alert type to danger
+            this.alertMessage = error || "An error occurred!"; // Set error message
+          }
+        );
     }
-  
   }
-  public emptyForm():void {
-    this.loginForm.reset()
+  public onUpdateProfile(): void {
+    this.alertMessage = ``;
+    this.alertType = ``;
+    this.isNameForm = true;
+    this.submitted = true;
+    console.log(this.nameControl.value);
+
+    if (this.nameControl.valid) {
+      this.blockUI.start();
+      console.log(this.nameControl.value);
+      this._accountSettingsService
+        .UpdateProfile(this.nameControl.value)
+        .subscribe(
+          (res) => {
+            this.blockUI.stop();
+
+            this.alertType = "success"; // Set alert type to success
+            this.alertMessage = res.message; // Set success message
+          },
+          (error) => {
+            this.blockUI.stop();
+
+            this.alertType = "danger"; // Set alert type to danger
+            this.alertMessage = error || "An error occurred!"; // Set error message
+          }
+        );
+    }
+  }
+  public emptyForm(): void {
+    this.alertMessage = ``;
+    this.alertType = ``;
+    this.submitted = false;
+    this.loginForm.reset();
+    this.nameControl.reset();
   }
 
   /**
    * On destroy
    */
   ngOnDestroy(): void {
+    this.submitted = false;
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();

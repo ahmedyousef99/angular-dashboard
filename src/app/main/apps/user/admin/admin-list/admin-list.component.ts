@@ -44,32 +44,6 @@ export class AdminListComponent implements OnInit {
   public searchControl = new FormControl("");
   public counterPerPage = new FormControl("");
 
-  public selectRole: any = [
-    { name: "All", value: "" },
-    { name: "Admin", value: "Admin" },
-    { name: "Author", value: "Author" },
-    { name: "Editor", value: "Editor" },
-    { name: "Maintainer", value: "Maintainer" },
-    { name: "Subscriber", value: "Subscriber" },
-  ];
-
-  public selectPlan: any = [
-    { name: "All", value: "" },
-    { name: "Basic", value: "Basic" },
-    { name: "Company", value: "Company" },
-    { name: "Enterprise", value: "Enterprise" },
-    { name: "Team", value: "Team" },
-  ];
-
-  public selectStatus: any = [
-    { name: "All", value: "" },
-    { name: "Pending", value: "Pending" },
-    { name: "Active", value: "Active" },
-    { name: "Inactive", value: "Inactive" },
-  ];
-
-  public selectedRole = [];
-  public selectedPlan = [];
   public selectedStatus = [];
   public searchValue = "";
   public page: { pageNumber: number; size: number };
@@ -163,24 +137,6 @@ export class AdminListComponent implements OnInit {
    *
    * @param event
    */
-  filterUpdate(event) {
-    // Reset ng-select on search
-    this.selectedRole = this.selectRole[0];
-    this.selectedPlan = this.selectPlan[0];
-    this.selectedStatus = this.selectStatus[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return d.fullName.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-
-    // Update The Rows
-    this.rows = temp;
-    // Whenever The Filter Changes, Always Go Back To The First Page
-    this.table.offset = 0;
-  }
 
   /**
    * Toggle the sidebar

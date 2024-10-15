@@ -6,8 +6,8 @@ import { Data, UpdateServiceBody } from "../models/services-details.model";
 import { takeUntil } from "rxjs/operators";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { Subject } from "rxjs";
-import { Category } from "app/main/apps/category/models/category.model";
-import { CategoryService } from "../../category/category.service";
+import { CategoryService } from "../../user/categories/category.service";
+import { Category } from "../../user/models/category.model";
 
 @Component({
   selector: "app-update-service",

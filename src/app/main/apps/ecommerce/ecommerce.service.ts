@@ -14,6 +14,7 @@ import {
   UpdateServiceBody,
 } from "./models/services-details.model";
 import { catchError } from "rxjs/operators";
+import { GetAllCustomerReviews } from "./models/customer-reviews.model";
 
 @Injectable({
   providedIn: "root",
@@ -30,6 +31,14 @@ export class EcommerceService {
   public getServiceDetails(id: number): Observable<ServicesDetails> {
     return this._httpClient.get<ServicesDetails>(
       `${environment.apiUrl}admin/service/${id}`
+    );
+  }
+
+  public getCustomerReviews(
+    serviceId: number
+  ): Observable<GetAllCustomerReviews> {
+    return this._httpClient.get<GetAllCustomerReviews>(
+      `${environment.apiUrl}admin/customer-review?serviceId=${serviceId}`
     );
   }
   public getAllServices(searchData?: {

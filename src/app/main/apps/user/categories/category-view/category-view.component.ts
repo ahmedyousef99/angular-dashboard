@@ -1,10 +1,10 @@
-import { CategoryService } from "./../category.service";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { DataDetails } from "../models/category.model";
+import { CategoryService } from "../category.service";
+import { DataDetails } from "../../models/category.model";
 
 @Component({
   selector: "app-category-view",

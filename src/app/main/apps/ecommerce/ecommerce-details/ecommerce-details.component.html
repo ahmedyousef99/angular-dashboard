@@ -198,6 +198,83 @@
         <!-- Related Products ends -->
       </div>
     </section>
+    <div *ngIf="reviews.length > 0" class="card">
+      <div class="card-body">
+        <div class="mt-4 mb-2 text-center">
+          <h4 class="text-light">Customer Reviews</h4>
+          <p class="card-text text-muted">See what our customers are saying</p>
+        </div>
+        <div
+          class="swiper-responsive-breakpoints swiper-container px-4 py-2"
+          [swiper]="swiperResponsive"
+        >
+          <div class="swiper-wrapper mb-2">
+            <div
+              class="swiper-slide p-0"
+              style="background: transparent"
+              *ngFor="let review of reviews"
+            >
+              <div class="review-card">
+                <div class="card-content">
+                  <div class="media">
+                    <div class="avatar mr-3">
+                      <ng-container
+                        *ngIf="review.customer.avatar; else defaultAvatar"
+                      >
+                        <img
+                          [src]="review.customer.avatar"
+                          width="50"
+                          height="50"
+                          alt="Avatar"
+                          class="rounded-circle"
+                        />
+                      </ng-container>
+                      <ng-template #defaultAvatar>
+                        <div class="default-avatar">
+                          {{ review.customer.name | initials }}
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div class="media-body">
+                      <div
+                        class="rating rating-sm px-1 border-right border-left mb-1"
+                      >
+                        <ngb-rating
+                          [(rate)]="review.rate"
+                          [readonly]="true"
+                          [max]="5"
+                          class="outline-none"
+                        >
+                          <ng-template let-fill="fill" let-index="index"
+                            ><span
+                              class="fa fa-star-o mr-25"
+                              [class.fa-star]="fill === 100"
+                            ></span
+                          ></ng-template>
+                        </ngb-rating>
+                      </div>
+                      <h6 class="font-weight-bold text-light mb-1">
+                        {{ review.customer.name }}
+                      </h6>
+                      <p class="review-date text-muted">
+                        {{ review.createdAt | date : "shortDate" }}
+                      </p>
+                      <p class="review-comment text-light">
+                        {{ review.comment }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Add Arrows -->
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- app e-commerce details end -->
   </div>
 </div>

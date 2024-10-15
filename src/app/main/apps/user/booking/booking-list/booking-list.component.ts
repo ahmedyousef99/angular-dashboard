@@ -155,7 +155,6 @@ export class BookingListComponent implements OnInit {
         });
       });
   }
-
   getBookingsList(isFromDelete?: {
     isAfterDelete?: boolean;
     name?: string;

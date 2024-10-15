@@ -9,6 +9,7 @@ import { takeUntil } from "rxjs/operators";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { Data } from "../models/services-details.model";
 import { ColumnMode } from "@swimlane/ngx-datatable";
+import { Reviews } from "../models/customer-reviews.model";
 
 @Component({
   selector: "app-ecommerce-details",
@@ -30,6 +31,7 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
   public mainImage: string = ``;
   public selectedId: number = 0;
   public ColumnMode = ColumnMode;
+  public reviews: Reviews[] = [];
 
   @BlockUI() blockUI: NgBlockUI;
 
@@ -106,6 +108,8 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(
             (res) => {
+              this.getReviews(this.serviceId);
+
               console.log(res, `the res`);
               this.dataServices = res.data;
               this.mainImage = this.dataServices.mainImage;
@@ -119,11 +123,6 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
             }
           );
       });
-
-    this.product.isInWishlist =
-      this.wishlist.findIndex((p) => p.productId === this.product.id) > -1;
-    this.product.isInCart =
-      this.cartList.findIndex((p) => p.productId === this.product.id) > -1;
 
     // content header
     this.contentHeader = {
@@ -149,6 +148,14 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
     this.mainImage = image.image;
     console.log(this.mainImage);
     this.selectedId = image.id;
+  }
+  getReviews(serviceId: number): void {
+    this._ecommerceService
+      .getCustomerReviews(serviceId)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        this.reviews = res.data.data;
+      });
   }
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions

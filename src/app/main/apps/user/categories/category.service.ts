@@ -2,15 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { BehaviorSubject, Observable, throwError } from "rxjs";
-import { AllAdmins } from "../user/models/admins.model";
-import {
-  AllCategories,
-  Category,
-  CategoryDetails,
-  DeleteCategory,
-  newCategoryReq,
-} from "./models/category.model";
+import { AllAdmins } from "../models/admins.model";
+
 import { catchError, map } from "rxjs/operators";
+import {
+  newCategoryReq,
+  DeleteCategory,
+  AllCategories,
+  CategoryDetails,
+} from "../models/category.model";
 
 @Injectable({
   providedIn: "root",

@@ -280,8 +280,9 @@ export const menu: CoreMenu[] = [
         translate: "MENU.APPS.USER.COLLAPSIBLE",
         type: "item",
         icon: "layers",
-        url: "apps/categories/category-list",
+        url: "apps/user/category-list",
       },
+
       {
         id: "Bookings",
         title: "Bookings",

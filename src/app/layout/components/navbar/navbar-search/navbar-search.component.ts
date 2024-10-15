@@ -1,16 +1,23 @@
-import { DOCUMENT } from '@angular/common';
-import { Router } from '@angular/router';
-import { Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { DOCUMENT } from "@angular/common";
+import { Router } from "@angular/router";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 
-import { SearchService } from 'app/layout/components/navbar/navbar-search/search.service';
+import { SearchService } from "app/layout/components/navbar/navbar-search/search.service";
 
 @Component({
-  selector: 'app-navbar-search',
-  templateUrl: './navbar-search.component.html'
+  selector: "app-navbar-search",
+  templateUrl: "./navbar-search.component.html",
 })
 export class NavbarSearchComponent implements OnInit {
   // Public
-  public searchText = '';
+  public searchText = "";
   public openSearchRef = false;
   public activeIndex = 0;
   public apiData;
@@ -20,19 +27,19 @@ export class NavbarSearchComponent implements OnInit {
   public pageSearchLimit;
 
   // Decorators
-  @ViewChild('openSearch') private _inputElement: ElementRef;
-  @ViewChild('pageList') private _pageListElement: ElementRef;
+  @ViewChild("openSearch") private _inputElement: ElementRef;
+  @ViewChild("pageList") private _pageListElement: ElementRef;
 
-  @HostListener('keydown.escape') fn() {
+  @HostListener("keydown.escape") fn() {
     this.removeOverlay();
     this.openSearchRef = false;
-    this.searchText = '';
+    this.searchText = "";
   }
-  @HostListener('document:click', ['$event']) clickout(event) {
-    if (event.target.className === 'content-overlay') {
+  @HostListener("document:click", ["$event"]) clickout(event) {
+    if (event.target.className === "content-overlay") {
       this.removeOverlay();
       this.openSearchRef = false;
-      this.searchText = '';
+      this.searchText = "";
     }
   }
 
@@ -56,7 +63,10 @@ export class NavbarSearchComponent implements OnInit {
    * Next Active Match
    */
   nextActiveMatch() {
-    this.activeIndex = this.activeIndex < this.pageSearchLimit - 1 ? ++this.activeIndex : this.activeIndex;
+    this.activeIndex =
+      this.activeIndex < this.pageSearchLimit - 1
+        ? ++this.activeIndex
+        : this.activeIndex;
   }
 
   /**
@@ -70,7 +80,9 @@ export class NavbarSearchComponent implements OnInit {
    * Remove Overlay
    */
   removeOverlay() {
-    this.document.querySelector('.app-content').classList.remove('show-overlay');
+    this.document
+      .querySelector(".app-content")
+      .classList.remove("show-overlay");
   }
 
   /**
@@ -88,7 +100,10 @@ export class NavbarSearchComponent implements OnInit {
     if (13 === event.keyCode) {
       // Navigate to activeIndex
       // ! Todo: Improve this code
-      let current_item = this._pageListElement.nativeElement.getElementsByClassName('current_item');
+      let current_item =
+        this._pageListElement.nativeElement.getElementsByClassName(
+          "current_item"
+        );
       current_item[0]?.children[0].click();
     }
   }
@@ -106,8 +121,10 @@ export class NavbarSearchComponent implements OnInit {
     });
 
     if (this.openSearchRef === false) {
-      this.document.querySelector('.app-content').classList.remove('show-overlay');
-      this.searchText = '';
+      this.document
+        .querySelector(".app-content")
+        .classList.remove("show-overlay");
+      this.searchText = "";
     }
   }
 
@@ -118,10 +135,12 @@ export class NavbarSearchComponent implements OnInit {
    */
   searchUpdate(event) {
     const val = event.target.value.toLowerCase();
-    if (val !== '') {
-      this.document.querySelector('.app-content').classList.add('show-overlay');
+    if (val !== "") {
+      this.document.querySelector(".app-content").classList.add("show-overlay");
     } else {
-      this.document.querySelector('.app-content').classList.remove('show-overlay');
+      this.document
+        .querySelector(".app-content")
+        .classList.remove("show-overlay");
     }
     this.autoSuggestion(event);
   }
@@ -133,12 +152,13 @@ export class NavbarSearchComponent implements OnInit {
    * On init
    */
   ngOnInit(): void {
-    this._searchService.onApiDataChange.subscribe(res => {
+    this._searchService.onApiDataChange.subscribe((res) => {
+      console.log(this.apiData);
       this.apiData = res;
-      this.pages = this.apiData[0].data;
-      this.pageSearchLimit = this.apiData[0].searchLimit;
-      this.files = this.apiData[1].data;
-      this.contacts = this.apiData[2].data;
+      this.pages = this.apiData[0]?.data;
+      this.pageSearchLimit = this.apiData[0]?.searchLimit;
+      this.files = this.apiData[1]?.data;
+      this.contacts = this.apiData[2]?.data;
     });
   }
 }
