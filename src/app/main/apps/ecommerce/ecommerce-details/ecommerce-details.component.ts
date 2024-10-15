@@ -133,7 +133,7 @@ export class EcommerceDetailsComponent implements OnInit, OnDestroy {
           {
             name: "Services",
             isLink: true,
-            link: "/",
+            link: "/apps/services/services-list",
           },
           {
             name: " Services Details",

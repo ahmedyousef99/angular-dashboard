@@ -61,12 +61,11 @@ export class CategoryListComponent implements OnInit {
 
   ngOnInit(): void {
     this.contentHeader = {
-      headerTitle: "Bookings",
+      headerTitle: "Categories",
       breadcrumb: {
-        type: "",
         links: [
           {
-            name: "Bookings List",
+            name: "Categories List",
             isLink: false,
           },
         ],

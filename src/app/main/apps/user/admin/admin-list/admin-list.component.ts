@@ -43,7 +43,7 @@ export class AdminListComponent implements OnInit {
   public search: FormGroup;
   public searchControl = new FormControl("");
   public counterPerPage = new FormControl("");
-
+  public contentHeader: {};
   public selectedStatus = [];
   public searchValue = "";
   public page: { pageNumber: number; size: number };
@@ -85,6 +85,17 @@ export class AdminListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Admins",
+      breadcrumb: {
+        links: [
+          {
+            name: "Admins List",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.search = this._formBuilder.group({
       search: [``],
     });

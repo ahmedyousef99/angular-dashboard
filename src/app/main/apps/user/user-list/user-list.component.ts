@@ -56,6 +56,7 @@ export class UserListComponent implements OnInit {
   searchInput: any;
   searchValues: any;
   loadSearch: boolean;
+  contentHeader: {};
 
   /**
    * Constructor
@@ -83,6 +84,17 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Customers",
+      breadcrumb: {
+        links: [
+          {
+            name: "Customer List",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.search = this._formBuilder.group({
       search: [``],
     });

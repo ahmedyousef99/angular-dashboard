@@ -58,6 +58,7 @@ export class WorkerListComponent implements OnInit {
   searchInput: any;
   searchValues: any;
   loadSearch: boolean;
+  contentHeader: {};
 
   /**
    * Constructor
@@ -85,9 +86,17 @@ export class WorkerListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.search = this._formBuilder.group({
-      search: [``],
-    });
+    this.contentHeader = {
+      headerTitle: "Workers",
+      breadcrumb: {
+        links: [
+          {
+            name: "Workers List",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((res) => {
       console.log(res, `seaaaarch`);
       this.searchValues = null;

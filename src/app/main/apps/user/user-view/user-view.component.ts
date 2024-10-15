@@ -24,6 +24,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
   // private
   private _unsubscribeAll: Subject<any>;
   productId: number;
+  contentHeader: {};
 
   /**
    * Constructor
@@ -48,6 +49,22 @@ export class UserViewComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Customers",
+      breadcrumb: {
+        links: [
+          {
+            name: "Customers List",
+            isLink: true,
+            link: "/apps/user/user-list",
+          },
+          {
+            name: "Customer Details",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {

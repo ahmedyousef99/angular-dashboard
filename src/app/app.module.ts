@@ -34,13 +34,6 @@ import { OnlineStatusService } from "ngx-online-status";
 
 const appRoutes: Routes = [
   {
-    path: "dashboard",
-    loadChildren: () =>
-      import("./main/dashboard/dashboard.module").then(
-        (m) => m.DashboardModule
-      ),
-  },
-  {
     path: "apps",
     loadChildren: () =>
       import("./main/apps/apps.module").then((m) => m.AppsModule),
@@ -87,7 +80,7 @@ const appRoutes: Routes = [
 
   {
     path: "",
-    redirectTo: "/dashboard/ecommerce",
+    redirectTo: "/apps/user/booking-list",
     pathMatch: "full",
   },
   {

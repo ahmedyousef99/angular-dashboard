@@ -21,6 +21,7 @@ export class WorkerViewComponent implements OnInit, OnDestroy {
   // private
   private _unsubscribeAll: Subject<any>;
   productId: number;
+  contentHeader: {};
 
   /**
    * Constructor
@@ -44,6 +45,22 @@ export class WorkerViewComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Workers",
+      breadcrumb: {
+        links: [
+          {
+            name: "Workers List",
+            isLink: true,
+            link: "/apps/user/worker-list",
+          },
+          {
+            name: "Worker Details",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-boxed-layout',
-  templateUrl: './boxed-layout.component.html',
-  styleUrls: ['./boxed-layout.component.scss']
+  selector: "app-boxed-layout",
+  templateUrl: "./boxed-layout.component.html",
+  styleUrls: ["./boxed-layout.component.scss"],
 })
 export class BoxedLayoutComponent implements OnInit {
   // public
@@ -19,27 +19,27 @@ export class BoxedLayoutComponent implements OnInit {
    */
   ngOnInit() {
     this.contentHeader = {
-      headerTitle: 'Layout Boxed',
+      headerTitle: "Layout Boxed",
       actionButton: true,
       breadcrumb: {
-        type: '',
+        type: "",
         links: [
           {
-            name: 'Home',
+            name: "Home",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'Layouts',
+            name: "Layouts",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'Layout Boxed',
-            isLink: false
-          }
-        ]
-      }
+            name: "Layout Boxed",
+            isLink: false,
+          },
+        ],
+      },
     };
   }
 }

@@ -20,6 +20,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   public url = this.router.url;
   public lastValue;
   public data;
+  public contentHeader: {};
   @BlockUI() blockUI: NgBlockUI;
 
   // private
@@ -48,6 +49,23 @@ export class AdminViewComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Admins",
+      breadcrumb: {
+        type: "",
+        links: [
+          {
+            name: "Admins List",
+            isLink: true,
+            link: "/apps/user/admin-list",
+          },
+          {
+            name: " Admins Details",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {

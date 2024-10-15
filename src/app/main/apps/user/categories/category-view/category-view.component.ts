@@ -55,14 +55,18 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
     //   });
 
     this.contentHeader = {
-      headerTitle: "Blog Detail",
+      headerTitle: "Categories",
       breadcrumb: {
         type: "",
         links: [
           {
-            name: "Categories",
+            name: "Categories List",
             isLink: true,
-            link: "/",
+            link: "/apps/user/category-list",
+          },
+          {
+            name: " Category Details",
+            isLink: false,
           },
         ],
       },
