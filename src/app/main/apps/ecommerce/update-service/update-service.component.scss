@@ -1,0 +1,39 @@
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.image-upload {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  input[type="file"] {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}
+
+.image-preview {
+  width: 100px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-left: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.remove-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px;
+
+  &:hover {
+    background-color: #ff1a1a;
+  }
+}

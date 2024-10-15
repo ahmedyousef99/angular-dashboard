@@ -1,0 +1,106 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+  <div *ngIf="data" class="content-body">
+    <section class="app-booking-view">
+      <div class="row">
+        <div class="col-xl-10 col-lg-8 col-md-8 mx-auto">
+          <div class="card booking-card shadow-lg">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4"
+              >
+                <h4 class="mb-0">Booking ID: #{{ data?.id }}</h4>
+                <div
+                  class="badge badge-pill"
+                  [ngClass]="{
+                    'badge-light-warning': canceledData?.status == 'PENDING',
+                    'badge-light-success': canceledData?.status == 'DONE',
+                    'badge-light-danger': canceledData?.status == 'REJECTED'
+                  }"
+                >
+                  {{ canceledData?.status }}
+                </div>
+              </div>
+
+              <div class="service-info mb-4">
+                <h5 class="text-primary">Booking Cancellation</h5>
+
+                <p>
+                  <strong>Submitted By:</strong>
+                  {{ canceledData?.submittedByType }}
+                </p>
+                <p><strong>Reason:</strong> {{ canceledData?.reason }}</p>
+              </div>
+              <div class="service-info mb-4">
+                <h5 class="text-primary">Service Information</h5>
+
+                <p><strong>Name:</strong> {{ data?.service?.nameEn }}</p>
+                <p>
+                  <strong>Description:</strong>
+                  {{ data?.service?.descriptionEn }}
+                </p>
+                <p><strong>Price:</strong> {{ data?.service?.price }}</p>
+                <p>
+                  <strong>Experience:</strong>
+                  {{ data?.service?.yearsOfExperience }} years
+                </p>
+              </div>
+
+              <hr />
+
+              <div class="customer-info mb-4">
+                <h5 class="text-primary">Customer Details</h5>
+                <p><strong>Name:</strong> {{ data?.customer?.name }}</p>
+                <p><strong>Email:</strong> {{ data?.customer?.email }}</p>
+                <p>
+                  <strong>Phone:</strong> {{ data?.customer?.phone || "N/A" }}
+                </p>
+              </div>
+
+              <hr />
+
+              <div class="booking-details mb-4">
+                <h5 class="text-primary">Booking Details</h5>
+                <p><strong>Date:</strong> {{ data?.dayDate | date }}</p>
+                <p><strong>Working Hours:</strong> {{ data?.workingHours }}</p>
+                <p>
+                  <strong>Starting Hour:</strong> {{ data?.startingHour }}:00
+                </p>
+                <p><strong>Ending Hour:</strong> {{ data?.endingHour }}:00</p>
+                <p><strong>Address:</strong> {{ data?.addressDetails }}</p>
+                <p><strong>City:</strong> {{ data?.city }}</p>
+                <p><strong>Zip Code:</strong> {{ data?.zipCode }}</p>
+              </div>
+
+              <div
+                *ngIf="data?.rejectionReason || data?.cancellationReason"
+                class="cancellation-info mb-4"
+              >
+                <h5 class="text-primary">Cancellation Information</h5>
+                <p *ngIf="data?.rejectionReason">
+                  <strong>Rejection Reason:</strong>
+                  {{ data?.rejectionReason || "N/A" }}
+                </p>
+                <p *ngIf="data?.cancellationReason">
+                  <strong>Cancellation Reason:</strong>
+                  {{ data?.cancellationReason || "N/A" }}
+                </p>
+              </div>
+              <hr />
+
+              <h5 class="mt-4">Customer Reviews</h5>
+              <div
+                *ngFor="let review of data?.customerReviewList"
+                class="review-item bg-light p-2 rounded mb-2"
+              >
+                <p><strong>Review:</strong> {{ review }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<block-ui></block-ui>

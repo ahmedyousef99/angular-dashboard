@@ -1,0 +1,61 @@
+<!-- vertical-layout -->
+<ng-container
+  *ngIf="networkStatus === onlineStatusCheck.ONLINE; else noInternet"
+>
+  <ng-container *ngIf="coreConfig.layout.type === 'vertical'">
+    <vertical-layout></vertical-layout>
+  </ng-container>
+  <!-- / vertical-layout -->
+
+  <!-- horizontal-layout -->
+  <ng-container *ngIf="coreConfig.layout.type === 'horizontal'">
+    <horizontal-layout></horizontal-layout>
+  </ng-container>
+  <!-- / horizontal-layout -->
+
+  <!-- theme customizer -->
+  <core-sidebar
+    name="themeCustomizer"
+    class="customizer d-none d-md-block"
+    [invisibleOverlay]="true"
+    *ngIf="coreConfig.layout.customizer"
+  >
+    <a
+      class="customizer-toggle d-flex align-items-center justify-content-center"
+      (click)="toggleSidebar('themeCustomizer')"
+    >
+      <span [data-feather]="'settings'" [class]="'spinner'"></span>
+    </a>
+    <core-theme-customizer></core-theme-customizer>
+  </core-sidebar>
+  <!-- / theme customizer -->
+</ng-container>
+
+<ng-template #noInternet>
+  <!-- Error page-->
+  <div class="misc-wrapper">
+    <a class="brand-logo" href="javascript:void(0);">
+      <img
+        src="{{ coreConfig.app.appLogoImage }}"
+        alt="brand-logo"
+        height="28"
+      />
+      <h2 class="brand-text text-primary ml-1">Servi+</h2></a
+    >
+    <div class="misc-inner p-2 p-sm-3">
+      <div class="w-100 text-center">
+        <h2 class="mb-1">Oops! 😞 No Internet Connection🕵🏻‍♀️</h2>
+        <img
+          class="img-fluid"
+          [src]="
+            coreConfig.layout.skin === 'dark'
+              ? 'assets/images/pages/lost-wireless-illustration_2175-1156.jpg'
+              : 'assets/images/pages/lost-wireless-illustration_2175-1156.jpg'
+          "
+          alt="Error page"
+        />
+      </div>
+    </div>
+  </div>
+  <!-- / Error page-->
+</ng-template>

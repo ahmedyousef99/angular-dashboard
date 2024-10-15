@@ -1,0 +1,146 @@
+<div class="slideout-content">
+  <!-- Modal to add new user starts-->
+  <div
+    class="modalsd modal-slide-in sdfade new-user-modal"
+    id="modals-slide-in"
+  >
+    <div class="modal-dialog">
+      <form
+        class="add-new-user modal-content pt-0"
+        (ngSubmit)="(adminForm.valid)"
+        [formGroup]="adminForm"
+      >
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="toggleSidebar('new-user-sidebar')"
+        >
+          ×
+        </button>
+        <div class="modal-header mb-1">
+          <h5 class="modal-title" id="exampleModalLabel">New Admin</h5>
+        </div>
+        <div class="modal-body flex-grow-1">
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-fullname"
+              >Full Name</label
+            >
+            <input
+              formControlName="name"
+              type="text"
+              class="form-control dt-full-name"
+              id="basic-icon-default-fullname"
+              placeholder="John Doe"
+              name="user-fullname"
+              [class.error]="submitted && f.name.errors"
+              required
+              aria-label="John Doe"
+              aria-describedby="basic-icon-default-fullname2"
+            />
+            <span *ngIf="submitted && f.name.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.name.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-default-password1"
+              >Password</label
+            >
+            <div class="input-group input-group-merge form-password-toggle">
+              <input
+                formControlName="password"
+                [type]="passwordTextType ? 'text' : 'password'"
+                id="basic-default-password1"
+                placeholder="Your password"
+                class="form-control"
+                aria-label="jdoe1"
+                aria-describedby="basic-default-password1"
+                name="user-name"
+                [class.error]="submitted && f.password.errors"
+              />
+              <div
+                class="input-group-append"
+                (click)="passwordTextType = !passwordTextType"
+              >
+                <span class="input-group-text cursor-pointer"
+                  ><i
+                    class="feather"
+                    [ngClass]="{
+                      'icon-eye-off': passwordTextType,
+                      'icon-eye': !passwordTextType
+                    }"
+                  ></i
+                ></span>
+              </div>
+            </div>
+
+            <span *ngIf="submitted && f.password.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.password.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="basic-icon-default-uname"
+              >Email</label
+            >
+            <input
+              formControlName="email"
+              type="email"
+              placeholder="Enter Your Email Address"
+              class="form-control"
+              aria-label="jdoe1"
+              name="email"
+              [class.error]="submitted && f.email.errors"
+              required
+            />
+            <span *ngIf="submitted && f.email.errors" class="invalid-form">
+              <small
+                class="form-text text-danger"
+                *ngIf="submitted && f.email.errors"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary mr-1"
+            (click)="submit()"
+            rippleEffect
+          >
+            <span *ngIf="!isSubmitLoading">Submit</span>
+            <div *ngIf="isSubmitLoading">
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+
+              <span class="ml-25 align-middle">Loading...</span>
+            </div>
+          </button>
+          <button
+            type="reset"
+            class="btn btn-outline-secondary"
+            (click)="toggleSidebar('new-user-sidebar')"
+            rippleEffect
+          >
+            Cancel
+          </button>
+          <span *ngIf="formMessage" class="invalid-form">
+            <span class="form-text text-danger">{{ formMessage }}!</span>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Modal to add new user Ends-->
+</div>
