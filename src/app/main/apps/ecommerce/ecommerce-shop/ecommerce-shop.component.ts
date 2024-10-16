@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 
 import { EcommerceService } from "app/main/apps/ecommerce/ecommerce.service";
-import { DataService } from "app/main/forms/form-elements/select/data.service";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
 import { DataServiceRes, getAllServices } from "../models/services.model";

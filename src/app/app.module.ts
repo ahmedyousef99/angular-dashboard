@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
-import { FakeDbService } from "@fake-db/fake-db.service";
 
 import "hammerjs";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -26,10 +25,6 @@ import { AppComponent } from "app/app.component";
 import { LayoutModule } from "app/layout/layout.module";
 import { ContentHeaderModule } from "app/layout/components/content-header/content-header.module";
 
-import { ContextMenuComponent } from "app/main/extensions/context-menu/context-menu.component";
-import { AnimatedCustomContextMenuComponent } from "./main/extensions/context-menu/custom-context-menu/animated-custom-context-menu/animated-custom-context-menu.component";
-import { BasicCustomContextMenuComponent } from "./main/extensions/context-menu/custom-context-menu/basic-custom-context-menu/basic-custom-context-menu.component";
-import { SubMenuCustomContextMenuComponent } from "./main/extensions/context-menu/custom-context-menu/sub-menu-custom-context-menu/sub-menu-custom-context-menu.component";
 import { OnlineStatusService } from "ngx-online-status";
 
 const appRoutes: Routes = [
@@ -44,39 +39,6 @@ const appRoutes: Routes = [
     loadChildren: () =>
       import("./main/pages/pages.module").then((m) => m.PagesModule),
   },
-  {
-    path: "ui",
-    loadChildren: () => import("./main/ui/ui.module").then((m) => m.UIModule),
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "components",
-    loadChildren: () =>
-      import("./main/components/components.module").then(
-        (m) => m.ComponentsModule
-      ),
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "extensions",
-    loadChildren: () =>
-      import("./main/extensions/extensions.module").then(
-        (m) => m.ExtensionsModule
-      ),
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "forms",
-    loadChildren: () =>
-      import("./main/forms/forms.module").then((m) => m.FormsModule),
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "tables",
-    loadChildren: () =>
-      import("./main/tables/tables.module").then((m) => m.TablesModule),
-    canActivate: [AuthGuard],
-  },
 
   {
     path: "",
@@ -90,21 +52,12 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ContextMenuComponent,
-    BasicCustomContextMenuComponent,
-    AnimatedCustomContextMenuComponent,
-    SubMenuCustomContextMenuComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(FakeDbService, {
-      delay: 0,
-      passThruUnknownUrl: true,
-    }),
+
     RouterModule.forRoot(appRoutes, {
       scrollPositionRestoration: "enabled", // Add options right here
       relativeLinkResolution: "legacy",
@@ -128,12 +81,8 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // ! IMPORTANT: Provider used to create fake backend, comment while using real API
-    fakeBackendProvider,
   ],
-  entryComponents: [
-    BasicCustomContextMenuComponent,
-    AnimatedCustomContextMenuComponent,
-  ],
+
   bootstrap: [AppComponent],
 })
 export class AppModule {}
