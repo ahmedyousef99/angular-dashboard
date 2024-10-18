@@ -49,7 +49,7 @@ export interface newCategoryReq {
   nameEn: string;
   nameEs: string;
   nameAr: string;
-  image: string;
+  image: any;
 }
 
 export interface CategoryDetails {

@@ -125,12 +125,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       },
       { validators: this.passwordMatchValidator }
     );
-    this._accountSettingsService.onSettingsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response) => {
-        this.data = response;
-        this.avatarImage = this.data.accountSetting.general.avatar;
-      });
 
     // content header
     this.contentHeader = {

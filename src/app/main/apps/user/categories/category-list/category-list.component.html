@@ -1,6 +1,13 @@
 <div class="content-wrapper container-xxl p-0">
   <app-content-header [contentHeader]="contentHeader"></app-content-header>
-
+  <ngb-alert
+    [animation]="true"
+    *ngIf="ResMessage"
+    [type]="'success'"
+    [dismissible]="true"
+  >
+    <div class="alert-body">{{ ResMessage }}</div>
+  </ngb-alert>
   <div class="content-body">
     <section class="users-list-wrapper">
       <div class="card">

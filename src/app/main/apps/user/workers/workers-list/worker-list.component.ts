@@ -59,6 +59,7 @@ export class WorkerListComponent implements OnInit {
   searchValues: any;
   loadSearch: boolean;
   contentHeader: {};
+  successMessage: string;
 
   /**
    * Constructor
@@ -213,19 +214,28 @@ export class WorkerListComponent implements OnInit {
 
   ///////////////////// Delete Selected
   public onDelete(): void {
+    this.successMessage = ``;
+    this.blockUI.start();
     this.deleteLoader = true;
     this._workerListService
       .deleteWorker(this.customerDataForDelete.id)
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response) => {
-        this.modalService.dismissAll();
-        this.deleteLoader = false;
-        this.customerDataForDelete = { id: 0, name: "" };
-        this.getWrokersList({
-          isAfterDelete: true,
-          name: this.customerDataForDelete.name,
-        });
-      });
+      .subscribe(
+        (response) => {
+          this.blockUI.stop();
+          this.successMessage = response.message;
+          this.modalService.dismissAll();
+          this.deleteLoader = false;
+          this.customerDataForDelete = { id: 0, name: "" };
+          this.getWrokersList({
+            isAfterDelete: true,
+            name: this.customerDataForDelete.name,
+          });
+        },
+        (error) => {
+          this.blockUI.stop();
+        }
+      );
   }
 
   /**

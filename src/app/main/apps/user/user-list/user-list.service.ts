@@ -65,9 +65,25 @@ export class UserListService implements Resolve<any> {
     id: number,
     data: CreateCustomerReq
   ): Observable<CreateCustomer> {
-    console.log(data, `from service`);
+    // Create FormData object to hold the filtered data
+    const formData = new FormData();
+
+    // Append only properties with valid values to FormData
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      if (value !== null && value !== undefined && value !== "") {
+        formData.append(key, value);
+      }
+    });
+
+    console.log(formData, `filtered data from service`);
+
+    // Send PATCH request with FormData
     return this._httpClient
-      .patch<CreateCustomer>(`${environment.apiUrl}admin/customer/${id}`, data)
+      .patch<CreateCustomer>(
+        `${environment.apiUrl}admin/customer/${id}`,
+        formData
+      )
       .pipe(
         catchError((error) => {
           console.error("Error updating customer:", error);
@@ -81,15 +97,27 @@ export class UserListService implements Resolve<any> {
       `${environment.apiUrl}admin/customer/${id}`
     );
   }
-
   createCustomer(customer: CreateCustomerReq): Observable<CreateCustomer> {
-    console.log(customer, 3331);
+    // Create FormData object to hold the filtered customer data
+    const formData = new FormData();
+
+    // Append only properties with valid values to FormData
+    Object.keys(customer).forEach((key) => {
+      const value = customer[key];
+      if (value !== null && value !== undefined && value !== "") {
+        formData.append(key, value);
+      }
+    });
+
+    console.log(customer, 3331); // For debugging
+
+    // Send POST request with FormData
     return this._httpClient
-      .post<CreateCustomer>(`${environment.apiUrl}admin/customer`, customer)
+      .post<CreateCustomer>(`${environment.apiUrl}admin/customer`, formData)
       .pipe(
         map((res) => {
           console.log(res, `111231`);
-          this.getDataTableRows();
+          this.getDataTableRows(); // Refresh data after creation
           return res;
         })
       );

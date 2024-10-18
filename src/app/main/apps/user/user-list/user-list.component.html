@@ -1,6 +1,13 @@
 <div class="content-wrapper container-xxl p-0">
   <app-content-header [contentHeader]="contentHeader"></app-content-header>
-
+  <ngb-alert
+    [animation]="true"
+    *ngIf="ResMessage"
+    [type]="'success'"
+    [dismissible]="true"
+  >
+    <div class="alert-body">{{ ResMessage }}</div>
+  </ngb-alert>
   <div class="content-body">
     <!-- User List -->
     <section class="users-list-wrapper">
@@ -105,7 +112,11 @@
           <ngx-datatable-column name="Email" [width]="180">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <div>
-                <div>
+                <div
+                  *ngIf="row?.isEmailVerified"
+                  placement="bottom"
+                  ngbTooltip="Not Verified"
+                >
                   <i
                     ngbTooltip="Verified"
                     placement="bottom"
@@ -113,10 +124,14 @@
                     class="feather font-medium-3 text-success"
                     data-feather="user-check"
                   ></i>
+                  {{ row?.email }}
                 </div>
-                <div placement="bottom" ngbTooltip="Not Verified">
+                <div
+                  *ngIf="!row?.isEmailVerified"
+                  placement="bottom"
+                  ngbTooltip="Not Verified"
+                >
                   <i
-                    *ngIf="!row?.isEmailVerified"
                     ngbTooltip="Not Verified"
                     class="feather font-medium-3 text-danger"
                     data-feather="user-x"
@@ -160,7 +175,7 @@
                 class="badge badge-pill"
                 [ngClass]="{
                   'badge-light-success': row?.status == 'ACTIVE',
-                  'badge-light-secondary': row?.status == 'INACTIVE'
+                  'badge-light-danger': row?.status == 'INACTIVE'
                 }"
               >
                 {{ row?.status }}

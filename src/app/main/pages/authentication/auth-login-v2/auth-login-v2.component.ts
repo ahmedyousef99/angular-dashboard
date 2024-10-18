@@ -41,7 +41,8 @@ export class AuthLoginV2Component implements OnInit {
     private testHttp: HttpClient
   ) {
     // redirect to home if already logged in
-    if (this._authenticationService.currentUserValue) {
+    console.log("currentUser" in localStorage);
+    if ("currentUser" in localStorage) {
       this._router.navigate(["/"]);
     }
 

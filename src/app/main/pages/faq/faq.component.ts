@@ -30,6 +30,7 @@ export class FaqComponent implements OnInit, OnDestroy {
   public allCustomerFaqs: Faq[];
   public allWorkersFaqs: Faq[];
   public deleteLoader: boolean = false;
+  public formMessage: string = "";
   @BlockUI() blockUI: NgBlockUI;
 
   // private
@@ -66,11 +67,15 @@ export class FaqComponent implements OnInit, OnDestroy {
     this._coreSidebarService.getSidebarRegistry(name).toggleOpen();
   }
   onDeleteFaq(): void {
+    this.formMessage = ``;
+    this.blockUI.start();
     this._faqService
       .deleteFaq(this.customerDataForDelete.id)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(
         (res) => {
+          this.formMessage = res.message;
+          this.blockUI.stop();
           console.log(res);
           this.modalService.dismissAll();
           this.deleteLoader = false;
@@ -79,6 +84,7 @@ export class FaqComponent implements OnInit, OnDestroy {
           this.getAllFaqs({ userType: "WORKER" });
         },
         (res) => {
+          this.blockUI.stop();
           console.log(res);
         }
       );
@@ -93,11 +99,6 @@ export class FaqComponent implements OnInit, OnDestroy {
       });
     this.getAllFaqs({ userType: "CUSTOMER" });
     this.getAllFaqs({ userType: "WORKER" });
-    this._faqService.onFaqsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((response) => {
-        this.data = response;
-      });
 
     // content header
     this.contentHeader = {

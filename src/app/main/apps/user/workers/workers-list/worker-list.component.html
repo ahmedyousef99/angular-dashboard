@@ -4,6 +4,13 @@
   <div class="content-body">
     <!-- User List -->
     <section class="users-list-wrapper">
+      <ngb-alert
+        *ngIf="successMessage"
+        [type]="'success'"
+        [dismissible]="false"
+      >
+        <div class="alert-body">{{ successMessage }}</div>
+      </ngb-alert>
       <div class="card">
         <div class="row">
           <div class="col-md-6 col-12">
@@ -85,7 +92,7 @@
                     class="avatar mr-1 ml-0"
                     [ngClass]="{
                       'bg-light-success': row?.status == 'ACTIVE',
-                      'bg-light-secondary': row?.status == 'INACTIVE'
+                      'bg-light-danger': row?.status == 'INACTIVE'
                     }"
                   >
                     <div class="avatar-content">{{ name | initials }}</div>
@@ -168,7 +175,7 @@
                 class="badge badge-pill"
                 [ngClass]="{
                   'badge-light-success': row?.status == 'ACTIVE',
-                  'badge-light-secondary': row?.status == 'INACTIVE'
+                  'badge-light-danger': row?.status == 'INACTIVE'
                 }"
               >
                 {{ row?.status }}

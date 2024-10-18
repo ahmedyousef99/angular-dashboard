@@ -33,6 +33,7 @@ export class CategoryListComponent implements OnInit {
   public avatarImage: any;
   public mainCatName: string = "";
   public filter: { page: number; limit: number };
+  public ResMessage: string = "";
 
   public contentHeader: object;
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -50,6 +51,7 @@ export class CategoryListComponent implements OnInit {
   searchInput: any;
   public modalForm: any = null;
   catId: any = 0;
+  selectedFile: any;
   constructor(
     private _categoryListService: CategoryService,
     private _coreSidebarService: CoreSidebarService,
@@ -110,10 +112,15 @@ export class CategoryListComponent implements OnInit {
 
       reader.onload = (e: any) => {
         this.avatarImage = e.target.result;
-        this.categoryForm.get("image").patchValue(this.avatarImage);
+        // this.categoryForm.get("image").patchValue(this.avatarImage);
       };
 
       reader.readAsDataURL(event.target.files[0]);
+    }
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file; // Store the selected file
+      this.categoryForm.get("image").patchValue(file);
     }
   }
 
@@ -135,6 +142,7 @@ export class CategoryListComponent implements OnInit {
       .updateCategory(this.catId, this.categoryForm.value)
       .subscribe(
         (res) => {
+          this.ResMessage = res.message;
           this.blockUI.stop();
           this.onCloseModal();
           this.handleSuccess();
@@ -157,14 +165,15 @@ export class CategoryListComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(
         (res) => {
+          this.ResMessage = res.message;
           this.blockUI.stop();
           this.onCloseModal();
-
           this.getCategoryList();
           this.isSubmitLoading = false;
         },
         (error) => {
           this.blockUI.stop();
+          this.handleError(error);
 
           this.isSubmitLoading = false;
         }
@@ -291,7 +300,8 @@ export class CategoryListComponent implements OnInit {
     this._categoryListService
       .deleteCategory(this.customerDataForDelete.id)
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
+      .subscribe((res) => {
+        this.ResMessage = res.message;
         this.modalService.dismissAll();
         this.deleteLoader = false;
         this.customerDataForDelete = { id: 0, name: "" };

@@ -13,7 +13,6 @@ import { takeUntil } from "rxjs/operators";
 import { FlatpickrOptions } from "ng2-flatpickr";
 import { cloneDeep } from "lodash";
 
-import { UserEditService } from "app/main/apps/user/user-edit/user-edit.service";
 import { UserListService } from "../user-list/user-list.service";
 import { CreateCustomerReq, Customers } from "../models/customer.model";
 import { ActivatedRoute, Params } from "@angular/router";
@@ -36,6 +35,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
   public customerForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;
+  public formMessage: string = ``;
+  contentHeader: {};
+
   @BlockUI() blockUI: NgBlockUI;
   @ViewChild("accountForm") accountForm: NgForm;
 
@@ -53,6 +55,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   // Private
   private _unsubscribeAll: Subject<any>;
   productId: number;
+  public successMessage: string = ``;
 
   /**
    * Constructor
@@ -62,7 +65,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
    */
   constructor(
     private router: Router,
-    private _userEditService: UserEditService,
     private _formBuilder: FormBuilder,
     private _userListService: UserListService,
     private route: ActivatedRoute
@@ -91,12 +93,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
       reader.onload = (event: any) => {
         this.avatarImage = event.target.result;
-        this.customerForm.get(`avatar`).patchValue(this.avatarImage);
         console.log(this.customerForm.value);
         console.log(this.avatarImage);
       };
 
       reader.readAsDataURL(event.target.files[0]);
+    }
+    const file: File = event.target.files[0];
+    if (file) {
+      this.customerForm.get(`avatar`).patchValue(file);
     }
   }
 
@@ -106,14 +111,29 @@ export class UserEditComponent implements OnInit, OnDestroy {
   get f() {
     return this.customerForm.controls;
   }
+  public clearAvatar(): void {
+    this.avatarImage = ``;
+    this.customerForm.get("avatar").patchValue("");
+  }
 
   private editCustomer(id: number, data: CreateCustomerReq): void {
+    this.blockUI.start();
     this._userListService
       .updateCustomer(id, data)
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((res) => {
-        console.log(res);
-      });
+      .subscribe(
+        (res) => {
+          this.successMessage = res.message;
+          console.log(res);
+          // this.getUserDetails();
+          this.blockUI.stop();
+        },
+        (error) => {
+          this.blockUI.stop();
+
+          this.formMessage = error;
+        }
+      );
   }
 
   /**
@@ -138,28 +158,28 @@ export class UserEditComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Customers",
+      breadcrumb: {
+        links: [
+          {
+            name: "Customers List",
+            isLink: true,
+            link: "/apps/user/user-list",
+          },
+          {
+            name: "Customer Edit",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {
         this.productId = +params[`id`];
-        this.blockUI.start();
         console.log(this.productId);
-        this._userListService
-          .getCustomerDetails(this.productId)
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(
-            (res) => {
-              console.log(res, `the res`);
-              this.currentRow = res.data;
-              this.avatarImage = this.currentRow.avatar;
-              this.customerForm.patchValue(this.currentRow);
-              this.blockUI.stop();
-              console.log(this.customerForm.value, `the form`);
-            },
-            (error) => {
-              this.blockUI.stop();
-            }
-          );
+        this.getUserDetails();
         // this.getDetails(this.productId);
       });
     // this._userEditService.onUserEditChanged
@@ -178,13 +198,34 @@ export class UserEditComponent implements OnInit, OnDestroy {
     //   });
     this.customerForm = this._formBuilder.group({
       name: [``, [Validators.required]],
-      email: [``, [Validators.required, Validators.email]],
+      email: [``, [Validators.email]],
       password: [``],
       phone: [``],
       dateOfBirth: [``, [Validators.required]],
       avatar: [``],
       status: [``], //INACTIVE or Active
     });
+  }
+  getUserDetails() {
+    this.blockUI.start();
+    this._userListService
+      .getCustomerDetails(this.productId)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(
+        (res) => {
+          console.log(res, `the res`);
+          this.currentRow = res.data;
+          this.avatarImage = this.currentRow.avatar;
+          this.customerForm.patchValue(this.currentRow);
+          this.customerForm.get("email").patchValue(``);
+          this.customerForm.get("phone").patchValue(``);
+          this.blockUI.stop();
+          console.log(this.customerForm.value, `the form`);
+        },
+        (error) => {
+          this.blockUI.stop();
+        }
+      );
   }
 
   /**

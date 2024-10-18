@@ -41,7 +41,7 @@ export class UserListComponent implements OnInit {
   public search: FormGroup;
   public searchControl = new FormControl("");
   public counterPerPage = new FormControl("");
-
+  public ResMessage: string = "";
   public selectedStatus = [];
   public searchValue = "";
   public page: { pageNumber: number; size: number };
@@ -219,6 +219,8 @@ export class UserListComponent implements OnInit {
       .deleteCustomer(this.customerDataForDelete.id)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response) => {
+        this.ResMessage = response.message;
+
         this.modalService.dismissAll();
         this.deleteLoader = false;
         this.customerDataForDelete = { id: 0, name: "" };
@@ -271,6 +273,7 @@ export class UserListComponent implements OnInit {
       .getDataTableRows(searchData)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
+        console.log(res);
         this.blockUI.stop();
         if (isFromDelete?.isAfterDelete) {
           this.toastr.success(

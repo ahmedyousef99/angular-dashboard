@@ -57,13 +57,33 @@ export class CategoryService {
   /**
    * Get rows
    */
-  public updateCategory(
-    id: number,
-    data: newCategoryReq
-  ): Observable<DeleteCategory> {
-    console.log(data, `from service`);
+  public updateCategory(id: number, data: any): Observable<DeleteCategory> {
+    // Create FormData object to hold the updated category data
+    const formData = new FormData();
+
+    // Append category properties to FormData
+    if (data.parentId !== undefined) {
+      formData.append("parentId", data.parentId.toString());
+    }
+
+    formData.append("nameEn", data.nameEn);
+    formData.append("isActive", data.isActive);
+    formData.append("nameEs", data.nameEs);
+    formData.append("nameAr", data.nameAr);
+
+    // Append the image file (ensure 'image' is the expected field name on the backend)
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+
+    console.log(data, `from service`); // For debugging
+
+    // Send PATCH request with FormData
     return this._httpClient
-      .patch<DeleteCategory>(`${environment.apiUrl}admin/category/${id}`, data)
+      .patch<DeleteCategory>(
+        `${environment.apiUrl}admin/category/${id}`,
+        formData
+      )
       .pipe(
         catchError((error) => {
           console.error("Error updating category:", error);
@@ -79,10 +99,27 @@ export class CategoryService {
   }
 
   createCategory(category: newCategoryReq): Observable<DeleteCategory> {
-    console.log(category, 3331);
+    // Create FormData object to hold the category data and image
+    const formData = new FormData();
+
+    // Append category properties to FormData
+    if (category.parentId !== undefined) {
+      formData.append("parentId", category.parentId.toString());
+    }
+
+    formData.append("nameEn", category.nameEn);
+    formData.append("nameEs", category.nameEs);
+    formData.append("nameAr", category.nameAr);
+
+    // Append the image file (ensure 'image' is the expected field name on the backend)
+    formData.append("image", category.image);
+
+    console.log(category, 3331); // For debugging
+
+    // Send POST request with FormData
     return this._httpClient.post<DeleteCategory>(
       `${environment.apiUrl}admin/category`,
-      category
+      formData
     );
   }
 

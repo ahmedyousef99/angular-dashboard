@@ -50,18 +50,15 @@ export class NewWorkerSidebarComponent implements OnInit {
     console.log(event);
     if (event.target.files && event.target.files[0]) {
       let reader = new FileReader();
-
       reader.onload = (event: any) => {
-        console.log(typeof event.target.result);
-
-        console.log(event.target.result);
         this.avatarImage = event.target.result;
-        this.workerForm.get(`avatar`).patchValue(this.avatarImage);
-        console.log(this.workerForm.value);
-        console.log(this.avatarImage);
       };
 
       reader.readAsDataURL(event.target.files[0]);
+    }
+    const file: File = event.target.files[0];
+    if (file) {
+      this.workerForm.get(`avatar`).patchValue(file);
     }
   }
 
@@ -90,6 +87,7 @@ export class NewWorkerSidebarComponent implements OnInit {
 
           this.formMessage = ``;
           this.workerForm.reset();
+          this.avatarImage = ``;
           this.submitted = false;
         },
         (error) => {

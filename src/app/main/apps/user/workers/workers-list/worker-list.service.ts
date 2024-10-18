@@ -17,8 +17,7 @@ import {
 } from "../../models/workers.model";
 
 @Injectable()
-export class WorkerListService implements Resolve<any> {
-  public rows: any;
+export class WorkerListService {
   public onUserListChanged: BehaviorSubject<AllWorkers>;
   public searchData: any = {};
 
@@ -48,16 +47,6 @@ export class WorkerListService implements Resolve<any> {
    * @param {RouterStateSnapshot} state
    * @returns {Observable<any> | Promise<any> | any}
    */
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<any> | Promise<any> | any {
-    return new Promise<void>((resolve, reject) => {
-      Promise.all([this.getAllWorkers(this.searchData)]).then(() => {
-        resolve();
-      }, reject);
-    });
-  }
 
   /**
    * Get rows
@@ -67,11 +56,27 @@ export class WorkerListService implements Resolve<any> {
     data: CreateWorkerReq
   ): Observable<CreateWorkersRes> {
     console.log(data, `from service`);
+
+    // Create FormData object to hold the filtered worker data
+    const formData = new FormData();
+
+    // Append only properties with valid values to FormData
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      if (value !== null && value !== undefined && value !== "") {
+        formData.append(key, value);
+      }
+    });
+
+    // Send PATCH request with FormData
     return this._httpClient
-      .patch<CreateWorkersRes>(`${environment.apiUrl}admin/worker/${id}`, data)
+      .patch<CreateWorkersRes>(
+        `${environment.apiUrl}admin/worker/${id}`,
+        formData
+      )
       .pipe(
         catchError((error) => {
-          console.error("Error updating Admin:", error);
+          console.error("Error updating worker:", error);
           return throwError(error);
         })
       );
@@ -84,12 +89,26 @@ export class WorkerListService implements Resolve<any> {
   }
 
   createWorker(admin: CreateWorkerReq): Observable<CreateWorkersRes> {
-    console.log(admin, 3331);
+    // Create FormData object to hold the filtered worker data
+    const formData = new FormData();
+
+    // Append only properties with valid values to FormData
+    Object.keys(admin).forEach((key) => {
+      const value = admin[key];
+      if (value !== null && value !== undefined && value !== "") {
+        formData.append(key, value);
+      }
+    });
+
+    console.log(admin, 3331); // For debugging
+
+    // Send POST request with FormData
     return this._httpClient
-      .post<CreateWorkersRes>(`${environment.apiUrl}admin/worker`, admin)
+      .post<CreateWorkersRes>(`${environment.apiUrl}admin/worker`, formData)
       .pipe(
         map((res) => {
           console.log(res, `from worker services`);
+          // Optionally refresh the worker data if needed
           // this.getAllWorkers();
           return res;
         })

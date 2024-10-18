@@ -18,9 +18,6 @@ const routes: Routes = [
     path: "faq",
     component: FaqComponent,
     canActivate: [AuthGuard],
-    resolve: {
-      faqData: FAQService,
-    },
     data: { animation: "faq" },
   },
 ];

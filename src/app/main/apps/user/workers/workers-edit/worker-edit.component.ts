@@ -13,7 +13,7 @@ import { ActivatedRoute, Params } from "@angular/router";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { Admin, CreateAdminReq } from "../../models/admins.model";
 import { WorkerListService } from "../workers-list/worker-list.service";
-import { CreateWorkerReq } from "../../models/workers.model";
+import { worker, CreateWorkerReq } from "../../models/workers.model";
 
 @Component({
   selector: "app-worker-edit",
@@ -26,12 +26,16 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
   public url = this.router.url;
   public urlLastValue;
   public rows;
-  public currentRow: Admin;
+  public currentRow: worker;
   public tempRow;
   public avatarImage: string;
   public workerForm: FormGroup;
   public passwordTextType: boolean;
   public submitted = false;
+  public formMessage: string = ``;
+  public successMessage: string = ``;
+  contentHeader: {};
+
   @BlockUI() blockUI: NgBlockUI;
   @ViewChild("accountForm") accountForm: NgForm;
 
@@ -86,12 +90,15 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
 
       reader.onload = (event: any) => {
         this.avatarImage = event.target.result;
-        this.workerForm.get(`avatar`).patchValue(this.avatarImage);
         console.log(this.workerForm.value);
         console.log(this.avatarImage);
       };
 
       reader.readAsDataURL(event.target.files[0]);
+    }
+    const file: File = event.target.files[0];
+    if (file) {
+      this.workerForm.get(`avatar`).patchValue(file);
     }
   }
 
@@ -103,12 +110,21 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
   }
 
   private editAdmin(id: number, data: CreateWorkerReq): void {
+    this.blockUI.start();
     this._workerListService
       .updateWorker(id, data)
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((res) => {
-        console.log(res);
-      });
+      .subscribe(
+        (res) => {
+          this.successMessage = res.message;
+          this.blockUI.stop();
+          console.log(res);
+        },
+        (error) => {
+          this.blockUI.stop();
+          this.formMessage = error;
+        }
+      );
   }
 
   /**
@@ -133,6 +149,22 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+    this.contentHeader = {
+      headerTitle: "Workers",
+      breadcrumb: {
+        links: [
+          {
+            name: "Workers List",
+            isLink: true,
+            link: "/apps/user/worker-list",
+          },
+          {
+            name: "Worker Update",
+            isLink: false,
+          },
+        ],
+      },
+    };
     this.route.params
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((params: Params) => {
@@ -147,6 +179,9 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
               console.log(res, `the res`);
               this.currentRow = res.data;
               this.workerForm.patchValue(this.currentRow);
+              this.avatarImage = res?.data?.avatar;
+              this.workerForm.get("email").patchValue("");
+              this.workerForm.get("phone").patchValue("");
               this.blockUI.stop();
               console.log(this.workerForm.value, `the form`);
             },
@@ -159,11 +194,12 @@ export class WorkerEditComponent implements OnInit, OnDestroy {
 
     this.workerForm = this._formBuilder.group({
       name: [``, [Validators.required]],
-      email: [``, [Validators.required, Validators.email]],
+      email: [``, [Validators.email]],
       password: [``],
       phone: [``],
       dateOfBirth: [``, [Validators.required]],
       avatar: [``],
+      address: [``],
       status: [``], //INACTIVE or Active
     });
   }

@@ -14,7 +14,6 @@ import { CorePipesModule } from "@core/pipes/pipes.module";
 import { CoreSidebarModule } from "@core/components";
 
 import { UserEditComponent } from "app/main/apps/user/user-edit/user-edit.component";
-import { UserEditService } from "app/main/apps/user/user-edit/user-edit.service";
 
 import { UserListComponent } from "app/main/apps/user/user-list/user-list.component";
 import { UserListService } from "app/main/apps/user/user-list/user-list.service";
@@ -42,83 +41,99 @@ import { BookingCancellationViewComponent } from "./booking-cancellation/booking
 import { CategoryListComponent } from "./categories/category-list/category-list.component";
 import { CategoryViewComponent } from "./categories/category-view/category-view.component";
 import { CategoryService } from "./categories/category.service";
+import { AuthGuard } from "app/auth/helpers";
 
 // routing
 const routes: Routes = [
   {
     path: "user-list",
     component: UserListComponent,
+    canActivate: [AuthGuard],
 
     data: { animation: "UserListComponent" },
   },
   {
     path: "admin-list",
+    canActivate: [AuthGuard],
     component: AdminListComponent,
     data: { animation: "UserViewComponent" },
   },
   {
     path: "worker-list",
+    canActivate: [AuthGuard],
     component: WorkerListComponent,
     data: { animation: "AdminListComponent" },
   },
   {
     path: "booking-list",
+    canActivate: [AuthGuard],
     component: BookingListComponent,
     data: { animation: "AdminListComponent" },
   },
   {
     path: "booking-cancellation-list",
+    canActivate: [AuthGuard],
     component: BookingCancellationListComponent,
     data: { animation: "AdminListComponent" },
   },
   {
     path: "category-list",
+    canActivate: [AuthGuard],
     component: CategoryListComponent,
     data: { animation: "AdminListComponent" },
   },
   {
     path: "admin-view/:id",
+    canActivate: [AuthGuard],
     component: AdminViewComponent,
     data: { animation: "AdminViewComponent" },
   },
   {
     path: "worker-view/:id",
+    canActivate: [AuthGuard],
     component: WorkerViewComponent,
     data: { animation: "AdminViewComponent" },
   },
   {
     path: "user-view/:id",
+    canActivate: [AuthGuard],
     component: UserViewComponent,
     data: { animation: "UserViewComponent" },
   },
   {
     path: "booking-view/:id",
+    canActivate: [AuthGuard],
     component: BookingViewComponent,
     data: { animation: "UserViewComponent" },
   },
   {
     path: "booking-cancellation-view/:id",
+    canActivate: [AuthGuard],
     component: BookingCancellationViewComponent,
     data: { animation: "UserViewComponent" },
   },
   {
     path: "category-view/:id",
+    canActivate: [AuthGuard],
     component: CategoryViewComponent,
     data: { animation: "UserViewComponent" },
   },
 
   {
     path: "admin-edit/:id",
+    canActivate: [AuthGuard],
     component: AdminEditComponent,
     data: { animation: "AdminEditComponent" },
   },
   {
     path: "worker-edit/:id",
+    canActivate: [AuthGuard],
     component: WorkerEditComponent,
     data: { animation: "AdminEditComponent" },
   },
   {
     path: "user-edit/:id",
+    canActivate: [AuthGuard],
     component: UserEditComponent,
     data: { animation: "UserEditComponent" },
   },
@@ -162,7 +177,6 @@ const routes: Routes = [
   providers: [
     UserListService,
     UserViewService,
-    UserEditService,
     AdminListService,
     WorkerListService,
     BookingListService,

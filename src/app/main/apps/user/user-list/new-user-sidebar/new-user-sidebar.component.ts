@@ -53,12 +53,15 @@ export class NewUserSidebarComponent implements OnInit {
 
       reader.onload = (event: any) => {
         this.avatarImage = event.target.result;
-        this.customerForm.get(`avatar`).patchValue(this.avatarImage);
         console.log(this.customerForm.value);
         console.log(this.avatarImage);
       };
 
       reader.readAsDataURL(event.target.files[0]);
+    }
+    const file: File = event.target.files[0];
+    if (file) {
+      this.customerForm.get(`avatar`).patchValue(file);
     }
   }
   /**
